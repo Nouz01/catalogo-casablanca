@@ -1,0 +1,1 @@
+﻿Guarda la foto de cada vendedor con su nombre exacto. Ejemplo: Juan.jpg, Hugo.jpg, Silvia.jpg

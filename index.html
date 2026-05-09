@@ -1,0 +1,1364 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casablanca — Catálogo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#1A1614; --linen:#221D1A; --sand:#2E2A26; --stone:#8A7D74;
+  --ink:#F5F0EB; --soft:#C0B8AF; --red:#D91A1A; --card:#201E1B;
+  --border:#322E2A; --fs:'Cormorant Garamond',Georgia,serif;
+  --fn:'DM Sans',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--fn);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+
+/* PROGRESS */
+#prog{position:fixed;top:0;left:0;z-index:9999;height:2px;width:0;background:linear-gradient(90deg,var(--red),#ff6b6b);pointer-events:none;transition:width .1s linear}
+
+/* HEADER */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg);padding:10px 20px 0;border-bottom:1px solid var(--border);transition:padding .3s}
+.hdr.shrunk{padding:6px 20px 0}
+.pill{display:flex;align-items:center;height:46px;border:1px solid var(--border);border-radius:50px;padding:0 18px;background:var(--linen);gap:0;transition:height .3s}
+.hdr.shrunk .pill{height:40px}
+.pill-logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0}
+.pill-logo img{height:24px;object-fit:contain;filter:brightness(0) invert(1)}
+.hdr.shrunk .pill-logo img{height:20px}
+.pill-logo.right img{filter:none}
+.pill-center{flex:1;text-align:center;font-size:13px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.hnav{display:flex;overflow-x:auto;scrollbar-width:none}
+.hnav::-webkit-scrollbar{display:none}
+.nsec{flex:1;min-width:max-content;padding:10px 14px 9px;border:none;background:none;color:var(--stone);font-family:var(--fn);font-size:13px;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;text-align:center}
+.nsec:hover{color:var(--ink)}
+.nsec.active{color:var(--ink);font-weight:500;border-bottom-color:var(--red)}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;height:72vw;max-height:680px;min-height:300px;background:var(--linen);margin-top:98px}
+.hslides{display:flex;height:100%;transition:transform .65s cubic-bezier(.34,1.2,.64,1);will-change:transform}
+.hslide{min-width:100%;height:100%;flex-shrink:0;overflow:hidden;position:relative}
+.hslide img{width:100%;height:100%;object-fit:cover}
+.hovl{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.55));display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 24px 48px;gap:16px;pointer-events:none}
+.htitle{font-family:var(--fs);font-size:clamp(32px,8vw,64px);font-weight:300;color:#fff;text-align:center;line-height:1.1;text-shadow:0 2px 24px rgba(0,0,0,.5)}
+.hbtn{background:rgba(255,255,255,.92);color:#1a1614;font-family:var(--fn);font-size:13px;font-weight:500;letter-spacing:.04em;border:none;border-radius:24px;padding:12px 32px;cursor:pointer;pointer-events:auto;transition:background .2s,transform .2s;animation:hpulse 2.5s ease-in-out infinite}
+.hbtn:hover{background:#fff;transform:scale(1.03)}
+@keyframes hpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.4)}50%{box-shadow:0 0 0 10px rgba(255,255,255,0)}}
+.harr{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.85);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;backdrop-filter:blur(4px)}
+.harr:hover{background:#fff}
+.harr svg{width:16px;height:16px;color:#111}
+.harr.prev{left:16px}
+.harr.next{right:16px}
+.hdots{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.hdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5);border:none;cursor:pointer;padding:0;transition:background .2s,transform .2s}
+.hdot.active{background:#fff;transform:scale(1.3)}
+
+/* BENEFITS */
+.benefits{background:#141210;display:flex;justify-content:center;overflow-x:auto;scrollbar-width:none}
+.benefits::-webkit-scrollbar{display:none}
+.bitem{display:flex;align-items:center;gap:12px;padding:16px 28px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.bitem:last-child{border-right:none}
+.bitem svg{width:22px;height:22px;color:var(--red);flex-shrink:0;animation:pulse-icon 3s ease-in-out infinite}
+.bitem:nth-child(2) svg{animation-delay:.4s}
+@keyframes pulse-icon{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+.bitem-txt{display:flex;flex-direction:column;gap:2px}
+.bitem-t{font-size:12px;font-weight:500;color:var(--ink);letter-spacing:.02em}
+.bitem-s{font-size:10px;color:var(--stone);letter-spacing:.04em}
+
+/* SECTIONS */
+.sec{padding:40px 0}
+.sec-head{padding:0 24px 20px;display:flex;align-items:baseline;justify-content:space-between}
+.sec-head h2{font-family:var(--fs);font-size:28px;font-weight:300;font-style:italic}
+.view-all{font-size:12px;color:var(--stone);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border:none;background:none;text-decoration:underline;text-underline-offset:3px}
+
+/* CATEGORY CARDS */
+.cats-scroll{display:flex;gap:12px;padding:0 24px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab}
+.cats-scroll::-webkit-scrollbar{display:none}
+.cats-scroll:active{cursor:grabbing}
+.ccat{flex-shrink:0;position:relative;overflow:hidden;border-radius:12px;cursor:pointer;width:200px;height:260px;background:var(--linen);transition:transform .2s}
+.ccat:hover{transform:translateY(-3px)}
+.ccat img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.ccat:hover img{transform:scale(1.05)}
+.ccat-ph{width:100%;height:100%;background:repeating-linear-gradient(45deg,var(--linen),var(--linen) 4px,var(--bg) 4px,var(--bg) 14px);display:flex;align-items:center;justify-content:center}
+.ccat-lbl{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,.65),transparent);padding:32px 14px 14px}
+.ccat-name{font-size:14px;font-weight:500;color:#fff}
+.ccat-count{font-size:11px;color:rgba(255,255,255,.65);letter-spacing:.04em}
+
+.chip{font-size:12px;color:var(--soft);background:var(--linen);border:1px solid var(--border);border-radius:20px;padding:5px 14px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s;font-family:var(--fn)}
+.chip.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+@media(max-width:480px){.cats-scroll{padding-left:14px;padding-right:14px}.sec-head{padding:0 14px 16px}}
+
+/* PRODUCT CARD */
+.pcard{background:var(--card);border-radius:10px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;border:1px solid var(--border);-webkit-tap-highlight-color:transparent}
+.pcard:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.4);border-color:var(--stone)}
+.pcard:active{transform:scale(.975)}
+.pimg-wrap{aspect-ratio:1;overflow:hidden;background:var(--linen);position:relative}
+.pimg{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.pcard:hover .pimg{transform:scale(1.05)}
+.pph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(45deg,var(--linen),var(--linen) 4px,var(--bg) 4px,var(--bg) 14px)}
+.pph span{font-size:9px;color:var(--stone);text-align:center;padding:8px;line-height:1.5}
+.pinfo{padding:10px 12px 13px}
+.pname{font-family:var(--fs);font-size:15px;color:var(--ink);line-height:1.3;margin-bottom:7px}
+.pmeta{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.pdots{display:flex;align-items:center;gap:3px}
+.cdot{width:10px;height:10px;border-radius:50%;border:1px solid rgba(0,0,0,.1);flex-shrink:0}
+.cmore{font-size:10px;color:var(--stone)}
+.pcat{font-size:10px;color:var(--stone)}
+.gempty{grid-column:1/-1;padding:60px 20px;text-align:center}
+.gempty p{font-family:var(--fs);font-size:20px;font-style:italic;color:var(--stone)}
+
+/* STATS STRIP */
+.stats-strip{display:flex;justify-content:center;gap:0;padding:40px 24px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:48px;overflow-x:auto;scrollbar-width:none;background:linear-gradient(135deg,rgba(217,26,26,.04) 0%,transparent 60%)}
+.stats-strip::-webkit-scrollbar{display:none}
+.stat-item{flex:1;min-width:130px;text-align:center;padding:0 24px;position:relative}
+.stat-item+.stat-item::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);height:40px;width:1px;background:var(--border)}
+.stat-num{font-family:var(--fs);font-size:clamp(30px,5vw,48px);font-weight:300;color:var(--ink);line-height:1;letter-spacing:-.02em}
+.stat-num span{color:var(--red)}
+.stat-lbl{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--stone);margin-top:7px}
+.stat-item{opacity:0;transform:translateY(28px)}
+.stat-item.vis{opacity:1;transform:none}
+
+/* LN CARD reveal */
+.ln-card{opacity:0;transform:scale(.94)}
+.ln-card.vis{opacity:1;transform:none}
+
+/* LINEA CARD reveal */
+.linea-card{opacity:0;transform:translateX(20px)}
+.linea-card.vis{opacity:1;transform:none}
+
+/* SEPARATOR */
+.sep-dec{display:flex;align-items:center;gap:16px;padding:4px 48px;margin:8px 0}
+.sep-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--red),transparent);opacity:.35}
+.sep-dia{font-size:7px;color:var(--red);opacity:.6;flex-shrink:0;letter-spacing:0}
+
+/* LO NUEVO — grid editorial grande */
+.lonuevo{padding:0 24px 56px}
+@media(max-width:640px){.lonuevo{padding:0 14px 40px}}
+.lonuevo-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
+.lonuevo-head h2{font-family:var(--fs);font-size:clamp(24px,5vw,36px);font-weight:300}
+.lonuevo-head p{font-size:12px;color:var(--stone);letter-spacing:.06em}
+.lonuevo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:260px 200px;gap:8px}
+@media(max-width:640px){.lonuevo-grid{grid-template-columns:1fr 1fr;grid-template-rows:180px 180px 140px}}
+.ln-card{border-radius:12px;overflow:hidden;position:relative;cursor:pointer;background:var(--linen)}
+.ln-card:first-child{grid-row:1/3;grid-column:1/2}
+@media(max-width:640px){.ln-card:first-child{grid-row:1/2;grid-column:1/3}}
+.ln-card img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.ln-card:hover img{transform:scale(1.06)}
+.ln-card-lbl{position:absolute;bottom:0;left:0;right:0;padding:20px 16px 16px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff}
+.ln-card-lbl p:first-child{font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.7;margin-bottom:3px}
+.ln-card-lbl p:last-child{font-family:var(--fs);font-size:18px;font-weight:300}
+@media(max-width:640px){.ln-card-lbl p:last-child{font-size:15px}}
+
+/* LINEAS strip */
+.lineas{padding:0 0 56px;overflow:hidden}
+.lineas-head{padding:0 24px 20px;display:flex;align-items:center;gap:12px}
+.lineas-head h2{font-family:var(--fs);font-size:clamp(22px,4vw,32px);font-weight:300}
+.lineas-head p{font-size:12px;color:var(--stone)}
+.lineas-scroll{display:flex;gap:10px;padding:0 24px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.lineas-scroll::-webkit-scrollbar{display:none}
+.linea-card{flex-shrink:0;width:140px;cursor:pointer}
+@media(max-width:640px){.linea-card{width:120px}}
+.linea-img{width:100%;aspect-ratio:1;border-radius:50%;overflow:hidden;border:2px solid var(--border);transition:border-color .2s}
+.linea-card:hover .linea-img{border-color:var(--red)}
+.linea-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.linea-card:hover .linea-img img{transform:scale(1.1)}
+.linea-name{text-align:center;font-size:12px;letter-spacing:.05em;margin-top:10px;color:var(--soft)}
+
+/* BANNER TEMPORADA */
+.banner-temp{margin:0 24px 56px;border-radius:20px;overflow:hidden;position:relative;min-height:280px;display:flex;align-items:center}
+@media(max-width:640px){.banner-temp{margin:0 14px 40px;min-height:220px}}
+.banner-temp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.banner-temp-ovl{position:absolute;inset:0;background:linear-gradient(100deg,rgba(0,0,0,.75) 40%,transparent)}
+.banner-temp-txt{position:relative;z-index:1;padding:40px 44px;max-width:420px}
+@media(max-width:640px){.banner-temp-txt{padding:28px 24px}}
+.banner-temp-txt p{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.banner-temp-txt h2{font-family:var(--fs);font-size:clamp(26px,5vw,40px);font-weight:300;line-height:1.15;margin-bottom:18px}
+.banner-temp-txt button{background:transparent;border:1px solid rgba(255,255,255,.5);color:#fff;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:10px 22px;border-radius:30px;cursor:pointer;transition:background .2s,border-color .2s}
+.banner-temp-txt button:hover{background:rgba(255,255,255,.12);border-color:#fff}
+
+/* EDITORIAL */
+.editorial{display:grid;grid-template-columns:1fr 1fr;margin:0 24px 48px;border-radius:16px;overflow:hidden;min-height:320px;background:var(--linen);border:1px solid var(--border)}
+@media(max-width:640px){.editorial{grid-template-columns:1fr;margin:0 14px 40px}.edit-img{aspect-ratio:4/3;order:-1}}
+.edit-txt{padding:40px 36px;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.edit-eye{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+.edit-title{font-family:var(--fs);font-size:clamp(22px,3vw,38px);font-weight:400;color:var(--ink);line-height:1.15}
+.edit-body{font-size:13px;color:var(--stone);line-height:1.6;max-width:280px}
+.edit-cta{display:inline-flex;align-items:center;background:transparent;color:var(--ink);font-family:var(--fn);font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(245,240,235,.35);border-radius:24px;padding:10px 24px;cursor:pointer;align-self:flex-start;transition:background .2s,border-color .2s,transform .2s}
+.edit-cta:hover{background:rgba(245,240,235,.08);border-color:var(--ink);transform:scale(1.03)}
+.edit-img{background:var(--linen);overflow:hidden}
+.edit-img img{width:100%;height:100%;object-fit:cover}
+.editorial.rev-img .edit-img{order:-1}
+
+/* FEATURED */
+.featured{background:#141414;padding:40px 0 48px}
+.feat-head{padding:0 24px 24px;display:flex;align-items:flex-start;justify-content:space-between}
+.feat-head h2{font-family:var(--fs);font-size:26px;font-weight:300;color:#fff}
+.feat-head p{font-size:12px;color:rgba(255,255,255,.4);margin-top:3px}
+.feat-all{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:6px 14px;background:none;cursor:pointer;transition:border-color .2s;white-space:nowrap}
+.feat-all:hover{border-color:rgba(255,255,255,.5)}
+.feat-scroll{display:flex;gap:12px;padding:0 24px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.feat-scroll::-webkit-scrollbar{display:none}
+.fcard{flex-shrink:0;width:180px;cursor:pointer;transition:transform .2s}
+.fcard:hover{transform:translateY(-3px)}
+.fcard:active{transform:scale(.96)}
+.fwrap{width:180px;aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:var(--linen);margin-bottom:10px;border:1px solid rgba(255,255,255,.06)}
+.fwrap img{width:100%;height:100%;object-fit:cover}
+.fname{font-family:var(--fs);font-size:14px;color:#fff;line-height:1.3;margin-bottom:5px}
+.fdots{display:flex;gap:3px}
+
+/* SUCURSALES */
+.suc{padding:40px 24px;background:var(--linen);border-top:1px solid var(--border)}
+.suc h2{font-family:var(--fs);font-size:26px;font-weight:300;font-style:italic;margin-bottom:20px}
+.slist{display:flex;flex-direction:column;gap:12px}
+.sitem{display:flex;align-items:flex-start;gap:14px;padding:16px;background:var(--card);border-radius:12px;border:1px solid var(--border);text-decoration:none;transition:border-color .2s}
+.sitem:hover{border-color:var(--red)}
+.sico{width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sico svg{width:16px;height:16px;color:#fff}
+.sinfo{flex:1}
+.sdir{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.ssub{font-size:12px;color:var(--stone)}
+
+/* FOOTER */
+footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:column;gap:16px}
+.foot-brand{font-family:var(--fs);font-size:22px;letter-spacing:.1em;color:#fff}
+.foot-tag{font-size:12px;color:rgba(255,255,255,.4)}
+.foot-copy{font-size:11px;color:rgba(255,255,255,.25);padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+
+/* OVERLAY */
+.overlay{position:fixed;inset:0;z-index:10000;background:var(--bg);overflow-y:auto;transform:translateY(100%);transition:transform .32s cubic-bezier(.32,0,.12,1);overscroll-behavior:contain}
+.overlay.open{transform:translateY(0)}
+.ov-hdr{position:sticky;top:0;z-index:10;background:#141414;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.btn-back{display:flex;align-items:center;gap:6px;background:none;border:none;font-family:var(--fn);font-size:13px;color:rgba(255,255,255,.8);cursor:pointer}
+.btn-back svg{width:18px;height:18px}
+.ov-bc{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.07em;text-transform:uppercase}
+.lookbook{padding-bottom:56px}
+
+/* GALLERY */
+.gal{position:relative;overflow:hidden;background:var(--linen);touch-action:pan-y}
+.gal-track{display:flex;transition:transform .35s cubic-bezier(.32,0,.12,1);will-change:transform}
+.gal-slide{min-width:100%;aspect-ratio:4/5;max-height:55vh;overflow:hidden;flex-shrink:0;position:relative;background:var(--linen)}
+.gal-slide img{width:100%;height:100%;object-fit:contain;transition:transform .3s ease}
+.gal-slide.zoomed img{transform:scale(1.8);cursor:zoom-out}
+.gal-cnt{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);color:#fff;font-size:11px;padding:4px 10px;border-radius:20px;letter-spacing:.04em}
+.gal-arr{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.45);backdrop-filter:blur(6px);color:#fff;border:none;width:36px;height:36px;border-radius:50%;font-size:24px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;transition:opacity .2s}
+.gal-arr.prev{left:10px}.gal-arr.next{right:10px}
+.gal-tag{position:absolute;bottom:14px;left:14px;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);color:#fff;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:20px}
+.gal-thumbs{display:flex;gap:6px;padding:12px 16px;overflow-x:auto;scrollbar-width:none;background:var(--linen)}
+.gal-thumbs::-webkit-scrollbar{display:none}
+.gthumb{width:56px;height:56px;flex-shrink:0;border-radius:6px;overflow:hidden;border:2px solid transparent;cursor:pointer;transition:border-color .15s,opacity .15s;opacity:.5}
+.gthumb.active{border-color:var(--red);opacity:1}
+.gthumb img{width:100%;height:100%;object-fit:cover}
+.vthumb-strip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 2px 4px}
+.vthumb-strip::-webkit-scrollbar{display:none}
+.vthumb{width:68px;flex-shrink:0;border-radius:8px;overflow:hidden;border:2px solid transparent;cursor:pointer;transition:border-color .15s,opacity .15s;opacity:.5}
+.vthumb.active{border-color:var(--red);opacity:1}
+.vthumb img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.vthumb-lbl{font-size:9px;text-align:center;padding:3px 2px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--linen)}
+
+/* DETAIL INFO */
+.lb-info{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+.lb-tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.lb-nombre{font-family:var(--fs);font-size:28px;font-weight:300;line-height:1.15;color:var(--ink);margin-bottom:8px}
+.lb-mat{font-size:13px;color:var(--stone)}
+.lb-var{padding:16px 20px;border-bottom:1px solid var(--border)}
+.lb-vhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.lb-vlbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--stone)}
+.lb-vact{font-size:13px;font-weight:500;color:var(--ink)}
+.lb-vlist{display:flex;flex-wrap:wrap;gap:8px}
+.vchip{display:flex;align-items:center;gap:8px;padding:7px 14px 7px 10px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:none;transition:border-color .15s;font-family:var(--fn)}
+.vchip.active{border-color:var(--red)}
+.vd{width:14px;height:14px;border-radius:50%;border:1px solid rgba(255,255,255,.15);flex-shrink:0}
+.vchip span{font-size:13px;color:var(--soft)}
+.vchip.active span{color:var(--ink);font-weight:500}
+
+/* OVERLAY FOOTER */
+.ov-foot{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:column;gap:16px}
+
+/* OTROS PRODUCTOS */
+.lb-otros{padding:20px 0 40px;border-top:1px solid var(--border)}
+.lb-otros-ttl{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--stone);padding:0 20px 14px}
+.lb-otros-scroll{display:flex;gap:10px;padding:0 20px;overflow-x:auto;scrollbar-width:none}
+.lb-otros-scroll::-webkit-scrollbar{display:none}
+.lb-ocard{flex-shrink:0;width:120px;cursor:pointer}
+.lb-owrap{width:120px;aspect-ratio:3/4;border-radius:8px;overflow:hidden;background:var(--linen);margin-bottom:6px}
+.lb-owrap img{width:100%;height:100%;object-fit:cover;transition:transform .35s}
+.lb-ocard:hover .lb-owrap img{transform:scale(1.05)}
+.lb-oname{font-family:var(--fs);font-size:13px;color:var(--soft)}
+
+/* STOCK BTN */
+.lb-stock{padding:20px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative}
+.lb-slbl{font-size:12px;color:var(--stone);margin-bottom:12px}
+.lb-sbtn{width:100%;padding:14px;background:#25D366;color:#fff;border:none;border-radius:12px;font-family:var(--fn);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s,transform .15s;box-shadow:0 4px 20px rgba(37,211,102,.3)}
+.lb-sbtn:hover{background:#20c05c}
+.lb-sbtn:active{transform:scale(.97)}
+.lb-vend{position:absolute;bottom:calc(100% - 4px);left:20px;right:20px;z-index:20;background:var(--linen);border-radius:12px;overflow:hidden;max-height:0;transition:max-height .4s cubic-bezier(.22,1,.36,1),opacity .3s;opacity:0;border:1px solid transparent;box-shadow:0 -8px 32px rgba(0,0,0,.35)}
+.lb-vend.open{max-height:500px;opacity:1;border-color:var(--border)}
+.lb-vend-ttl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--stone);padding:12px 16px 8px;border-bottom:1px solid var(--border)}
+.vend-item{display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none;border-bottom:1px solid var(--border);transition:background .15s}
+.vend-item:last-child{border-bottom:none}
+.vend-item:hover{background:var(--sand)}
+.vend-av{width:34px;height:34px;border-radius:50%;background:#25D366;color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vend-name{flex:1;font-size:14px;font-weight:500;color:var(--ink)}
+
+/* WPP FAB */
+.wpp-fab{position:fixed;bottom:24px;right:20px;z-index:9000}
+.wpp-btn{width:52px;height:52px;border-radius:50%;background:#25D366;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.4);transition:transform .2s;color:#fff;animation:wpp-pulse 2.5s ease-in-out infinite}
+.wpp-btn:hover{transform:scale(1.1)}
+.wpp-btn svg{width:26px;height:26px}
+@keyframes wpp-pulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.4)}50%{box-shadow:0 4px 32px rgba(37,211,102,.7),0 0 0 8px rgba(37,211,102,.1)}}
+/* WPP BUBBLE — popup flotante sobre el botón */
+.wpp-sheet-bg{position:fixed;inset:0;z-index:9800;background:transparent;pointer-events:none}
+.wpp-sheet-bg.open{pointer-events:auto}
+.wpp-menu{position:fixed;bottom:84px;right:20px;z-index:9900;width:250px;background:var(--linen);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.4),0 2px 8px rgba(0,0,0,.2);transform-origin:right bottom;transform:scale(.85) translateY(12px);opacity:0;pointer-events:none;transition:transform .22s cubic-bezier(.32,0,.12,1),opacity .22s;overflow:hidden}
+.wpp-menu.open{transform:scale(1) translateY(0);opacity:1;pointer-events:auto}
+.wpp-mhdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:1px solid var(--border)}
+.wpp-mhdr span{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--stone)}
+.wpp-mx{background:var(--sand);border:none;color:var(--ink);font-size:14px;cursor:pointer;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.wpp-vlist{max-height:320px;overflow-y:auto;scrollbar-width:thin}
+.wpp-vi{display:flex;align-items:center;gap:12px;padding:11px 16px;text-decoration:none;border-bottom:1px solid var(--border);transition:background .15s}
+.wpp-vi:last-child{border-bottom:none}
+.wpp-vi:active{background:var(--sand)}
+.wpp-av{width:38px;height:38px;border-radius:50%;background:#25D366;color:#fff;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.wpp-av img{width:100%;height:100%;object-fit:cover}
+.wpp-vn{font-size:14px;font-weight:500;color:var(--ink);flex:1}
+.wpp-vsub{font-size:11px;color:var(--stone);margin-top:2px}
+.wpp-arr{width:12px;height:12px;color:var(--stone);flex-shrink:0}
+/* DOWNLOAD BUTTON */
+.dl-btn{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.55);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;opacity:0;transition:opacity .2s;z-index:10;backdrop-filter:blur(4px)}
+.dl-btn svg{width:16px;height:16px}
+.pimg-wrap:hover .dl-btn,.dl-btn:focus{opacity:1}
+.gal-dl{position:absolute;bottom:54px;right:12px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.6);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;z-index:20;backdrop-filter:blur(4px);transition:background .2s}
+.gal-dl svg{width:18px;height:18px}
+.gal-dl:hover{background:rgba(0,0,0,.85)}
+
+/* CANVAS */
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none}
+.hdr,.hero,.benefits,.sec,.editorial,.featured,.suc,footer{position:relative;z-index:1}
+
+/* CATEGORY DRAWER */
+.cdr{position:fixed;inset:0;z-index:8000;pointer-events:none}
+.cdr.open{pointer-events:auto}
+.cdr-bg{position:absolute;inset:0;background:rgba(0,0,0,0);backdrop-filter:blur(0px);transition:background .3s,backdrop-filter .3s}
+.cdr.open .cdr-bg{background:rgba(0,0,0,.7);backdrop-filter:blur(6px)}
+.cdr-panel{position:absolute;bottom:0;left:0;right:0;height:88vh;background:var(--bg);border-radius:20px 20px 0 0;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,0,.12,1);display:flex;flex-direction:column;overflow:hidden;border-top:1px solid var(--border)}
+.cdr.open .cdr-panel{transform:translateY(0)}
+.cdr-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0;flex-shrink:0}
+.cdr-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.cdr-title{font-family:var(--fs);font-size:26px;font-weight:300;font-style:italic;color:var(--ink)}
+.cdr-count{font-size:12px;color:var(--stone);margin-top:2px}
+.cdr-close{width:36px;height:36px;border-radius:50%;background:var(--linen);border:1px solid var(--border);color:var(--ink);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0}
+.cdr-close:hover{background:var(--sand)}
+.cdr-chips{display:none}
+.cdr-body{flex:1;overflow-y:auto;padding:12px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.cdr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* FOLDER TILES */
+.ftile{background:var(--linen);border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid var(--border);transition:transform .18s,border-color .18s;-webkit-tap-highlight-color:transparent}
+.ftile:hover{transform:translateY(-3px);border-color:var(--stone)}
+.ftile:active{transform:scale(.96)}
+.ftile-img{aspect-ratio:1;overflow:hidden;background:var(--card);position:relative}
+.ftile-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.ftile:hover .ftile-img img{transform:scale(1.06)}
+.ftile-ph{width:100%;height:100%;background:repeating-linear-gradient(45deg,var(--linen),var(--linen) 4px,var(--bg) 4px,var(--bg) 14px);display:flex;align-items:center;justify-content:center}
+.ftile-lbl{padding:10px 12px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ftile-name{font-family:var(--fs);font-size:16px;font-weight:400;color:var(--ink);line-height:1.2;flex:1}
+.ftile-arr{width:20px;height:20px;color:var(--stone);flex-shrink:0;opacity:.6}
+
+/* REVEAL */
+.rev{opacity:0;transform:translateY(36px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.rev.vis{opacity:1;transform:translateY(0)}
+.rev-sc{opacity:0;transform:scale(.92);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.rev-sc.vis{opacity:1;transform:scale(1)}
+.rev-l{opacity:0;transform:translateX(-40px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.rev-l.vis{opacity:1;transform:translateX(0)}
+.rev-r{opacity:0;transform:translateX(40px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.rev-r.vis{opacity:1;transform:translateX(0)}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+<canvas id="bgc"></canvas>
+
+<!-- HEADER -->
+<header class="hdr" id="hdr">
+  <div class="pill">
+    <a class="pill-logo" href="#">
+      <img src="Logos/casablanca_blanco_Mesa de trabajo 1.png" alt="Casablanca" onerror="this.style.display='none'">
+    </a>
+    <div class="pill-center">Catálogo</div>
+    <a class="pill-logo right" href="#">
+      <img src="Logos/Logo tienda de blanco.png" alt="Tienda de Blanco" onerror="this.style.display='none'" style="height:22px">
+    </a>
+  </div>
+  <nav class="hnav" id="hnav">
+    <button class="nsec" data-sec="sabanas" onclick="navTo('sabanas')">Sábanas</button>
+    <button class="nsec" data-sec="cubrecamas" onclick="navTo('cubrecamas')">Cubrecamas</button>
+    <button class="nsec" data-sec="almohadones" onclick="navTo('almohadones')">Almohadones</button>
+    <button class="nsec" data-sec="toallones" onclick="navTo('toallones')">Toallones</button>
+    <button class="nsec" data-sec="toalla" onclick="navTo('toalla')">Toallas</button>
+    <button class="nsec" data-sec="fundas" onclick="navTo('fundas')">Fundas</button>
+    <button class="nsec" data-sec="cortinas" onclick="navTo('cortinas')">Cortinas</button>
+    <button class="nsec" data-sec="hogar" onclick="navTo('hogar')">Manteles</button>
+    <button class="nsec" data-sec="borregos" onclick="navTo('borregos')">Borregos</button>
+    <button class="nsec" data-sec="acolchados" onclick="navTo('acolchados')">Acolchados</button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hslides" id="hslides">
+    <div class="hslide active">
+      <img src="miniaturas/INICIO/1.jpg" alt="" onerror="this.style.opacity=0">
+    </div>
+    <div class="hslide">
+      <img src="miniaturas/INICIO/2.jpg" alt="" onerror="this.style.opacity=0">
+    </div>
+    <div class="hslide">
+      <img src="miniaturas/INICIO/3.jpg" alt="" onerror="this.style.opacity=0">
+    </div>
+  </div>
+  <div class="hovl"><span id="htitle" style="display:none"></span></div>
+  <button class="harr prev" onclick="goHero(-1)">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4L6 10l6 6"/></svg>
+  </button>
+  <button class="harr next" onclick="goHero(1)">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l6 6-6 6"/></svg>
+  </button>
+  <div class="hdots" id="hdots">
+    <button class="hdot active" onclick="setHero(0)"></button>
+    <button class="hdot" onclick="setHero(1)"></button>
+    <button class="hdot" onclick="setHero(2)"></button>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<div class="benefits">
+  <div class="bitem">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+    <div class="bitem-txt"><span class="bitem-t">Envíos al país</span><span class="bitem-s">Sin cargo mínimo</span></div>
+  </div>
+  <div class="bitem">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    <div class="bitem-txt"><span class="bitem-t">Asesoramiento</span><span class="bitem-s">Personalizado</span></div>
+  </div>
+</div>
+
+<!-- CATEGORÍAS -->
+<section class="sec rev">
+  <div class="sec-head">
+    <h2>Explorar</h2>
+  </div>
+  <div class="cats-scroll" id="catsScroll">
+    <div class="ccat" onclick="openDrawer('sabanas','Sábanas')">
+      <img src="miniaturas/EXPLORAR/Sabanas.jpg" alt="Sábanas" onerror="this.style.display='none'">
+      <div class="ccat-lbl"><p class="ccat-name">Sábanas</p><p class="ccat-count">Hotel · Oro Lisa · Fútbol</p></div>
+    </div>
+    <div class="ccat" onclick="openDrawer('cubrecamas','Cubrecamas')">
+      <img src="miniaturas/EXPLORAR/Cubrecamas.jpg" alt="Cubrecamas" onerror="this.style.display='none'">
+      <div class="ccat-lbl"><p class="ccat-name">Cubrecamas</p><p class="ccat-count">Oro · Plata · Estampados</p></div>
+    </div>
+    <div class="ccat" onclick="openDrawer('almohadones','Almohadones')">
+      <img src="miniaturas/EXPLORAR/Almohadones.jpg" alt="Almohadones" onerror="this.style.display='none'">
+      <div class="ccat-lbl"><p class="ccat-name">Almohadones</p><p class="ccat-count">Diseños · Deportivos</p></div>
+    </div>
+    <div class="ccat" onclick="openDrawer('toallones','Toallones')">
+      <img src="miniaturas/EXPLORAR/Toallones.jpg" alt="Toallones" onerror="this.style.display='none'">
+      <div class="ccat-lbl"><p class="ccat-name">Toallones</p><p class="ccat-count">Oro · Fútbol · Diseños</p></div>
+    </div>
+    <div class="ccat" onclick="openDrawer('fundas','Fundas')">
+      <img src="miniaturas/EXPLORAR/Fundas.jpg" alt="Fundas" onerror="this.style.display='none'">
+      <div class="ccat-lbl"><p class="ccat-name">Fundas</p><p class="ccat-count">River · Boca · Racing +</p></div>
+    </div>
+    <div class="ccat" onclick="openDrawer('cortinas','Cortinas')">
+      <img src="miniaturas/EXPLORAR/Cortinas.jpg" alt="Cortinas" onerror="this.style.display='none'">
+      <div class="ccat-lbl"><p class="ccat-name">Cortinas</p><p class="ccat-count">Blackout · Baño · Cocina</p></div>
+    </div>
+    <div class="ccat" onclick="openDrawer('hogar','Manteles')">
+      <img src="miniaturas/EXPLORAR/Manteles.jpg" alt="Manteles" onerror="this.style.display='none'">
+      <div class="ccat-lbl"><p class="ccat-name">Manteles</p><p class="ccat-count">Diseños · Ecocuero · Vinilo</p></div>
+    </div>
+    <div class="ccat" onclick="openDrawer('borregos','Borregos')">
+      <img src="miniaturas/EXPLORAR/Borregos.jpg" alt="Borregos" onerror="this.style.display='none'">
+      <div class="ccat-lbl"><p class="ccat-name">Borregos</p><p class="ccat-count">Infantiles · Diseños</p></div>
+    </div>
+    <div class="ccat" onclick="openDrawer('acolchados','Acolchados')">
+      <img src="miniaturas/EXPLORAR/Acolchados.jpg" alt="Acolchados" onerror="this.style.display='none'">
+      <div class="ccat-lbl"><p class="ccat-name">Acolchados</p><p class="ccat-count">Infantil · Diseños</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num">15<span>+</span></div>
+    <div class="stat-lbl">Años de calidad</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">100<span>%</span></div>
+    <div class="stat-lbl">Algodón puro</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">8<span></span></div>
+    <div class="stat-lbl">Líneas exclusivas</div>
+  </div>
+</div>
+<div class="sep-dec"><span class="sep-line"></span><span class="sep-dia">◆</span><span class="sep-line"></span></div>
+
+<!-- LO NUEVO -->
+<div class="lonuevo rev" id="sec-lonuevo">
+  <div class="lonuevo-head">
+    <h2>Lo nuevo</h2>
+    <p>Colección completa</p>
+  </div>
+  <div class="lonuevo-grid">
+    <div class="ln-card" onclick="openDrawer('cubrecamas','Cubrecamas')">
+      <img src="miniaturas/LO NUEVO/Cubrecamas Oro.jpg" alt="Cubrecamas Oro" loading="lazy" onerror="this.style.display='none'">
+      <div class="ln-card-lbl"><p>Novedad</p><p>Cubrecama Oro</p></div>
+    </div>
+    <div class="ln-card" onclick="openDrawer('toallones','Toallones')">
+      <img src="miniaturas/LO NUEVO/Toallon Oro.jpg" alt="Toallón Oro" loading="lazy" onerror="this.style.display='none'">
+      <div class="ln-card-lbl"><p>Colección</p><p>Toallón Oro</p></div>
+    </div>
+    <div class="ln-card" onclick="openDrawer('sabanas','Sábanas')">
+      <img src="miniaturas/LO NUEVO/Sabanas Hotel.jpg" alt="Sábanas Hotel" loading="lazy" onerror="this.style.display='none'">
+      <div class="ln-card-lbl"><p>Premium</p><p>Sábanas Hotel</p></div>
+    </div>
+    <div class="ln-card" onclick="openDrawer('cortinas','Cortinas')">
+      <img src="miniaturas/LO NUEVO/Cortinas Blackout.jpg" alt="Cortinas Blackout" loading="lazy" onerror="this.style.display='none'">
+      <div class="ln-card-lbl"><p>Nuevo</p><p>Cortinas Blackout</p></div>
+    </div>
+    <div class="ln-card" onclick="openDrawer('hogar','Manteles')">
+      <img src="miniaturas/LO NUEVO/Manteles.jpg" alt="Manteles" loading="lazy" onerror="this.style.display='none'">
+      <div class="ln-card-lbl"><p>Colección Hogar</p><p>Manteles</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- LÍNEAS -->
+<div class="lineas rev" id="sec-lineas">
+  <div class="lineas-head">
+    <h2>Líneas</h2>
+    <p>Explorá por colección</p>
+  </div>
+  <div class="lineas-scroll">
+    <div class="linea-card" onclick="openDrawer('sabanas','Sábanas')">
+      <div class="linea-img"><img src="miniaturas/LINEAS/Hotel.jpg" alt="Hotel" loading="lazy" onerror="this.style.display='none'"></div>
+      <p class="linea-name">Hotel</p>
+    </div>
+    <div class="linea-card" onclick="openDrawer('cubrecamas','Cubrecamas')">
+      <div class="linea-img"><img src="miniaturas/LINEAS/Cubrecama Plata.jpg" alt="Plata" loading="lazy" onerror="this.style.display='none'"></div>
+      <p class="linea-name">Cubrecama Plata</p>
+    </div>
+    <div class="linea-card" onclick="openDrawer('cubrecamas','Cubrecamas')">
+      <div class="linea-img"><img src="miniaturas/LINEAS/Cubrecama Oro.jpg" alt="Cubrecama Oro" loading="lazy" onerror="this.style.display='none'"></div>
+      <p class="linea-name">Cubrecama Oro</p>
+    </div>
+    <div class="linea-card" onclick="openDrawer('toallones','Toallones')">
+      <div class="linea-img"><img src="miniaturas/LINEAS/Toallon Oro.jpg" alt="Toallones Oro" loading="lazy" onerror="this.style.display='none'"></div>
+      <p class="linea-name">Toallón Oro</p>
+    </div>
+    <div class="linea-card" onclick="openDrawer('hogar','Manteles')">
+      <div class="linea-img"><img src="miniaturas/LINEAS/Manteles.jpg" alt="Manteles" loading="lazy" onerror="this.style.display='none'"></div>
+      <p class="linea-name">Manteles</p>
+    </div>
+    <div class="linea-card" onclick="openDrawer('fundas','Fundas')">
+      <div class="linea-img"><img src="miniaturas/LINEAS/Fundas Futbol.jpg" alt="Fundas" loading="lazy" onerror="this.style.display='none'"></div>
+      <p class="linea-name">Fundas Fútbol</p>
+    </div>
+  </div>
+</div>
+
+<!-- EDITORIAL 3 — Sábanas Oro Lisa (imagen derecha) -->
+<div class="editorial rev">
+  <div class="edit-txt">
+    <p class="edit-eye">Línea estrella</p>
+    <h2 class="edit-title">Sábanas Oro Lisa:<br>14 colores, infinitas combinaciones</h2>
+    <p class="edit-body">Percal ORO de alta densidad. Disponible en Queen y Twin con una paleta de 14 tonos que va de los neutros más suaves a los colores más vibrantes.</p>
+    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('sabanas','Sábanas')">Ver colección</button>
+  </div>
+  <div class="edit-img">
+    <img src="miniaturas/EDITORIAL/Sabanas Oro Lisa.jpg" alt="Sábanas" onerror="this.style.display='none'">
+  </div>
+</div>
+
+<!-- ACOLCHADOS ORO LISO -->
+<div class="sep-dec"><span class="sep-line"></span><span class="sep-dia">◆</span><span class="sep-line"></span></div>
+<div class="banner-temp rev">
+  <img src="miniaturas/BANNERS/Oro Liso.jpg" alt="" loading="lazy" onerror="this.style.opacity=0">
+  <div class="banner-temp-ovl" style="background:linear-gradient(110deg,rgba(0,0,0,.82) 48%,rgba(0,0,0,.2))"></div>
+  <div class="banner-temp-txt">
+    <p>Acolchados · Línea Oro</p>
+    <h2>Oro Liso:<br>El clásico que nunca falla</h2>
+    <button onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados')">Ver colección Oro</button>
+  </div>
+</div>
+
+<!-- ACOLCHADOS INFANTILES -->
+<div class="editorial rev-img rev">
+  <div class="edit-img">
+    <img src="miniaturas/EDITORIAL/Infantiles.jpg" alt="Acolchado Infantil" loading="lazy" onerror="this.style.display='none'">
+  </div>
+  <div class="edit-txt">
+    <p class="edit-eye">Para los más chicos</p>
+    <h2 class="edit-title">Acolchados Infantiles:<br>Diseños que enamoran</h2>
+    <p class="edit-body">Personajes favoritos en acolchados de alta calidad. My Little Pony, Transformers, Peppa Pig, Playstation y muchos más.</p>
+    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados')">Ver infantiles</button>
+  </div>
+</div>
+
+<!-- ACOLCHADOS LEXUS -->
+<div class="sep-dec"><span class="sep-line"></span><span class="sep-dia">◆</span><span class="sep-line"></span></div>
+<div class="banner-temp rev">
+  <img src="miniaturas/BANNERS/Lexus.jpg" alt="" loading="lazy" onerror="this.style.opacity=0">
+  <div class="banner-temp-ovl" style="background:linear-gradient(80deg,rgba(0,0,0,.88) 52%,rgba(0,0,0,.15))"></div>
+  <div class="banner-temp-txt">
+    <p>Acolchados · Línea Lexus</p>
+    <h2>Lexus:<br>Diseño y textura<br>en cada detalle</h2>
+    <button onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados')">Explorar Lexus</button>
+  </div>
+</div>
+
+<!-- SABANAS ARP -->
+<div class="editorial rev">
+  <div class="edit-txt">
+    <p class="edit-eye">Sábanas · Diseño exclusivo</p>
+    <h2 class="edit-title">Sábanas Ágatha:<br>Arte para tu descanso</h2>
+    <p class="edit-body">La firma de Ágatha Ruiz de la Prada llega a tu cama. Diseños únicos en colores vibrantes que transforman tu dormitorio.</p>
+    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('sabanas','Sábanas')">Ver sábanas</button>
+  </div>
+  <div class="edit-img">
+    <img src="miniaturas/EDITORIAL/Sabanas Agatha.jpg" alt="Sábanas Ágatha" loading="lazy" onerror="this.style.display='none'">
+  </div>
+</div>
+
+<!-- ACOLCHADOS ORO ESTAMPADOS -->
+<div class="editorial rev-img rev">
+  <div class="edit-img">
+    <img src="miniaturas/EDITORIAL/Oro Estampados.jpg" alt="Oro Estampado" loading="lazy" onerror="this.style.display='none'">
+  </div>
+  <div class="edit-txt">
+    <p class="edit-eye">Acolchados · Oro Estampados</p>
+    <h2 class="edit-title">Oro Estampados:<br>Color y vida en cada temporada</h2>
+    <p class="edit-body">Diseños florales y modernos sobre base Oro premium. La combinación perfecta de estilo y confort para renovar tu habitación.</p>
+    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados')">Ver estampados</button>
+  </div>
+</div>
+
+<!-- FEATURED -->
+<section class="featured rev" id="sec-dest">
+  <div class="feat-head">
+    <div>
+      <h2>Destacados</h2>
+      <p>Los más elegidos de la temporada</p>
+    </div>
+    <button class="feat-all" onclick="vib(15);sndOpen();openDrawer('acolchados','Acolchados')">Ver todo</button>
+  </div>
+  <div class="feat-scroll" id="featScroll"></div>
+</section>
+
+<!-- SUCURSALES -->
+<div class="suc rev">
+  <h2>Nuestras ubicaciones</h2>
+  <div class="slist">
+    <a class="sitem" href="https://maps.google.com/?q=Sarmiento+2528+Buenos+Aires" target="_blank">
+      <div class="sico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-6.5-8-12a8 8 0 0116 0c0 5.5-8 12-8 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+      <div class="sinfo"><p class="sdir">Sarmiento 2528</p><p class="ssub">Buenos Aires — Abrir en Maps</p></div>
+      <svg style="width:14px;height:14px;color:var(--stone);flex-shrink:0" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l6 6-6 6"/></svg>
+    </a>
+    <a class="sitem" href="https://maps.google.com/?q=Sarmiento+2674+Buenos+Aires" target="_blank">
+      <div class="sico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-6.5-8-12a8 8 0 0116 0c0 5.5-8 12-8 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+      <div class="sinfo"><p class="sdir">Sarmiento 2674</p><p class="ssub">Buenos Aires — Abrir en Maps</p></div>
+      <svg style="width:14px;height:14px;color:var(--stone);flex-shrink:0" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l6 6-6 6"/></svg>
+    </a>
+    <a class="sitem" href="https://maps.google.com/?q=Av+Corrientes+2501+Buenos+Aires" target="_blank">
+      <div class="sico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-6.5-8-12a8 8 0 0116 0c0 5.5-8 12-8 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+      <div class="sinfo"><p class="sdir">Av. Corrientes 2501</p><p class="ssub">Buenos Aires — Abrir en Maps</p></div>
+      <svg style="width:14px;height:14px;color:var(--stone);flex-shrink:0" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l6 6-6 6"/></svg>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <div>
+    <p class="foot-brand">CASABLANCA</p>
+    <p class="foot-tag">Tienda de Blanco — Catálogo 2026</p>
+  </div>
+  <p class="foot-copy">© 2026 Casablanca. Catálogo interno.</p>
+</footer>
+
+<!-- CATEGORY DRAWER -->
+<div class="cdr" id="cdr">
+  <div class="cdr-bg" id="cdrBg"></div>
+  <div class="cdr-panel" id="cdrPanel">
+    <div class="cdr-handle"></div>
+    <div class="cdr-hdr">
+      <div>
+        <h2 class="cdr-title" id="cdrTitle">Categoría</h2>
+        <p class="cdr-count" id="cdrCount"></p>
+      </div>
+      <button class="cdr-close" id="cdrClose">✕</button>
+    </div>
+    <div class="cdr-chips" id="cdrChips"></div>
+    <div class="cdr-body">
+      <div class="cdr-grid" id="cdrGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY DETALLE -->
+<div class="overlay" id="overlay">
+  <div class="ov-hdr">
+    <button class="btn-back" id="btnBack">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4L5 10l7 6"/></svg>
+      Volver
+    </button>
+    <span class="ov-bc" id="ovBc"></span>
+  </div>
+  <div class="lookbook" id="lookbook"></div>
+</div>
+
+<!-- WPP FAB -->
+<div class="wpp-fab">
+  <button class="wpp-btn" id="wppBtn">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.526 5.845L.057 23.882l6.187-1.438A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.877 9.877 0 01-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.58 6.58 2.106 12 2.106c5.42 0 9.894 4.474 9.894 9.894 0 5.42-4.474 9.894-9.894 9.894z"/></svg>
+  </button>
+  <div class="wpp-sheet-bg" id="wppBg"></div>
+  <div class="wpp-menu" id="wppMenu">
+    <div class="wpp-mhdr">
+      <span>Contactar vendedor</span>
+      <button class="wpp-mx" id="wppClose">✕</button>
+    </div>
+    <div class="wpp-vlist" id="wppVlist"></div>
+  </div>
+</div>
+
+<script src="catalog.js"></script>
+<script>
+// ─── VENDEDORES (editá nombres y números) ─────────────────────────────────────
+const VENDEDORES = [
+  { nombre:'Juan',  tel:'5491100000001' },
+  { nombre:'Hugo',  tel:'5491100000002' },
+  { nombre:'Silvia',tel:'5491100000003' },
+  { nombre:'Maxi',  tel:'5491100000004' },
+  { nombre:'Bruni', tel:'5491100000005' },
+  { nombre:'Mauro', tel:'5491100000006' },
+  { nombre:'Rafa',  tel:'5491100000007' },
+];
+
+// ─── COLOR MAP ────────────────────────────────────────────────────────────────
+const CMAP = {
+  'blanco':'#F5F5F2','optical white':'#F0EDE8','bright white':'#F5F5F5',
+  'winter white':'#EAE8E0','natural':'#D4C4A0','ivory':'#F5EDCE',
+  'sand':'#CCAF88','beige':'#E0C8A8','lino claro':'#C8B490','beige claro':'#DFC9AC',
+  'tostado':'#B8906A','indian tan':'#A07050','bitter chocolate':'#5A3020',
+  'gris claro':'#D0CCCA','gris perla':'#C8C4C8','gris plata':'#B8B4B0',
+  'gris topo':'#908888','gris medio':'#909090','nimbus':'#808890',
+  'paloma':'#B0A8A8','volcanic':'#606060','black':'#1A1818','blak':'#1A1818',
+  'azul marino':'#1B2A4A','navy blue':'#1A2848','celeste':'#88B8D8',
+  'azulino':'#6090C0','eucalipto':'#7A9E7A','scarlet sage':'#7A9060',
+  'mint':'#90C8B8','verde humo':'#8A9C88','lila':'#9888B8','burgundy':'#7A1828',
+  'old rose':'#C89098','pink lavander':'#C8A8C8','rosa':'#E0A8B8',
+  'hielo':'#D0E8F0','tierra':'#B08060','vison':'#9A7060','visón':'#9A7060',
+  'gris':'#AAA6A0','único':'#D0C8BC',
+};
+function chex(n){
+  if(!n) return '#888';
+  const k=n.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  for(const[key,val] of Object.entries(CMAP)){
+    const nk=key.normalize('NFD').replace(/[̀-ͯ]/g,'');
+    if(k===nk||k.includes(nk)) return val;
+  }
+  let h=0; for(const ch of n) h=(h*31+ch.charCodeAt(0))&0xffff;
+  return `hsl(${h%360},30%,55%)`;
+}
+
+// ─── NAMING AUTOMÁTICO ────────────────────────────────────────────────────────
+const SINGULAR_MAP = {
+  'Almohadones':'ALMOHADÓN','Acolchados':'ACOLCHADO','Cubrecamas':'CUBRECAMA',
+  'Cortinas':'CORTINA','Sabanas':'SÁBANA','Fundas':'FUNDA',
+  'Borregos':'BORREGO','Baño':'BAÑO','Hogar':'HOGAR',
+};
+function getDisplayName(p){ return p.nombre; }
+function getDisplayNameColor(p,vi){ return p.nombre; }
+
+// ─── CATALOG DATA — cargado desde catalog.js (ver catalog.js) ────────────────
+
+const FOTO_LABELS = ['Detalle','Ambiente','Textura','Color'];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let activeP=null, activeVI=0;
+
+
+// ─── FEATURED ─────────────────────────────────────────────────────────────────
+function renderFeatured(){
+  const picks=CATALOG.slice(0,6);
+  document.getElementById('featScroll').innerHTML=picks.map(p=>{
+    const src=p.vars[0]?.fotos?.[0];
+    const dots=p.vars.slice(0,4).map(v=>`<span class="cdot" style="background:${chex(v.color)}"></span>`).join('');
+    const dn=getDisplayName(p);
+    return `<div class="fcard" data-id="${p.id}">
+      <div class="fwrap">${src?`<img src="${src}" alt="${dn}" loading="lazy" onerror="this.style.opacity=0">`:`<div class="pph" style="height:100%"><span>${dn}</span></div>`}</div>
+      <p class="fname">${dn}</p>
+      <div class="fdots">${dots}</div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('.fcard').forEach(c=>c.addEventListener('click',()=>openDet(c.dataset.id)));
+  if(window.revealCards) window.revealCards();
+}
+
+// ─── DETALLE ──────────────────────────────────────────────────────────────────
+function openDet(id, vi=-1){
+  vib(30); sndOpen();
+  history.pushState({view:'overlay',id},'','#producto');
+  activeP=CATALOG.find(p=>p.id===id); if(!activeP) return;
+  const ov=document.getElementById('overlay');
+  ov.classList.add('open'); ov.scrollTop=0;
+  document.getElementById('ovBc').textContent=activeP.cat;
+  if(activeP.vars.length>1 && vi<0){
+    renderVariantPicker();
+  } else {
+    activeVI=Math.max(0,vi); renderLookbook();
+  }
+}
+function closeDet(){vib(15);sndClose();document.getElementById('overlay').classList.remove('open');}
+
+function renderVariantPicker(){
+  const p=activeP;
+  const arrSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>';
+  document.getElementById('lookbook').innerHTML=`
+    <div style="padding:20px 16px 8px">
+      <p style="font-size:11px;color:var(--stone);letter-spacing:.07em;text-transform:uppercase;margin-bottom:16px">${p.nombre} &mdash; ${p.vars.length} variante${p.vars.length!==1?'s':''}</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        ${p.vars.map((vv,i)=>`
+          <div class="ftile vpick" data-vi="${i}" style="cursor:pointer">
+            <div class="ftile-img">
+              ${vv.fotos?.[0]?`<img src="${vv.fotos[0]}" alt="${vv.color}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=ftile-ph></div>'">`:`<div class="ftile-ph"></div>`}
+            </div>
+            <div class="ftile-lbl">
+              <p class="ftile-name">${vv.color}</p>
+              <span class="ftile-arr">${arrSvg}</span>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  document.querySelectorAll('.vpick').forEach(c=>c.addEventListener('click',()=>{
+    vib(15);
+    activeVI=parseInt(c.dataset.vi);
+    renderLookbook();
+    document.getElementById('overlay').scrollTop=0;
+  }));
+}
+
+function renderLookbook(){
+  const p=activeP, v=p.vars[activeVI], fotos=v.fotos||[];
+  const wppMsg=encodeURIComponent(`Hola! Consulto disponibilidad: *${getDisplayNameColor(p,activeVI)}* - Color: ${v.color}`);
+  const slides=fotos.slice(0,6).map((src,fi)=>`
+    <div class="gal-slide" data-fi="${fi}" style="position:relative">
+      <img src="${src}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=pph style=height:100%><span>${getDisplayNameColor(p,activeVI)}</span></div>'">
+      <a class="gal-dl" href="${src}" download="${getDisplayNameColor(p,activeVI).replace(/[^a-z0-9]/gi,'_')}_${v.color.replace(/[^a-z0-9]/gi,'_')}_${fi+1}.jpg" onclick="event.stopPropagation()" title="Descargar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v10M7 15l5 5 5-5"/><rect x="3" y="19" width="18" height="2" rx="1"/></svg></a>
+    </div>`).join('');
+  const thumbs=fotos.length>1?fotos.slice(0,6).map((src,fi)=>`
+    <div class="gthumb${fi===0?' active':''}" data-ti="${fi}"><img src="${src}" alt="" loading="lazy"></div>`).join(''):'';
+  const varThumbs=p.vars.length>1?p.vars.map((vv,i)=>`
+    <div class="vthumb${i===activeVI?' active':''}" data-vi="${i}">
+      <img src="${vv.fotos?.[0]||''}" alt="${vv.color}" loading="lazy" onerror="this.style.opacity=0">
+      <span class="vthumb-lbl">${vv.color}</span>
+    </div>`).join(''):'';
+  const vendLinks=VENDEDORES.map(vn=>`
+    <a class="vend-item" href="https://wa.me/${vn.tel}?text=${wppMsg}" target="_blank" onclick="vib(40);sndWpp()">
+      <div class="vend-av">${vn.nombre[0]}</div>
+      <span class="vend-name">${vn.nombre}</span>
+      <svg style="width:14px;height:14px;color:var(--stone)" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l6 6-6 6"/></svg>
+    </a>`).join('');
+
+  document.getElementById('lookbook').innerHTML=`
+    ${p.vars.length>1?`<button onclick="renderVariantPicker();document.getElementById('overlay').scrollTop=0" style="display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--stone);font-family:var(--fn);font-size:13px;padding:14px 16px 0;cursor:pointer">&#8249; <span>${p.nombre}</span></button>`:''}
+    <div class="gal" id="galWrap">
+      <div class="gal-track" id="galTrack">${slides||`<div class="gal-slide"><div class="pph" style="height:100%"><span>${getDisplayNameColor(p,activeVI)}</span></div></div>`}</div>
+      <span class="gal-cnt" id="galCnt">1 / ${fotos.length||1}</span>
+      ${fotos.length>1?`<button class="gal-arr prev" id="galPrev">&#8249;</button><button class="gal-arr next" id="galNext">&#8250;</button>`:''}
+    </div>
+    ${thumbs?`<div class="gal-thumbs" id="galThumbs">${thumbs}</div>`:''}
+    <div class="lb-info">
+      <p class="lb-tag">${p.cat}</p>
+      <h2 class="lb-nombre">${getDisplayNameColor(p,activeVI)}</h2>
+      <p class="lb-mat">${p.mat}</p>
+    </div>
+    <div class="lb-stock">
+      <p class="lb-slbl">¿Está disponible este producto?</p>
+      <button class="lb-sbtn" id="lbSbtn">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.526 5.845L.057 23.882l6.187-1.438A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.877 9.877 0 01-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.58 6.58 2.106 12 2.106c5.42 0 9.894 4.474 9.894 9.894 0 5.42-4.474 9.894-9.894 9.894z"/></svg>
+        Preguntar disponibilidad
+      </button>
+      <div class="lb-vend" id="lbVend">
+        <p class="lb-vend-ttl">Elegí un vendedor</p>
+        ${vendLinks}
+      </div>
+    </div>
+    ${varThumbs?`<div class="lb-var">
+      <div class="lb-vhead"><span class="lb-vlbl">Color</span><span class="lb-vact" id="vActLbl">${v.color}</span></div>
+      <div class="vthumb-strip">${varThumbs}</div>
+    </div>`:`<div class="lb-var"><div class="lb-vhead"><span class="lb-vlbl">Color</span><span class="lb-vact">${v.color}</span></div></div>`}
+    ${(()=>{const otros=CATALOG.filter(x=>x.id!==p.id&&x.sec===p.sec).slice(0,4);return otros.length?`<div class="lb-otros"><p class="lb-otros-ttl">Otros productos</p><div class="lb-otros-scroll">${otros.map(op=>`<div class="lb-ocard" data-id="${op.id}"><div class="lb-owrap"><img src="${op.vars[0]?.fotos?.[0]||''}" alt="${getDisplayName(op)}" loading="lazy" onerror="this.style.opacity=0"></div><p class="lb-oname">${getDisplayName(op)}</p></div>`).join('')}</div></div>`:''})()}
+    <div class="suc">
+      <h2>Nuestras ubicaciones</h2>
+      <div class="slist">
+        <a class="sitem" href="https://maps.google.com/?q=Sarmiento+2528+Buenos+Aires" target="_blank">
+          <div class="sico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-6.5-8-12a8 8 0 0116 0c0 5.5-8 12-8 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+          <div class="sinfo"><p class="sdir">Sarmiento 2528</p><p class="ssub">Buenos Aires — Abrir en Maps</p></div>
+          <svg style="width:14px;height:14px;color:var(--stone);flex-shrink:0" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l6 6-6 6"/></svg>
+        </a>
+        <a class="sitem" href="https://maps.google.com/?q=Sarmiento+2674+Buenos+Aires" target="_blank">
+          <div class="sico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-6.5-8-12a8 8 0 0116 0c0 5.5-8 12-8 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+          <div class="sinfo"><p class="sdir">Sarmiento 2674</p><p class="ssub">Buenos Aires — Abrir en Maps</p></div>
+          <svg style="width:14px;height:14px;color:var(--stone);flex-shrink:0" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l6 6-6 6"/></svg>
+        </a>
+        <a class="sitem" href="https://maps.google.com/?q=Av+Corrientes+2501+Buenos+Aires" target="_blank">
+          <div class="sico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-6.5-8-12a8 8 0 0116 0c0 5.5-8 12-8 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+          <div class="sinfo"><p class="sdir">Av. Corrientes 2501</p><p class="ssub">Buenos Aires — Abrir en Maps</p></div>
+          <svg style="width:14px;height:14px;color:var(--stone);flex-shrink:0" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="ov-foot">
+      <div>
+        <p class="foot-brand">CASABLANCA</p>
+        <p class="foot-tag">Tienda de Blanco — Catálogo 2026</p>
+      </div>
+      <p class="foot-copy">© 2026 Casablanca. Catálogo interno.</p>
+    </div>`;
+
+  // Eventos variantes
+  document.querySelectorAll('.vthumb').forEach(b=>b.addEventListener('click',()=>{
+    vib(12); sndFilter();
+    activeVI=parseInt(b.dataset.vi); renderLookbook();
+    document.getElementById('overlay').scrollTop=0;
+  }));
+
+  // Toggle vendedores (botón grande)
+  const sbtn=document.getElementById('lbSbtn'), vend=document.getElementById('lbVend');
+  sbtn.addEventListener('click',()=>{
+    const o=vend.classList.toggle('open');
+    sbtn.lastChild.textContent=o?' Cerrar':' Preguntar disponibilidad';
+  });
+  // Cards "Otros productos"
+  document.querySelectorAll('.lb-ocard').forEach(c=>c.addEventListener('click',()=>{
+    vib(20); sndOpen();
+    activeP=CATALOG.find(x=>x.id===c.dataset.id); activeVI=0; renderLookbook();
+    document.getElementById('overlay').scrollTop=0;
+  }));
+
+  if(!fotos.length) return;
+
+  // Gallery carousel
+  let ci=0;
+  const track=document.getElementById('galTrack'), cnt=document.getElementById('galCnt');
+  const thumbsEl=document.getElementById('galThumbs'), total=fotos.length;
+  function goSlide(i){
+    ci=Math.max(0,Math.min(i,total-1));
+    track.style.transform=`translateX(-${ci*100}%)`;
+    cnt.textContent=`${ci+1} / ${total}`;
+    if(thumbsEl) thumbsEl.querySelectorAll('.gthumb').forEach((t,ti)=>t.classList.toggle('active',ti===ci));
+  }
+  if(thumbsEl) thumbsEl.querySelectorAll('.gthumb').forEach(t=>t.addEventListener('click',()=>{vib(15);sndThumb();goSlide(parseInt(t.dataset.ti));}));
+  const prevBtn=document.getElementById('galPrev'), nextBtn=document.getElementById('galNext');
+  if(prevBtn) prevBtn.addEventListener('click',()=>{vib(12);goSlide(ci-1);});
+  if(nextBtn) nextBtn.addEventListener('click',()=>{vib(12);goSlide(ci+1);});
+  // Double tap zoom
+  track.querySelectorAll('.gal-slide').forEach(slide=>{
+    let lt=0;
+    slide.addEventListener('touchend',e=>{const n=Date.now();if(n-lt<300)slide.classList.toggle('zoomed');lt=n;},{passive:true});
+    slide.addEventListener('click',()=>slide.classList.toggle('zoomed'));
+  });
+  // Swipe
+  let tx0=0,ty0=0;
+  const gw=document.getElementById('galWrap');
+  gw.addEventListener('touchstart',e=>{tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;},{passive:true});
+  gw.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-tx0, dy=Math.abs(e.changedTouches[0].clientY-ty0);
+    if(Math.abs(dx)>40&&dy<80) goSlide(dx<0?ci+1:ci-1);
+  },{passive:true});
+}
+
+document.getElementById('btnBack').addEventListener('click',()=>{ history.back(); });
+
+// Back button del celular navega dentro de la web
+window.addEventListener('popstate', e=>{
+  const s = e.state;
+  if(document.getElementById('overlay').classList.contains('open')){ closeDet(); return; }
+  if(document.getElementById('cdr').classList.contains('open')){ closeDrawer(); return; }
+  if(wppMenu && wppMenu.classList.contains('open')){ closeWppSheet(); return; }
+});
+
+// Swipe down to close overlay
+const ov=document.getElementById('overlay');
+let oTy=0;
+ov.addEventListener('touchstart',e=>{oTy=e.touches[0].clientY;},{passive:true});
+ov.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-oTy>80&&ov.scrollTop===0)closeDet();},{passive:true});
+
+const NAV_TITLES={acolchados:'Acolchados',sabanas:'Sábanas'};
+function navTo(sec){ openDrawer(sec,NAV_TITLES[sec]||sec); }
+
+// ─── CATEGORY DRAWER ─────────────────────────────────────────────────────────
+let drawerSec='', drawerCatFilter='all';
+
+function openDrawer(sec, title){
+  vib(20); sndOpen();
+  history.pushState({view:'drawer',sec,title},'','#categorias');
+  drawerSec=sec; drawerCatFilter='all';
+  document.getElementById('cdrTitle').textContent=title;
+  renderDrawer();
+  document.getElementById('cdr').classList.add('open');
+  document.body.style.overflow='hidden';
+  document.querySelectorAll('.nsec').forEach(b=>b.classList.toggle('active',b.dataset.sec===sec));
+}
+
+function closeDrawer(){
+  vib(15); sndClose();
+  document.getElementById('cdr').classList.remove('open');
+  document.body.style.overflow='';
+  document.querySelectorAll('.nsec').forEach(b=>b.classList.remove('active'));
+}
+
+function drawerMatch(p){ return drawerSec && p.sec.includes(drawerSec); }
+function renderDrawer(){
+  const prods=CATALOG.filter(drawerMatch);
+  document.getElementById('cdrChips').innerHTML='';
+
+  document.getElementById('cdrCount').textContent=`${prods.length} carpeta${prods.length!==1?'s':''}`;
+
+  if(!prods.length){
+    document.getElementById('cdrGrid').innerHTML='<div style="grid-column:1/-1;padding:40px;text-align:center"><p style="font-family:var(--fs);font-size:18px;font-style:italic;color:var(--stone)">Sin productos</p></div>';
+    return;
+  }
+
+  const arrSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>';
+  document.getElementById('cdrGrid').innerHTML=prods.map(p=>{
+    const src=p.vars[0]?.fotos?.[0];
+    const dn=getDisplayName(p);
+    const sub=p.vars.length>1?`${p.vars.length} variantes`:`1 variante`;
+    return `<div class="ftile" data-id="${p.id}">
+      <div class="ftile-img">
+        ${src?`<img src="${src}" alt="${dn}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=ftile-ph></div>'">`:`<div class="ftile-ph"></div>`}
+      </div>
+      <div class="ftile-lbl">
+        <p class="ftile-name">${p.nombre}</p>
+        <span class="ftile-arr">${arrSvg}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.querySelectorAll('#cdrGrid .ftile').forEach(c=>c.addEventListener('click',()=>{
+    openDet(c.dataset.id);
+  }));
+  if(window.revealCards) window.revealCards();
+}
+
+// Cerrar drawer
+document.getElementById('cdrClose').addEventListener('click',()=>{ closeDrawer(); history.back(); });
+document.getElementById('cdrBg').addEventListener('click',()=>{ closeDrawer(); history.back(); });
+
+// Swipe down to close drawer
+const cdrPanel=document.getElementById('cdrPanel');
+const cdrBody=document.querySelector('.cdr-body');
+let cdrTy=0;
+cdrPanel.addEventListener('touchstart',e=>{cdrTy=e.touches[0].clientY;},{passive:true});
+cdrPanel.addEventListener('touchend',e=>{
+  if(e.changedTouches[0].clientY-cdrTy>90&&cdrBody.scrollTop===0){closeDrawer();history.back();}
+},{passive:true});
+
+// ─── HERO ─────────────────────────────────────────────────────────────────────
+const HERO_DATA=[
+  {title:'La Calidad<br>del Descanso'},
+  {title:'Sábanas<br>Oro Lisa'},
+  {title:'Sábanas<br>Hotel'},
+];
+let hi=0;
+const hslides=document.querySelectorAll('.hslide'), hdots=document.querySelectorAll('.hdot');
+function setHero(i){
+  hslides[hi].classList.remove('active');
+  hdots[hi].classList.remove('active');
+  hi=(i+hslides.length)%hslides.length;
+  hslides[hi].classList.add('active');
+  hdots[hi].classList.add('active');
+  document.getElementById('hslides').style.transform=`translateX(-${hi*100}%)`;
+  const tEl=document.getElementById('htitle');
+  if(tEl&&tEl.style.display!=='none'){tEl.style.opacity='0';setTimeout(()=>{tEl.innerHTML=HERO_DATA[hi].title;tEl.style.opacity='1';},200);}
+}
+function goHero(d){setHero(hi+d);}
+
+// ─── WPP FAB ──────────────────────────────────────────────────────────────────
+const wppVlist=document.getElementById('wppVlist');
+wppVlist.innerHTML=VENDEDORES.map(v=>`
+  <a class="wpp-vi" href="https://wa.me/${v.tel}" target="_blank" onclick="vib(40);sndWpp()">
+    <div class="wpp-av">
+      <img src="Vendedores/${v.nombre}.jpg" alt="${v.nombre}" onerror="this.outerHTML='${v.nombre[0]}'">
+    </div>
+    <div style="flex:1"><div class="wpp-vn">${v.nombre}</div><div class="wpp-vsub">Consultar disponibilidad</div></div>
+    <svg class="wpp-arr" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l6 6-6 6"/></svg>
+  </a>`).join('');
+
+function openWppSheet(){ vib(40);sndWpp(); wppMenu.classList.add('open'); wppBg.classList.add('open'); }
+function closeWppSheet(){ wppMenu.classList.remove('open'); wppBg.classList.remove('open'); }
+
+const wppBtn=document.getElementById('wppBtn'), wppMenu=document.getElementById('wppMenu'), wppClose=document.getElementById('wppClose'), wppBg=document.getElementById('wppBg');
+wppBtn.addEventListener('click',(e)=>{ e.stopPropagation(); wppMenu.classList.contains('open')?closeWppSheet():openWppSheet(); });
+wppClose.addEventListener('click',()=>{ closeWppSheet(); });
+wppBg.addEventListener('click',()=>{ closeWppSheet(); });
+document.addEventListener('click',(e)=>{ if(wppMenu.classList.contains('open')&&!wppMenu.contains(e.target)&&e.target!==wppBtn) closeWppSheet(); });
+
+// ─── HAPTIC + SOUND ───────────────────────────────────────────────────────────
+function vib(ms=30){ if(navigator.vibrate) navigator.vibrate(ms); }
+
+// ─── Sonido global ────────────────────────────────────────────────────────────
+const _snd = new Audio('Sonidos/Tap General.mp3');
+_snd.volume = 1;
+document.addEventListener('click', ()=>{ try{ _snd.currentTime=0; _snd.play().catch(()=>{}); }catch(e){} }, true);
+
+function sndOpen()  {}
+function sndClose() {}
+function sndThumb() {}
+function sndWpp()   {}
+function sndFilter(){}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+renderFeatured();
+</script>
+
+<script>
+// ─── ANIMATIONS & CANVAS ─────────────────────────────────────────────────────
+(function(){
+  const prog=document.getElementById('prog');
+  const hdr=document.getElementById('hdr');
+
+  // Progress bar + header shrink
+  window.addEventListener('scroll',()=>{
+    const h=document.documentElement.scrollHeight-window.innerHeight;
+    prog.style.width=(h>0?(window.scrollY/h)*100:0)+'%';
+    hdr.classList.toggle('shrunk',window.scrollY>60);
+    // Parallax hero — solo desktop para evitar desborde en móvil
+    if(window.innerWidth > 768){
+      document.querySelectorAll('.hslide img').forEach(img=>{
+        img.style.transform=`translateY(${window.scrollY*.18}px)`;
+      });
+    }
+  },{passive:true});
+
+  // Bidirectional observer — secciones aparecen al entrar y desaparecen al salir
+  const biObs=new IntersectionObserver(es=>{
+    es.forEach(e=>e.target.classList.toggle('vis',e.isIntersecting));
+  },{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+
+  // One-shot observer — cards de producto (no reaniman al volver a verlas)
+  const obs=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});
+  },{threshold:.08,rootMargin:'0px 0px -20px 0px'});
+
+  function revealCards(){
+    document.querySelectorAll('.pcard:not(.rev-sc)').forEach((el,i)=>{
+      el.classList.add('rev-sc'); el.style.transitionDelay=(i*.05)+'s'; obs.observe(el);
+    });
+    document.querySelectorAll('.fcard:not(.rev-sc)').forEach((el,i)=>{
+      el.classList.add('rev-sc'); el.style.transitionDelay=(i*.07)+'s'; obs.observe(el);
+    });
+  }
+  window.revealCards=revealCards;
+
+  // Secciones — bidireccional
+  document.querySelectorAll('.rev,.rev-l,.rev-r').forEach(el=>biObs.observe(el));
+  // Category cards — visibles de inmediato, animación suave
+  document.querySelectorAll('.ccat').forEach((el,i)=>{
+    el.style.opacity='0'; el.style.transform='scale(.94)';
+    el.style.transition=`opacity .5s ${i*.07}s cubic-bezier(.22,1,.36,1),transform .5s ${i*.07}s cubic-bezier(.22,1,.36,1)`;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      el.style.opacity='1'; el.style.transform='scale(1)';
+    }));
+  });
+  // Stats, lo nuevo, líneas — bidireccional con delay escalonado
+  document.querySelectorAll('.stat-item').forEach((el,i)=>{
+    el.style.transition=`opacity .6s ${i*.12}s cubic-bezier(.22,1,.36,1),transform .6s ${i*.12}s cubic-bezier(.22,1,.36,1)`;
+    biObs.observe(el);
+  });
+  document.querySelectorAll('.ln-card').forEach((el,i)=>{
+    el.style.transition=`opacity .55s ${i*.07}s cubic-bezier(.22,1,.36,1),transform .55s ${i*.07}s cubic-bezier(.22,1,.36,1)`;
+    biObs.observe(el);
+  });
+  document.querySelectorAll('.linea-card').forEach((el,i)=>{
+    el.style.transition=`opacity .5s ${i*.06}s cubic-bezier(.22,1,.36,1),transform .5s ${i*.06}s cubic-bezier(.22,1,.36,1)`;
+    biObs.observe(el);
+  });
+
+  // Canvas particles
+  const canvas=document.getElementById('bgc'), ctx=canvas.getContext('2d');
+  let W,H;
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize(); window.addEventListener('resize',resize);
+
+  const lines=Array.from({length:10},()=>({
+    x:Math.random()*1400, y:Math.random()*900,
+    len:Math.random()*160+50, angle:Math.random()*Math.PI*2,
+    rotSpeed:(Math.random()-.5)*.003, speed:(Math.random()-.5)*.15,
+    alpha:Math.random()*.05+.01, w:Math.random()*.8+.2,
+    red:Math.random()>.8
+  }));
+  const circles=Array.from({length:4},()=>({
+    x:Math.random()*1400, y:Math.random()*900,
+    r:Math.random()*100+40, vy:(Math.random()-.5)*.12,
+    alpha:Math.random()*.03+.01
+  }));
+  const dots=Array.from({length:25},()=>({
+    x:Math.random()*1400, y:Math.random()*900,
+    r:Math.random()*1.2+.3, alpha:Math.random()*.1+.02,
+    pulse:Math.random()*Math.PI*2, ps:Math.random()*.02+.005
+  }));
+
+  let sy=0;
+  window.addEventListener('scroll',()=>{sy=window.scrollY;},{passive:true});
+
+  let rafId=null, paused=false;
+  document.addEventListener('visibilitychange',()=>{ paused=document.hidden; if(!paused&&!rafId) draw(); });
+
+  function draw(){
+    rafId=null;
+    if(paused) return;
+    ctx.clearRect(0,0,W,H);
+    const pl=sy*.06;
+    // Radial glow
+    const g=ctx.createRadialGradient(W*.2,H*.1-pl*.3,0,W*.2,H*.1,W*.6);
+    g.addColorStop(0,'rgba(217,26,26,0.04)'); g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    // Lines
+    lines.forEach(l=>{
+      l.angle+=l.rotSpeed; l.x+=Math.cos(l.angle)*l.speed; l.y+=Math.sin(l.angle)*l.speed;
+      if(l.x<-200)l.x=W+200; if(l.x>W+200)l.x=-200;
+      if(l.y<-200)l.y=H+200; if(l.y>H+200)l.y=-200;
+      const x2=l.x+Math.cos(l.angle)*l.len, y2=l.y+Math.sin(l.angle)*l.len;
+      ctx.beginPath(); ctx.moveTo(l.x,l.y-pl*.04); ctx.lineTo(x2,y2-pl*.04);
+      const hex=Math.round(l.alpha*255).toString(16).padStart(2,'0');
+      ctx.strokeStyle=(l.red?'#D91A1A':'#ffffff')+hex;
+      ctx.lineWidth=l.w; ctx.stroke();
+    });
+    // Circles
+    circles.forEach(c=>{
+      c.y+=c.vy; if(c.y>H+c.r)c.y=-c.r; if(c.y<-c.r)c.y=H+c.r;
+      ctx.beginPath(); ctx.arc(c.x,c.y-pl*.03,c.r,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(255,255,255,${c.alpha})`; ctx.lineWidth=.5; ctx.stroke();
+    });
+    // Dots
+    dots.forEach(d=>{
+      d.pulse+=d.ps;
+      const a=d.alpha*(0.5+0.5*Math.sin(d.pulse));
+      ctx.beginPath(); ctx.arc(d.x,d.y-pl*.02,d.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill();
+    });
+    rafId=requestAnimationFrame(draw);
+  }
+  draw();
+
+  // Cats scroll drag
+  const cs=document.getElementById('catsScroll');
+  let dX=0,sl=0,drag=false;
+  cs.addEventListener('mousedown',e=>{drag=true;dX=e.pageX-cs.offsetLeft;sl=cs.scrollLeft;});
+  cs.addEventListener('mouseleave',()=>drag=false);
+  cs.addEventListener('mouseup',()=>drag=false);
+  cs.addEventListener('mousemove',e=>{if(!drag)return;e.preventDefault();cs.scrollLeft=sl-(e.pageX-cs.offsetLeft-dX)*1.2;});
+
+  // Ripple touch
+  document.addEventListener('touchstart',e=>{
+    const card=e.target.closest('.pcard,.ccat,.fcard');
+    if(!card)return;
+    const r=card.getBoundingClientRect(),t=e.touches[0];
+    const el=document.createElement('span');
+    const sz=Math.max(r.width,r.height)*1.6;
+    el.style.cssText=`position:absolute;border-radius:50%;pointer-events:none;width:${sz}px;height:${sz}px;left:${t.clientX-r.left-sz/2}px;top:${t.clientY-r.top-sz/2}px;background:rgba(255,255,255,0.18);transform:scale(0);animation:rpl .55s ease-out forwards;z-index:10`;
+    if(getComputedStyle(card).position==='static')card.style.position='relative';
+    card.appendChild(el); setTimeout(()=>el.remove(),600);
+  },{passive:true});
+
+  // Magnetic hover — listener único por card para evitar acumulación
+  document.addEventListener('mouseover',e=>{
+    const card=e.target.closest('.pcard,.ccat');
+    if(!card||card._magnet) return;
+    card._magnet=true;
+    function mv(e2){
+      const r=card.getBoundingClientRect();
+      const dx=(e2.clientX-r.left-r.width/2)/(r.width/2);
+      const dy=(e2.clientY-r.top-r.height/2)/(r.height/2);
+      card.style.transform=`perspective(600px) rotateY(${dx*5}deg) rotateX(${-dy*5}deg) translateY(-2px)`;
+    }
+    function ml(){ card.style.transform=''; card.removeEventListener('mousemove',mv); card.removeEventListener('mouseleave',ml); card._magnet=false; }
+    card.addEventListener('mousemove',mv);
+    card.addEventListener('mouseleave',ml,{once:true});
+  });
+
+  // Glitter trail
+  let lt=0;
+  document.addEventListener('touchmove',e=>{
+    const now=Date.now(); if(now-lt<45)return; lt=now;
+    const t=e.touches[0], el=document.createElement('div');
+    const sz=Math.random()*10+4;
+    const colors=['#D91A1A','#D9C9B0','#A89880','#fff8'];
+    el.style.cssText=`position:fixed;pointer-events:none;z-index:9997;left:${t.clientX-sz/2}px;top:${t.clientY-sz/2}px;width:${sz}px;height:${sz}px;border-radius:50%;background:${colors[Math.floor(Math.random()*colors.length)]};opacity:.7;transition:transform .5s ease,opacity .5s ease`;
+    document.body.appendChild(el);
+    requestAnimationFrame(()=>{el.style.transform='scale(0)';el.style.opacity='0';});
+    setTimeout(()=>el.remove(),520);
+  },{passive:true});
+
+  // Confetti burst on tap card
+  document.addEventListener('touchstart',e=>{
+    const card=e.target.closest('.pcard,.ccat,.fcard'); if(!card)return;
+    const t=e.touches[0]; burst(t.clientX,t.clientY);
+  },{passive:true});
+
+  function burst(x,y){
+    for(let i=0;i<16;i++){
+      const el=document.createElement('div');
+      const a=(i/16)*Math.PI*2, sp=Math.random()*80+40, sz=Math.random()*7+3;
+      const colors=['#D91A1A','#EDE5D8','#D9C9B0','#A89880','#fff'];
+      const rot=Math.random()*360;
+      el.style.cssText=`position:fixed;pointer-events:none;z-index:9998;left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>.5?'50%':'2px'};transform:rotate(${rot}deg);transition:none`;
+      document.body.appendChild(el);
+      const dx=Math.cos(a)*sp, dy=Math.sin(a)*sp-60;
+      requestAnimationFrame(()=>{
+        el.style.transition='transform .7s cubic-bezier(.22,1,.36,1),opacity .7s ease';
+        el.style.transform=`translate(${dx}px,${dy}px) rotate(${rot+180}deg) scale(0)`;
+        el.style.opacity='0';
+      });
+      setTimeout(()=>el.remove(),750);
+    }
+  }
+
+  // Inject keyframes
+  const s=document.createElement('style');
+  s.textContent=`@keyframes rpl{to{transform:scale(1);opacity:0}}`;
+  document.head.appendChild(s);
+
+  // Hero title transition
+  const _hte=document.getElementById('htitle');
+  if(_hte&&_hte.style.display!=='none')_hte.style.transition='opacity .2s ease';
+
+  // Section title bounce
+  const secObs=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const t=e.target.querySelector('h2');
+      if(t&&!t.dataset.b){t.dataset.b='1';t.style.animation='tbounce .6s cubic-bezier(.34,1.56,.64,1)';}
+    });
+  },{threshold:.3});
+  document.querySelectorAll('.sec,.featured').forEach(s2=>secObs.observe(s2));
+
+  const s2=document.createElement('style');
+  s2.textContent=`@keyframes tbounce{0%{transform:scale(.85) translateY(10px);opacity:.5}60%{transform:scale(1.04) translateY(-2px)}100%{transform:scale(1) translateY(0);opacity:1}}`;
+  document.head.appendChild(s2);
+
+  // Inicializar reveal de cards ya renderizadas (featured se renderiza antes de este script)
+  revealCards();
+})();
+</script>
+</body>
+</html>
