@@ -16,14 +16,14 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font-family:var(--fn);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{background:var(--bg);color:var(--ink);font-family:var(--fn);-webkit-font-smoothing:antialiased;overflow-x:clip}
 img{display:block;max-width:100%}
 
 /* PROGRESS */
 #prog{position:fixed;top:0;left:0;z-index:9999;height:2px;width:0;background:linear-gradient(90deg,var(--red),#ff6b6b);pointer-events:none;transition:width .1s linear}
 
 /* HEADER */
-.hdr{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg);padding:10px 20px 0;border-bottom:1px solid var(--border);transition:padding .3s}
+.hdr{position:sticky;top:0;left:0;right:0;z-index:200;background:var(--bg);padding:10px 20px 0;border-bottom:1px solid var(--border);transition:padding .3s}
 .hdr.shrunk{padding:6px 20px 0}
 .pill{display:flex;align-items:center;height:46px;border:1px solid var(--border);border-radius:50px;padding:0 18px;background:var(--linen);gap:0;transition:height .3s}
 .hdr.shrunk .pill{height:40px}
@@ -39,12 +39,13 @@ img{display:block;max-width:100%}
 .nsec.active{color:var(--ink);font-weight:500;border-bottom-color:var(--red)}
 
 /* HERO */
-.hero{position:relative;overflow:hidden;height:72vw;max-height:680px;min-height:300px;background:var(--linen);margin-top:98px}
+.hero{position:relative;overflow:hidden;height:72vw;max-height:680px;min-height:300px;background:var(--linen)}
 .hslides{display:flex;height:100%;transition:transform .65s cubic-bezier(.34,1.2,.64,1);will-change:transform}
 .hslide{min-width:100%;height:100%;flex-shrink:0;overflow:hidden;position:relative}
 .hslide img{width:100%;height:100%;object-fit:cover}
-.hovl{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.55));display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 24px 48px;gap:16px;pointer-events:none}
+.hovl{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.55));display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;gap:10px;pointer-events:none}
 .htitle{font-family:var(--fs);font-size:clamp(32px,8vw,64px);font-weight:300;color:#fff;text-align:center;line-height:1.1;text-shadow:0 2px 24px rgba(0,0,0,.5)}
+.hsubtitle{font-family:var(--fn);font-size:clamp(11px,2vw,14px);font-weight:400;color:rgba(255,255,255,.75);text-align:center;letter-spacing:.18em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.4);margin-top:-8px}
 .hbtn{background:rgba(255,255,255,.92);color:#1a1614;font-family:var(--fn);font-size:13px;font-weight:500;letter-spacing:.04em;border:none;border-radius:24px;padding:12px 32px;cursor:pointer;pointer-events:auto;transition:background .2s,transform .2s;animation:hpulse 2.5s ease-in-out infinite}
 .hbtn:hover{background:#fff;transform:scale(1.03)}
 @keyframes hpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.4)}50%{box-shadow:0 0 0 10px rgba(255,255,255,0)}}
@@ -331,9 +332,11 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 .dl-btn{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.55);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;opacity:0;transition:opacity .2s;z-index:10;backdrop-filter:blur(4px)}
 .dl-btn svg{width:16px;height:16px}
 .pimg-wrap:hover .dl-btn,.dl-btn:focus{opacity:1}
-.gal-dl{position:absolute;bottom:54px;right:12px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.6);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;z-index:20;backdrop-filter:blur(4px);transition:background .2s}
+.gal-dl{position:absolute;bottom:54px;right:12px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.6);border:none;padding:0;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;z-index:20;backdrop-filter:blur(4px);transition:background .2s,opacity .2s,transform .2s}
 .gal-dl svg{width:18px;height:18px}
 .gal-dl:hover{background:rgba(0,0,0,.85)}
+.gal-dl.dl-busy{opacity:.4;pointer-events:none;transform:scale(.88)}
+.gal-dl.dl-ok{background:rgba(46,160,67,.9)!important}
 
 /* CANVAS */
 #bgc{position:fixed;inset:0;z-index:0;pointer-events:none}
@@ -376,6 +379,29 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 .rev-l.vis{opacity:1;transform:translateX(0)}
 .rev-r{opacity:0;transform:translateX(40px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
 .rev-r.vis{opacity:1;transform:translateX(0)}
+/* SEARCH */
+.srch-btn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:none;background:none;color:var(--soft);cursor:pointer;flex-shrink:0;padding:0;margin-left:auto;transition:color .2s;-webkit-appearance:none}
+.srch-btn:active,.srch-btn:hover{color:var(--ink)}
+.srch-btn svg{width:18px;height:18px}
+#srch{position:fixed;inset:0;z-index:500;background:var(--bg);transform:translateY(-100%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden}
+#srch.open{transform:translateY(0)}
+.srch-hdr{display:flex;align-items:center;gap:10px;padding:max(12px,env(safe-area-inset-top)) 14px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.srch-input{flex:1;background:var(--linen);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-size:15px;color:var(--ink);font-family:var(--fn);outline:none;-webkit-appearance:none;transition:border-color .2s}
+.srch-input::placeholder{color:var(--stone)}
+.srch-input:focus{border-color:var(--stone)}
+.srch-close{background:none;border:none;color:var(--stone);font-family:var(--fn);font-size:14px;padding:6px 2px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.srch-body{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.srch-hint{padding:60px 20px;text-align:center;color:var(--stone);font-size:14px;line-height:1.8}
+.srch-empty{padding:60px 20px;text-align:center;color:var(--stone);font-size:14px}
+.srch-count{padding:12px 16px 2px;font-size:10px;color:var(--stone);letter-spacing:.1em;text-transform:uppercase}
+.srch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;padding:10px 12px 40px}
+.srch-card{cursor:pointer;border-radius:10px;overflow:hidden;background:var(--linen);border:1px solid var(--border);transition:transform .15s}
+.srch-card:active{transform:scale(.96)}
+.srch-card-img{aspect-ratio:1;overflow:hidden}
+.srch-card-img img{width:100%;height:100%;object-fit:cover}
+.srch-card-info{padding:8px 10px 10px}
+.srch-card-name{font-family:var(--fs);font-size:14px;color:var(--ink);line-height:1.3;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srch-card-cat{font-size:10px;color:var(--stone);letter-spacing:.04em;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -390,6 +416,9 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
       <img src="Logos/casablanca_blanco_Mesa de trabajo 1.png" alt="Casablanca" onerror="this.style.display='none'">
     </a>
     <div class="pill-center">Catálogo</div>
+    <button class="srch-btn" onclick="openSearch()" aria-label="Buscar productos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
     <a class="pill-logo right" href="#">
       <img src="Logos/Logo tienda de blanco.png" alt="Tienda de Blanco" onerror="this.style.display='none'" style="height:22px">
     </a>
@@ -398,12 +427,13 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <button class="nsec" data-sec="sabanas" onclick="navTo('sabanas')">Sábanas</button>
     <button class="nsec" data-sec="cubrecamas" onclick="navTo('cubrecamas')">Cubrecamas</button>
     <button class="nsec" data-sec="almohadones" onclick="navTo('almohadones')">Almohadones</button>
-    <button class="nsec" data-sec="toallones" onclick="navTo('toallones')">Toallones</button>
-    <button class="nsec" data-sec="toalla" onclick="navTo('toalla')">Toallas</button>
-    <button class="nsec" data-sec="fundas" onclick="navTo('fundas')">Fundas</button>
-    <button class="nsec" data-sec="cortinas" onclick="navTo('cortinas')">Cortinas</button>
-    <button class="nsec" data-sec="hogar" onclick="navTo('hogar')">Manteles</button>
+    <button class="nsec" data-sec="almohadas" onclick="navTo('almohadas')">Almohadas</button>
+    <button class="nsec" data-sec="bano" onclick="navTo('bano')">Baño</button>
     <button class="nsec" data-sec="borregos" onclick="navTo('borregos')">Borregos</button>
+    <button class="nsec" data-sec="cortinas" onclick="navTo('cortinas')">Cortinas</button>
+    <button class="nsec" data-sec="frazada" onclick="navTo('frazada')">Frazada Plata</button>
+    <button class="nsec" data-sec="fundas" onclick="navTo('fundas')">Fundas</button>
+    <button class="nsec" data-sec="hogar" onclick="navTo('hogar')">Hogar</button>
     <button class="nsec" data-sec="acolchados" onclick="navTo('acolchados')">Acolchados</button>
   </nav>
 </header>
@@ -412,16 +442,19 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 <section class="hero">
   <div class="hslides" id="hslides">
     <div class="hslide active">
-      <img src="miniaturas/INICIO/1.jpg" alt="" onerror="this.style.opacity=0">
+      <img src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/BANNERS/1.jpg" alt="" onerror="this.style.opacity=0;this.closest('.hslide').dataset.empty='1'">
     </div>
     <div class="hslide">
-      <img src="miniaturas/INICIO/2.jpg" alt="" onerror="this.style.opacity=0">
+      <img src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/BANNERS/2.jpg" alt="" onerror="this.style.opacity=0;this.closest('.hslide').dataset.empty='1'">
     </div>
     <div class="hslide">
-      <img src="miniaturas/INICIO/3.jpg" alt="" onerror="this.style.opacity=0">
+      <img src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/BANNERS/3.jpg" alt="" onerror="this.style.opacity=0;this.closest('.hslide').dataset.empty='1'">
     </div>
   </div>
-  <div class="hovl"><span id="htitle" style="display:none"></span></div>
+  <div class="hovl">
+    <span id="htitle" class="htitle"></span>
+    <span class="hsubtitle">Tienda de Blanco</span>
+  </div>
   <button class="harr prev" onclick="goHero(-1)">
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4L6 10l6 6"/></svg>
   </button>
@@ -439,7 +472,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 <div class="benefits">
   <div class="bitem">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-    <div class="bitem-txt"><span class="bitem-t">Envíos al país</span><span class="bitem-s">Sin cargo mínimo</span></div>
+    <div class="bitem-txt"><span class="bitem-t">Envíos a todo el país</span><span class="bitem-s">Sin cargo mínimo</span></div>
   </div>
   <div class="bitem">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -454,40 +487,40 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
   </div>
   <div class="cats-scroll" id="catsScroll">
     <div class="ccat" onclick="openDrawer('sabanas','Sábanas')">
-      <img src="miniaturas/EXPLORAR/Sabanas.jpg" alt="Sábanas" onerror="this.style.display='none'">
+      <img data-cover="sabanas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/SABANAS/HOTEL (preguntar medidas)/SAB_HOTEL_PLANA_FULL_1.jpg" alt="Sábanas" loading="lazy" onerror="this.style.opacity=0">
       <div class="ccat-lbl"><p class="ccat-name">Sábanas</p><p class="ccat-count">Hotel · Oro Lisa · Fútbol</p></div>
     </div>
     <div class="ccat" onclick="openDrawer('cubrecamas','Cubrecamas')">
-      <img src="miniaturas/EXPLORAR/Cubrecamas.jpg" alt="Cubrecamas" onerror="this.style.display='none'">
+      <img data-cover="cubrecamas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/CUBRECAMAS/LEXUS DTAL/CU_DTAL_LEXUS_FULL_BYN_1.jpg" alt="Cubrecamas" loading="lazy" onerror="this.style.opacity=0">
       <div class="ccat-lbl"><p class="ccat-name">Cubrecamas</p><p class="ccat-count">Oro · Plata · Estampados</p></div>
     </div>
     <div class="ccat" onclick="openDrawer('almohadones','Almohadones')">
-      <img src="miniaturas/EXPLORAR/Almohadones.jpg" alt="Almohadones" onerror="this.style.display='none'">
-      <div class="ccat-lbl"><p class="ccat-name">Almohadones</p><p class="ccat-count">Diseños · Deportivos</p></div>
+      <img data-cover="almohadones" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/ALMOHADONES/Bebes/ALM_MINI MUNDO_AZUL_1.jpg" alt="Almohadones" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ccat-lbl"><p class="ccat-name">Almohadones</p><p class="ccat-count">Diseños · Deportivos · Bebés</p></div>
     </div>
-    <div class="ccat" onclick="openDrawer('toallones','Toallones')">
-      <img src="miniaturas/EXPLORAR/Toallones.jpg" alt="Toallones" onerror="this.style.display='none'">
-      <div class="ccat-lbl"><p class="ccat-name">Toallones</p><p class="ccat-count">Oro · Fútbol · Diseños</p></div>
+    <div class="ccat" onclick="openDrawer('almohadas','Almohadas')">
+      <img data-cover="almohadas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/ALMOHADAS/Royal/14.jpg" alt="Almohadas" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ccat-lbl"><p class="ccat-name">Almohadas</p><p class="ccat-count">Cool · Eternity · Golden</p></div>
     </div>
     <div class="ccat" onclick="openDrawer('fundas','Fundas')">
-      <img src="miniaturas/EXPLORAR/Fundas.jpg" alt="Fundas" onerror="this.style.display='none'">
+      <img data-cover="fundas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/FUNDAS/RIVER PLATE/FUNDAS_PACK_RIVER PLATE_ BANDA_1.jpg" alt="Fundas" loading="lazy" onerror="this.style.opacity=0">
       <div class="ccat-lbl"><p class="ccat-name">Fundas</p><p class="ccat-count">River · Boca · Racing +</p></div>
     </div>
     <div class="ccat" onclick="openDrawer('cortinas','Cortinas')">
-      <img src="miniaturas/EXPLORAR/Cortinas.jpg" alt="Cortinas" onerror="this.style.display='none'">
-      <div class="ccat-lbl"><p class="ccat-name">Cortinas</p><p class="ccat-count">Blackout · Baño · Cocina</p></div>
+      <img data-cover="cortinas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/CORTINAS/Cortinas De Ambiente/AMB AGOSTINA/CORT_AMB_AGOSTINA_FUCSIA_1.jpg" alt="Cortinas" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ccat-lbl"><p class="ccat-name">Cortinas</p><p class="ccat-count">Blackout · Baño · Ambiente</p></div>
     </div>
-    <div class="ccat" onclick="openDrawer('hogar','Manteles')">
-      <img src="miniaturas/EXPLORAR/Manteles.jpg" alt="Manteles" onerror="this.style.display='none'">
-      <div class="ccat-lbl"><p class="ccat-name">Manteles</p><p class="ccat-count">Diseños · Ecocuero · Vinilo</p></div>
+    <div class="ccat" onclick="openDrawer('hogar','Hogar')">
+      <img data-cover="hogar" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/HOGAR/MANTELES/MANTEL DTAL/MANTEL DTAL ORO_CUP.jpg" alt="Hogar" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ccat-lbl"><p class="ccat-name">Hogar</p><p class="ccat-count">Manteles · Ecocuero · Vinilo</p></div>
     </div>
     <div class="ccat" onclick="openDrawer('borregos','Borregos')">
-      <img src="miniaturas/EXPLORAR/Borregos.jpg" alt="Borregos" onerror="this.style.display='none'">
-      <div class="ccat-lbl"><p class="ccat-name">Borregos</p><p class="ccat-count">Infantiles · Diseños</p></div>
+      <img data-cover="borregos" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/BORREGOS/PEPPA DTAL/BO_DTAL_PEPPA_TWIN_TOGETHER_1.jpg" alt="Borregos" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ccat-lbl"><p class="ccat-name">Borregos</p><p class="ccat-count">Peppa · Play · Pony</p></div>
     </div>
     <div class="ccat" onclick="openDrawer('acolchados','Acolchados')">
-      <img src="miniaturas/EXPLORAR/Acolchados.jpg" alt="Acolchados" onerror="this.style.display='none'">
-      <div class="ccat-lbl"><p class="ccat-name">Acolchados</p><p class="ccat-count">Infantil · Diseños</p></div>
+      <img data-cover="acolchados" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/ACOLCHADOS/ORO LISO/AC ORO LISO TWIN BLANCO.jpg" alt="Acolchados" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ccat-lbl"><p class="ccat-name">Acolchados</p><p class="ccat-count">Oro Liso · Estampados · Infantil</p></div>
     </div>
   </div>
 </section>
@@ -495,16 +528,16 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 <!-- STATS -->
 <div class="stats-strip">
   <div class="stat-item">
-    <div class="stat-num">15<span>+</span></div>
-    <div class="stat-lbl">Años de calidad</div>
+    <div class="stat-num">30<span> días</span></div>
+    <div class="stat-lbl">Garantía de devolución</div>
   </div>
   <div class="stat-item">
-    <div class="stat-num">100<span>%</span></div>
-    <div class="stat-lbl">Algodón puro</div>
+    <div class="stat-num">24<span>hs</span></div>
+    <div class="stat-lbl">Despacho en menos de 24 hs</div>
   </div>
   <div class="stat-item">
-    <div class="stat-num">8<span></span></div>
-    <div class="stat-lbl">Líneas exclusivas</div>
+    <div class="stat-num"><span>∞</span></div>
+    <div class="stat-lbl">Variedad exclusiva</div>
   </div>
 </div>
 <div class="sep-dec"><span class="sep-line"></span><span class="sep-dia">◆</span><span class="sep-line"></span></div>
@@ -512,29 +545,29 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 <!-- LO NUEVO -->
 <div class="lonuevo rev" id="sec-lonuevo">
   <div class="lonuevo-head">
-    <h2>Lo nuevo</h2>
-    <p>Colección completa</p>
+    <h2>Colección destacada</h2>
+    <p>Ver todo el catálogo</p>
   </div>
   <div class="lonuevo-grid">
-    <div class="ln-card" onclick="openDrawer('cubrecamas','Cubrecamas')">
-      <img src="miniaturas/LO NUEVO/Cubrecamas Oro.jpg" alt="Cubrecamas Oro" loading="lazy" onerror="this.style.display='none'">
-      <div class="ln-card-lbl"><p>Novedad</p><p>Cubrecama Oro</p></div>
-    </div>
-    <div class="ln-card" onclick="openDrawer('toallones','Toallones')">
-      <img src="miniaturas/LO NUEVO/Toallon Oro.jpg" alt="Toallón Oro" loading="lazy" onerror="this.style.display='none'">
-      <div class="ln-card-lbl"><p>Colección</p><p>Toallón Oro</p></div>
-    </div>
-    <div class="ln-card" onclick="openDrawer('sabanas','Sábanas')">
-      <img src="miniaturas/LO NUEVO/Sabanas Hotel.jpg" alt="Sábanas Hotel" loading="lazy" onerror="this.style.display='none'">
-      <div class="ln-card-lbl"><p>Premium</p><p>Sábanas Hotel</p></div>
+    <div class="ln-card" onclick="openDrawer('acolchados','Acolchados')">
+      <img data-cover="ln-1" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/ACOLCHADOS/ORO LISO/AC ORO LISO TWIN BLANCO.jpg" alt="Acolchados Oro Liso" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ln-card-lbl"><p>Línea estrella</p><p>Acolchados Oro Liso</p></div>
     </div>
     <div class="ln-card" onclick="openDrawer('cortinas','Cortinas')">
-      <img src="miniaturas/LO NUEVO/Cortinas Blackout.jpg" alt="Cortinas Blackout" loading="lazy" onerror="this.style.display='none'">
+      <img data-cover="ln-2" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/CORTINAS/Cortinas De Ambiente/AMB BLACKOUT/CORT_AMB_BLACKOUT_BEIGE_1.jpg" alt="Cortinas Blackout" loading="lazy" onerror="this.style.opacity=0">
       <div class="ln-card-lbl"><p>Nuevo</p><p>Cortinas Blackout</p></div>
     </div>
-    <div class="ln-card" onclick="openDrawer('hogar','Manteles')">
-      <img src="miniaturas/LO NUEVO/Manteles.jpg" alt="Manteles" loading="lazy" onerror="this.style.display='none'">
-      <div class="ln-card-lbl"><p>Colección Hogar</p><p>Manteles</p></div>
+    <div class="ln-card" onclick="openDrawer('acolchados','Acolchados')">
+      <img data-cover="ln-3" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/ACOLCHADOS/ORO ESTAMPADOS/AC_ORO_FULL_FLORES AMARILLAS_1.jpg" alt="Acolchados Oro Estampados" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ln-card-lbl"><p>Colección</p><p>Acolchados Oro Estampados</p></div>
+    </div>
+    <div class="ln-card" onclick="openDrawer('sabanas','Sábanas')">
+      <img data-cover="ln-4" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/SABANAS/ORO/ORO LISA (rehacer colores con ia)/SAB_ORO_LISA_QUEEN_AZUL_1.jpg" alt="Sábanas Oro Lisas" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ln-card-lbl"><p>Premium</p><p>Sábanas Oro Lisas</p></div>
+    </div>
+    <div class="ln-card" onclick="openDrawer('almohadas','Almohadas')">
+      <img data-cover="ln-5" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/ALMOHADAS/Royal/14.jpg" alt="Almohadas" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ln-card-lbl"><p>Descanso</p><p>Almohadas</p></div>
     </div>
   </div>
 </div>
@@ -547,27 +580,27 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
   </div>
   <div class="lineas-scroll">
     <div class="linea-card" onclick="openDrawer('sabanas','Sábanas')">
-      <div class="linea-img"><img src="miniaturas/LINEAS/Hotel.jpg" alt="Hotel" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="linea-hotel" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/LINEAS/Hotel.jpg" alt="Hotel" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Hotel</p>
     </div>
     <div class="linea-card" onclick="openDrawer('cubrecamas','Cubrecamas')">
-      <div class="linea-img"><img src="miniaturas/LINEAS/Cubrecama Plata.jpg" alt="Plata" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="linea-cubrecama-plata" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/LINEAS/Cubrecama Plata.jpg" alt="Plata" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Cubrecama Plata</p>
     </div>
     <div class="linea-card" onclick="openDrawer('cubrecamas','Cubrecamas')">
-      <div class="linea-img"><img src="miniaturas/LINEAS/Cubrecama Oro.jpg" alt="Cubrecama Oro" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="linea-cubrecama-oro" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/LINEAS/Cubrecama Oro.jpg" alt="Cubrecama Oro" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Cubrecama Oro</p>
     </div>
     <div class="linea-card" onclick="openDrawer('toallones','Toallones')">
-      <div class="linea-img"><img src="miniaturas/LINEAS/Toallon Oro.jpg" alt="Toallones Oro" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="linea-toallon-oro" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/LINEAS/Toallon Oro.jpg" alt="Toallones Oro" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Toallón Oro</p>
     </div>
     <div class="linea-card" onclick="openDrawer('hogar','Manteles')">
-      <div class="linea-img"><img src="miniaturas/LINEAS/Manteles.jpg" alt="Manteles" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="linea-manteles" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/LINEAS/Manteles.jpg" alt="Manteles" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Manteles</p>
     </div>
     <div class="linea-card" onclick="openDrawer('fundas','Fundas')">
-      <div class="linea-img"><img src="miniaturas/LINEAS/Fundas Futbol.jpg" alt="Fundas" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="linea-fundas" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/LINEAS/Fundas Futbol.jpg" alt="Fundas" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Fundas Fútbol</p>
     </div>
   </div>
@@ -579,47 +612,47 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <p class="edit-eye">Línea estrella</p>
     <h2 class="edit-title">Sábanas Oro Lisa:<br>14 colores, infinitas combinaciones</h2>
     <p class="edit-body">Percal ORO de alta densidad. Disponible en Queen y Twin con una paleta de 14 tonos que va de los neutros más suaves a los colores más vibrantes.</p>
-    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('sabanas','Sábanas')">Ver colección</button>
+    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('sabanas','Sábanas','ORO')">Ver colección</button>
   </div>
   <div class="edit-img">
-    <img src="miniaturas/EDITORIAL/Sabanas Oro Lisa.jpg" alt="Sábanas" onerror="this.style.display='none'">
+    <img data-cover="ed-sabanas-oro" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/EDITORIAL/Sabanas Oro Lisa.jpg" alt="Sábanas" onerror="this.style.display='none'">
   </div>
 </div>
 
 <!-- ACOLCHADOS ORO LISO -->
 <div class="sep-dec"><span class="sep-line"></span><span class="sep-dia">◆</span><span class="sep-line"></span></div>
 <div class="banner-temp rev">
-  <img src="miniaturas/BANNERS/Oro Liso.jpg" alt="" loading="lazy" onerror="this.style.opacity=0">
+  <img data-cover="bn-oro-liso" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/BANNERS/Oro Liso.jpg" alt="" loading="lazy" onerror="this.style.opacity=0">
   <div class="banner-temp-ovl" style="background:linear-gradient(110deg,rgba(0,0,0,.82) 48%,rgba(0,0,0,.2))"></div>
   <div class="banner-temp-txt">
     <p>Acolchados · Línea Oro</p>
     <h2>Oro Liso:<br>El clásico que nunca falla</h2>
-    <button onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados')">Ver colección Oro</button>
+    <button onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','ORO LISO')">Ver colección Oro</button>
   </div>
 </div>
 
 <!-- ACOLCHADOS INFANTILES -->
 <div class="editorial rev-img rev">
   <div class="edit-img">
-    <img src="miniaturas/EDITORIAL/Infantiles.jpg" alt="Acolchado Infantil" loading="lazy" onerror="this.style.display='none'">
+    <img data-cover="ed-infantiles" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/EDITORIAL/Infantiles.jpg" alt="Acolchado Infantil" loading="lazy" onerror="this.style.display='none'">
   </div>
   <div class="edit-txt">
     <p class="edit-eye">Para los más chicos</p>
     <h2 class="edit-title">Acolchados Infantiles:<br>Diseños que enamoran</h2>
     <p class="edit-body">Personajes favoritos en acolchados de alta calidad. My Little Pony, Transformers, Peppa Pig, Playstation y muchos más.</p>
-    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados')">Ver infantiles</button>
+    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Infantiles')">Ver infantiles</button>
   </div>
 </div>
 
 <!-- ACOLCHADOS LEXUS -->
 <div class="sep-dec"><span class="sep-line"></span><span class="sep-dia">◆</span><span class="sep-line"></span></div>
 <div class="banner-temp rev">
-  <img src="miniaturas/BANNERS/Lexus.jpg" alt="" loading="lazy" onerror="this.style.opacity=0">
+  <img data-cover="bn-lexus" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/BANNERS/Lexus.jpg" alt="" loading="lazy" onerror="this.style.opacity=0">
   <div class="banner-temp-ovl" style="background:linear-gradient(80deg,rgba(0,0,0,.88) 52%,rgba(0,0,0,.15))"></div>
   <div class="banner-temp-txt">
     <p>Acolchados · Línea Lexus</p>
     <h2>Lexus:<br>Diseño y textura<br>en cada detalle</h2>
-    <button onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados')">Explorar Lexus</button>
+    <button onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Lexus_')">Explorar Lexus</button>
   </div>
 </div>
 
@@ -629,23 +662,23 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <p class="edit-eye">Sábanas · Diseño exclusivo</p>
     <h2 class="edit-title">Sábanas Ágatha:<br>Arte para tu descanso</h2>
     <p class="edit-body">La firma de Ágatha Ruiz de la Prada llega a tu cama. Diseños únicos en colores vibrantes que transforman tu dormitorio.</p>
-    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('sabanas','Sábanas')">Ver sábanas</button>
+    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('sabanas','Sábanas','ARP')">Ver sábanas</button>
   </div>
   <div class="edit-img">
-    <img src="miniaturas/EDITORIAL/Sabanas Agatha.jpg" alt="Sábanas Ágatha" loading="lazy" onerror="this.style.display='none'">
+    <img data-cover="ed-sabanas-agatha" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/EDITORIAL/Sabanas Agatha.jpg" alt="Sábanas Ágatha" loading="lazy" onerror="this.style.display='none'">
   </div>
 </div>
 
 <!-- ACOLCHADOS ORO ESTAMPADOS -->
 <div class="editorial rev-img rev">
   <div class="edit-img">
-    <img src="miniaturas/EDITORIAL/Oro Estampados.jpg" alt="Oro Estampado" loading="lazy" onerror="this.style.display='none'">
+    <img data-cover="ed-oro-estampados" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/EDITORIAL/Oro Estampados.jpg" alt="Oro Estampado" loading="lazy" onerror="this.style.display='none'">
   </div>
   <div class="edit-txt">
     <p class="edit-eye">Acolchados · Oro Estampados</p>
     <h2 class="edit-title">Oro Estampados:<br>Color y vida en cada temporada</h2>
     <p class="edit-body">Diseños florales y modernos sobre base Oro premium. La combinación perfecta de estilo y confort para renovar tu habitación.</p>
-    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados')">Ver estampados</button>
+    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','ORO ESTAMPADOS')">Ver estampados</button>
   </div>
 </div>
 
@@ -656,7 +689,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
       <h2>Destacados</h2>
       <p>Los más elegidos de la temporada</p>
     </div>
-    <button class="feat-all" onclick="vib(15);sndOpen();openDrawer('acolchados','Acolchados')">Ver todo</button>
+    <button class="feat-all" onclick="vib(15);sndOpen();openDrawer('sabanas','Sábanas')">Ver catálogo</button>
   </div>
   <div class="feat-scroll" id="featScroll"></div>
 </section>
@@ -690,6 +723,18 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
   </div>
   <p class="foot-copy">© 2026 Casablanca. Catálogo interno.</p>
 </footer>
+
+<!-- SEARCH PANEL -->
+<div id="srch" role="dialog" aria-modal="true">
+  <div class="srch-hdr">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--stone);flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input class="srch-input" id="srchInput" type="search" placeholder="Buscar productos, colores…" autocomplete="off" autocorrect="off" spellcheck="false" inputmode="search">
+    <button class="srch-close" onclick="closeSearch()">Cancelar</button>
+  </div>
+  <div class="srch-body" id="srchBody">
+    <p class="srch-hint">Escribí un producto, categoría o color</p>
+  </div>
+</div>
 
 <!-- CATEGORY DRAWER -->
 <div class="cdr" id="cdr">
@@ -739,15 +784,43 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 
 <script src="catalog.js"></script>
 <script>
+// ─── CLOUDINARY CDN ───────────────────────────────────────────────────────────
+const CDN = 'https://res.cloudinary.com/dtelhncnm/image/upload/';
+function cdnUrl(path) {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  return CDN + path.replace('1000X1000 Catalogo/', 'catalogo/')
+    .split('/').map(encodeURIComponent).join('/');
+}
+
+async function dlImg(btn, url, name) {
+  if (btn._dl) return;
+  btn._dl = true;
+  btn.classList.add('dl-busy');
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('fetch');
+    const blob = await r.blob();
+    const tmp = URL.createObjectURL(blob);
+    const a = Object.assign(document.createElement('a'), {href:tmp, download:name});
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(tmp), 30000);
+    btn.classList.replace('dl-busy','dl-ok');
+    setTimeout(() => { btn.classList.remove('dl-ok'); btn._dl=false; }, 2200);
+  } catch {
+    window.open(url, '_blank');
+    btn.classList.remove('dl-busy');
+    btn._dl = false;
+  }
+}
+
 // ─── VENDEDORES (editá nombres y números) ─────────────────────────────────────
 const VENDEDORES = [
-  { nombre:'Juan',  tel:'5491100000001' },
-  { nombre:'Hugo',  tel:'5491100000002' },
-  { nombre:'Silvia',tel:'5491100000003' },
-  { nombre:'Maxi',  tel:'5491100000004' },
-  { nombre:'Bruni', tel:'5491100000005' },
-  { nombre:'Mauro', tel:'5491100000006' },
-  { nombre:'Rafa',  tel:'5491100000007' },
+  { nombre:'Maxi',    tel:'5491162690989' },
+  { nombre:'Cristian',tel:'5491162691125' },
+  { nombre:'Hugo',    tel:'5491154707712' },
+  { nombre:'Seba',    tel:'5491162690988' },
+  { nombre:'Mauro',   tel:'5491165828412' },
 ];
 
 // ─── COLOR MAP ────────────────────────────────────────────────────────────────
@@ -794,11 +867,38 @@ const FOTO_LABELS = ['Detalle','Ambiente','Textura','Color'];
 let activeP=null, activeVI=0;
 
 
+// ─── CLICK TRACKING ───────────────────────────────────────────────────────────
+const CLICK_KEY='cb_clicks';
+function getClicks(){ try{ return JSON.parse(localStorage.getItem(CLICK_KEY)||'{}'); }catch(e){ return {}; } }
+function trackClick(id){ const c=getClicks(); c[id]=(c[id]||0)+1; localStorage.setItem(CLICK_KEY,JSON.stringify(c)); }
+
 // ─── FEATURED ─────────────────────────────────────────────────────────────────
+// Seed picks: one from each major section so initial view is varied
+const FEAT_SEED_IDS=['p-77','p-30','p-16','p-53','p-93','p-0','p-101','p-62','p-12'];
+
 function renderFeatured(){
-  const picks=CATALOG.slice(0,6);
+  const clicks=getClicks();
+  // Sort by click count desc; fallback to seed order for unclicked products
+  const ranked=CATALOG
+    .filter(p=>p.vars[0]?.fotos?.[0])
+    .map(p=>({p, score:(clicks[p.id]||0)}))
+    .sort((a,b)=>{
+      if(b.score!==a.score) return b.score-a.score;
+      // tie-break: prefer seed list order, then catalog order
+      const ai=FEAT_SEED_IDS.indexOf(a.p.id); const bi=FEAT_SEED_IDS.indexOf(b.p.id);
+      if(ai>=0&&bi<0) return -1; if(bi>=0&&ai<0) return 1;
+      if(ai>=0&&bi>=0) return ai-bi;
+      return 0;
+    });
+
+  // Ensure variety: pick top clicked + fill with diverse sections
+  const picks=[]; const seenSec=new Set();
+  for(const {p} of ranked){ if(picks.length>=8) break; if(!seenSec.has(p.sec)||clicks[p.id]>0){ picks.push(p); seenSec.add(p.sec); } }
+  // Fill remaining slots if needed
+  for(const {p} of ranked){ if(picks.length>=8) break; if(!picks.includes(p)) picks.push(p); }
+
   document.getElementById('featScroll').innerHTML=picks.map(p=>{
-    const src=p.vars[0]?.fotos?.[0];
+    const src=cdnUrl(p.vars[0]?.fotos?.[0]);
     const dots=p.vars.slice(0,4).map(v=>`<span class="cdot" style="background:${chex(v.color)}"></span>`).join('');
     const dn=getDisplayName(p);
     return `<div class="fcard" data-id="${p.id}">
@@ -807,7 +907,7 @@ function renderFeatured(){
       <div class="fdots">${dots}</div>
     </div>`;
   }).join('');
-  document.querySelectorAll('.fcard').forEach(c=>c.addEventListener('click',()=>openDet(c.dataset.id)));
+  document.querySelectorAll('.fcard').forEach(c=>c.addEventListener('click',()=>{ trackClick(c.dataset.id); openDet(c.dataset.id); }));
   if(window.revealCards) window.revealCards();
 }
 
@@ -837,7 +937,7 @@ function renderVariantPicker(){
         ${p.vars.map((vv,i)=>`
           <div class="ftile vpick" data-vi="${i}" style="cursor:pointer">
             <div class="ftile-img">
-              ${vv.fotos?.[0]?`<img src="${vv.fotos[0]}" alt="${vv.color}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=ftile-ph></div>'">`:`<div class="ftile-ph"></div>`}
+              ${vv.fotos?.[0]?`<img src="${cdnUrl(vv.fotos[0])}" alt="${vv.color}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=ftile-ph></div>'">`:`<div class="ftile-ph"></div>`}
             </div>
             <div class="ftile-lbl">
               <p class="ftile-name">${vv.color}</p>
@@ -859,14 +959,14 @@ function renderLookbook(){
   const wppMsg=encodeURIComponent(`Hola! Consulto disponibilidad: *${getDisplayNameColor(p,activeVI)}* - Color: ${v.color}`);
   const slides=fotos.slice(0,6).map((src,fi)=>`
     <div class="gal-slide" data-fi="${fi}" style="position:relative">
-      <img src="${src}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=pph style=height:100%><span>${getDisplayNameColor(p,activeVI)}</span></div>'">
-      <a class="gal-dl" href="${src}" download="${getDisplayNameColor(p,activeVI).replace(/[^a-z0-9]/gi,'_')}_${v.color.replace(/[^a-z0-9]/gi,'_')}_${fi+1}.jpg" onclick="event.stopPropagation()" title="Descargar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v10M7 15l5 5 5-5"/><rect x="3" y="19" width="18" height="2" rx="1"/></svg></a>
+      <img src="${cdnUrl(src)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=pph style=height:100%><span>${getDisplayNameColor(p,activeVI)}</span></div>'">
+      <button class="gal-dl" onclick="event.stopPropagation();dlImg(this,'${cdnUrl(src)}','${getDisplayNameColor(p,activeVI).replace(/[^a-z0-9]/gi,'_')}_${v.color.replace(/[^a-z0-9]/gi,'_')}_${fi+1}.jpg')" title="Descargar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v10M7 15l5 5 5-5"/><rect x="3" y="19" width="18" height="2" rx="1"/></svg></button>
     </div>`).join('');
   const thumbs=fotos.length>1?fotos.slice(0,6).map((src,fi)=>`
-    <div class="gthumb${fi===0?' active':''}" data-ti="${fi}"><img src="${src}" alt="" loading="lazy"></div>`).join(''):'';
+    <div class="gthumb${fi===0?' active':''}" data-ti="${fi}"><img src="${cdnUrl(src)}" alt="" loading="lazy"></div>`).join(''):'';
   const varThumbs=p.vars.length>1?p.vars.map((vv,i)=>`
     <div class="vthumb${i===activeVI?' active':''}" data-vi="${i}">
-      <img src="${vv.fotos?.[0]||''}" alt="${vv.color}" loading="lazy" onerror="this.style.opacity=0">
+      <img src="${cdnUrl(vv.fotos?.[0]||'')}" alt="${vv.color}" loading="lazy" onerror="this.style.opacity=0">
       <span class="vthumb-lbl">${vv.color}</span>
     </div>`).join(''):'';
   const vendLinks=VENDEDORES.map(vn=>`
@@ -893,7 +993,7 @@ function renderLookbook(){
       <p class="lb-slbl">¿Está disponible este producto?</p>
       <button class="lb-sbtn" id="lbSbtn">
         <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.526 5.845L.057 23.882l6.187-1.438A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.877 9.877 0 01-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.58 6.58 2.106 12 2.106c5.42 0 9.894 4.474 9.894 9.894 0 5.42-4.474 9.894-9.894 9.894z"/></svg>
-        Preguntar disponibilidad
+        Consultar
       </button>
       <div class="lb-vend" id="lbVend">
         <p class="lb-vend-ttl">Elegí un vendedor</p>
@@ -904,7 +1004,7 @@ function renderLookbook(){
       <div class="lb-vhead"><span class="lb-vlbl">Color</span><span class="lb-vact" id="vActLbl">${v.color}</span></div>
       <div class="vthumb-strip">${varThumbs}</div>
     </div>`:`<div class="lb-var"><div class="lb-vhead"><span class="lb-vlbl">Color</span><span class="lb-vact">${v.color}</span></div></div>`}
-    ${(()=>{const otros=CATALOG.filter(x=>x.id!==p.id&&x.sec===p.sec).slice(0,4);return otros.length?`<div class="lb-otros"><p class="lb-otros-ttl">Otros productos</p><div class="lb-otros-scroll">${otros.map(op=>`<div class="lb-ocard" data-id="${op.id}"><div class="lb-owrap"><img src="${op.vars[0]?.fotos?.[0]||''}" alt="${getDisplayName(op)}" loading="lazy" onerror="this.style.opacity=0"></div><p class="lb-oname">${getDisplayName(op)}</p></div>`).join('')}</div></div>`:''})()}
+    ${(()=>{const otros=CATALOG.filter(x=>x.id!==p.id&&x.sec===p.sec).slice(0,4);return otros.length?`<div class="lb-otros"><p class="lb-otros-ttl">Otros productos</p><div class="lb-otros-scroll">${otros.map(op=>`<div class="lb-ocard" data-id="${op.id}"><div class="lb-owrap"><img src="${cdnUrl(op.vars[0]?.fotos?.[0]||'')}" alt="${getDisplayName(op)}" loading="lazy" onerror="this.style.opacity=0"></div><p class="lb-oname">${getDisplayName(op)}</p></div>`).join('')}</div></div>`:''})()}
     <div class="suc">
       <h2>Nuestras ubicaciones</h2>
       <div class="slist">
@@ -987,9 +1087,48 @@ function renderLookbook(){
 
 document.getElementById('btnBack').addEventListener('click',()=>{ history.back(); });
 
+// ── SEARCH ────────────────────────────────────────────────────────────────────
+function openSearch(){
+  vib(15);
+  document.getElementById('srch').classList.add('open');
+  setTimeout(()=>document.getElementById('srchInput').focus(),320);
+  history.pushState({view:'search'},'','#buscar');
+}
+function closeSearch(){
+  document.getElementById('srch').classList.remove('open');
+  document.getElementById('srchInput').value='';
+  document.getElementById('srchBody').innerHTML='<p class="srch-hint">Escribí un producto, categoría o color</p>';
+}
+function doSearch(q){
+  const body=document.getElementById('srchBody');
+  if(!q.trim()){body.innerHTML='<p class="srch-hint">Escribí un producto, categoría o color</p>';return;}
+  const terms=q.toLowerCase().trim().split(/\s+/);
+  const results=CATALOG.filter(p=>{
+    const hay=[p.nombre,p.cat,p.sec,getSubcat(p)||'',...p.vars.map(v=>v.color)].join(' ').toLowerCase();
+    return terms.every(t=>hay.includes(t));
+  });
+  if(!results.length){body.innerHTML=`<p class="srch-empty">Sin resultados para "<strong>${q}</strong>"</p>`;return;}
+  body.innerHTML=`<p class="srch-count">${results.length} resultado${results.length!==1?'s':''}</p>
+    <div class="srch-grid">${results.map(p=>{
+      const src=cdnUrl(p.vars[0]?.fotos?.[0]);
+      const dn=getDisplayName(p);
+      return `<div class="srch-card" data-id="${p.id}">
+        <div class="srch-card-img">${src?`<img src="${src}" alt="${dn}" loading="lazy" onerror="this.style.opacity=0">`:`<div class="pph" style="height:100%"><span>${dn}</span></div>`}</div>
+        <div class="srch-card-info"><p class="srch-card-name">${dn}</p><p class="srch-card-cat">${p.cat}</p></div>
+      </div>`;
+    }).join('')}</div>`;
+  body.querySelectorAll('.srch-card').forEach(c=>c.addEventListener('click',()=>{
+    closeSearch();
+    if(location.hash==='#buscar') history.back();
+    setTimeout(()=>{ trackClick(c.dataset.id); openDet(c.dataset.id); },50);
+  }));
+}
+document.getElementById('srchInput').addEventListener('input',e=>doSearch(e.target.value));
+
 // Back button del celular navega dentro de la web
 window.addEventListener('popstate', e=>{
   const s = e.state;
+  if(document.getElementById('srch').classList.contains('open')){ closeSearch(); return; }
   if(document.getElementById('overlay').classList.contains('open')){ closeDet(); return; }
   if(document.getElementById('cdr').classList.contains('open')){ closeDrawer(); return; }
   if(wppMenu && wppMenu.classList.contains('open')){ closeWppSheet(); return; }
@@ -1001,16 +1140,36 @@ let oTy=0;
 ov.addEventListener('touchstart',e=>{oTy=e.touches[0].clientY;},{passive:true});
 ov.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-oTy>80&&ov.scrollTop===0)closeDet();},{passive:true});
 
-const NAV_TITLES={acolchados:'Acolchados',sabanas:'Sábanas'};
-function navTo(sec){ openDrawer(sec,NAV_TITLES[sec]||sec); }
-
 // ─── CATEGORY DRAWER ─────────────────────────────────────────────────────────
+const SEC_MAP={
+  sabanas:    {secs:['sabanas'],    title:'Sábanas'},
+  cubrecamas: {secs:['cubrecamas'], title:'Cubrecamas'},
+  almohadones:{secs:['almohadones'],title:'Almohadones'},
+  almohadas:  {secs:['almohadas'],  title:'Almohadas'},
+  bano:       {secs:['toalla','toallones','batas'], title:'Baño'},
+  borregos:   {secs:['borregos'],   title:'Borregos'},
+  cortinas:   {secs:['cortinas'],   title:'Cortinas'},
+  frazada:    {secs:['frazada'],    title:'Frazada Plata'},
+  fundas:     {secs:['fundas'],     title:'Fundas'},
+  hogar:      {secs:['hogar'],      title:'Hogar'},
+  acolchados: {secs:['acolchados'], title:'Acolchados'},
+};
+const NAV_TITLES=Object.fromEntries(Object.entries(SEC_MAP).map(([k,v])=>[k,v.title]));
+function navTo(sec){ openDrawer(sec, NAV_TITLES[sec]||sec); }
+
+function getSubcat(p){
+  const f=p.vars[0]?.fotos?.[0];
+  if(!f) return null;
+  const parts=f.split('/');
+  return parts.length>=4 ? parts[2] : null;
+}
+
 let drawerSec='', drawerCatFilter='all';
 
-function openDrawer(sec, title){
+function openDrawer(sec, title, sub){
   vib(20); sndOpen();
   history.pushState({view:'drawer',sec,title},'','#categorias');
-  drawerSec=sec; drawerCatFilter='all';
+  drawerSec=sec; drawerCatFilter=sub||'all';
   document.getElementById('cdrTitle').textContent=title;
   renderDrawer();
   document.getElementById('cdr').classList.add('open');
@@ -1025,38 +1184,63 @@ function closeDrawer(){
   document.querySelectorAll('.nsec').forEach(b=>b.classList.remove('active'));
 }
 
-function drawerMatch(p){ return drawerSec && p.sec.includes(drawerSec); }
+function drawerMatch(p){
+  const cfg=SEC_MAP[drawerSec];
+  if(!cfg) return false;
+  if(!cfg.secs.some(s=>p.sec===s)) return false;
+  if(cfg.filter && !cfg.filter(p)) return false;
+  return true;
+}
+
 function renderDrawer(){
   const prods=CATALOG.filter(drawerMatch);
-  document.getElementById('cdrChips').innerHTML='';
+  const chipsEl=document.getElementById('cdrChips');
 
-  document.getElementById('cdrCount').textContent=`${prods.length} carpeta${prods.length!==1?'s':''}`;
+  // subcategory chips
+  const subcats=[...new Set(prods.map(getSubcat).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+  if(subcats.length>1){
+    chipsEl.style.display='flex';
+    chipsEl.style.gap='8px';
+    chipsEl.style.overflowX='auto';
+    chipsEl.style.padding='8px 12px 4px';
+    chipsEl.style.scrollbarWidth='none';
+    chipsEl.innerHTML=`<button class="chip ${drawerCatFilter==='all'?'active':''}" onclick="filterDrawer('all')">Todos</button>`+
+      subcats.map(s=>`<button class="chip ${drawerCatFilter===s?'active':''}" onclick="filterDrawer(this.dataset.sub)" data-sub="${s.replace(/"/g,'&quot;')}">${s}</button>`).join('');
+  } else {
+    chipsEl.style.display='none';
+    chipsEl.innerHTML='';
+  }
 
-  if(!prods.length){
+  const visible=drawerCatFilter==='all' ? prods : prods.filter(p=>getSubcat(p)===drawerCatFilter);
+  document.getElementById('cdrCount').textContent=`${visible.length} producto${visible.length!==1?'s':''}`;
+
+  if(!visible.length){
     document.getElementById('cdrGrid').innerHTML='<div style="grid-column:1/-1;padding:40px;text-align:center"><p style="font-family:var(--fs);font-size:18px;font-style:italic;color:var(--stone)">Sin productos</p></div>';
     return;
   }
 
   const arrSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>';
-  document.getElementById('cdrGrid').innerHTML=prods.map(p=>{
-    const src=p.vars[0]?.fotos?.[0];
+  document.getElementById('cdrGrid').innerHTML=visible.map(p=>{
+    const src=cdnUrl(p.vars[0]?.fotos?.[0]);
     const dn=getDisplayName(p);
-    const sub=p.vars.length>1?`${p.vars.length} variantes`:`1 variante`;
     return `<div class="ftile" data-id="${p.id}">
       <div class="ftile-img">
         ${src?`<img src="${src}" alt="${dn}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=ftile-ph></div>'">`:`<div class="ftile-ph"></div>`}
       </div>
       <div class="ftile-lbl">
-        <p class="ftile-name">${p.nombre}</p>
+        <p class="ftile-name">${getDisplayName(p)}</p>
         <span class="ftile-arr">${arrSvg}</span>
       </div>
     </div>`;
   }).join('');
 
-  document.querySelectorAll('#cdrGrid .ftile').forEach(c=>c.addEventListener('click',()=>{
-    openDet(c.dataset.id);
-  }));
+  document.querySelectorAll('#cdrGrid .ftile').forEach(c=>c.addEventListener('click',()=>{ trackClick(c.dataset.id); openDet(c.dataset.id); }));
   if(window.revealCards) window.revealCards();
+}
+
+function filterDrawer(subcat){
+  drawerCatFilter=subcat||'all';
+  renderDrawer();
 }
 
 // Cerrar drawer
@@ -1074,9 +1258,9 @@ cdrPanel.addEventListener('touchend',e=>{
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
 const HERO_DATA=[
-  {title:'La Calidad<br>del Descanso'},
-  {title:'Sábanas<br>Oro Lisa'},
-  {title:'Sábanas<br>Hotel'},
+  {title:'Bienvenido<br>a Casablanca'},
+  {title:'Calidad que<br>se siente al tacto'},
+  {title:'Tu hogar merece<br>lo mejor'},
 ];
 let hi=0;
 const hslides=document.querySelectorAll('.hslide'), hdots=document.querySelectorAll('.hdot');
@@ -1088,9 +1272,16 @@ function setHero(i){
   hdots[hi].classList.add('active');
   document.getElementById('hslides').style.transform=`translateX(-${hi*100}%)`;
   const tEl=document.getElementById('htitle');
-  if(tEl&&tEl.style.display!=='none'){tEl.style.opacity='0';setTimeout(()=>{tEl.innerHTML=HERO_DATA[hi].title;tEl.style.opacity='1';},200);}
+  if(tEl){tEl.style.opacity='0';setTimeout(()=>{tEl.innerHTML=HERO_DATA[hi].title;tEl.style.opacity='1';},200);}
 }
-function goHero(d){setHero(hi+d);}
+function goHero(d){
+  let t=(hi+d+hslides.length)%hslides.length;
+  for(let i=0;i<hslides.length-1;i++){
+    if(!hslides[t].dataset.empty) break;
+    t=(t+d+hslides.length)%hslides.length;
+  }
+  setHero(t);
+}
 
 // ─── WPP FAB ──────────────────────────────────────────────────────────────────
 const wppVlist=document.getElementById('wppVlist');
@@ -1128,6 +1319,23 @@ function sndFilter(){}
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 renderFeatured();
+
+// ─── PORTADAS CONFIG ──────────────────────────────────────────────────────────
+fetch('https://res.cloudinary.com/dtelhncnm/raw/upload/portadas_config.json?_='+Date.now())
+  .then(r=>r.ok?r.json():null)
+  .then(cfg=>{
+    if(!cfg) return;
+    const CDN_IMG='https://res.cloudinary.com/dtelhncnm/image/upload/';
+    document.querySelectorAll('[data-cover]').forEach(el=>{
+      const k=el.dataset.cover;
+      if(cfg[k]) el.src=CDN_IMG+cfg[k];
+    });
+    const bannerSlides=document.querySelectorAll('.hslide');
+    ['ban-1','ban-2','ban-3'].forEach((k,i)=>{
+      if(cfg[k]&&bannerSlides[i]) bannerSlides[i].querySelector('img').src=CDN_IMG+cfg[k];
+    });
+  })
+  .catch(()=>{});
 </script>
 
 <script>
@@ -1340,7 +1548,7 @@ renderFeatured();
 
   // Hero title transition
   const _hte=document.getElementById('htitle');
-  if(_hte&&_hte.style.display!=='none')_hte.style.transition='opacity .2s ease';
+  if(_hte){_hte.style.transition='opacity .2s ease';_hte.innerHTML=HERO_DATA[0].title;}
 
   // Section title bounce
   const secObs=new IntersectionObserver(es=>{
@@ -1358,6 +1566,31 @@ renderFeatured();
 
   // Inicializar reveal de cards ya renderizadas (featured se renderiza antes de este script)
   revealCards();
+})();
+</script>
+
+<!-- ADMIN ENTRY -->
+<div style="text-align:center;padding:40px 0 24px">
+  <button id="admin-entry" title="" style="background:none;border:none;cursor:pointer;opacity:.15;transition:opacity .3s;padding:10px;display:inline-block">
+    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="#8A7D74" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="10" cy="10" r="3"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.42 1.42M14.36 14.36l1.42 1.42M4.22 15.78l1.42-1.42M14.36 5.64l1.42-1.42"/>
+    </svg>
+  </button>
+</div>
+<script>
+(function(){
+  const btn=document.getElementById('admin-entry');
+  btn.addEventListener('mouseenter',()=>btn.style.opacity='.4');
+  btn.addEventListener('mouseleave',()=>btn.style.opacity='.15');
+  btn.addEventListener('click',async()=>{
+    const pwd=prompt('');
+    if(!pwd)return;
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pwd));
+    const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if(hash==='03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'){
+      window.location.href='admin.html';
+    }
+  });
 })();
 </script>
 </body>
