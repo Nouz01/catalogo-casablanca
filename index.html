@@ -971,7 +971,7 @@ function renderVariantPicker(){
 
 function renderLookbook(){
   const p=activeP, v=p.vars[activeVI], fotos=v.fotos||[];
-  const wppMsg=encodeURIComponent(`Hola! Consulto disponibilidad: *${getDisplayNameColor(p,activeVI)}* - Color: ${v.color}`);
+  const wppMsg=encodeURIComponent(`Hola, quería consultar por este producto: *${getDisplayNameColor(p,activeVI)}* - Color: ${v.color}`);
   const slides=fotos.slice(0,6).map((src,fi)=>`
     <div class="gal-slide" data-fi="${fi}" style="position:relative">
       <img src="${cdnUrl(src)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=pph style=height:100%><span>${getDisplayNameColor(p,activeVI)}</span></div>'">
@@ -1300,16 +1300,24 @@ function goHero(d){
 
 // ─── WPP FAB ──────────────────────────────────────────────────────────────────
 const wppVlist=document.getElementById('wppVlist');
-wppVlist.innerHTML=VENDEDORES.map(v=>`
-  <a class="wpp-vi" href="https://wa.me/${v.tel}" target="_blank" onclick="vib(40);sndWpp()">
-    <div class="wpp-av">
-      <img src="Vendedores/${v.nombre}.jpg" alt="${v.nombre}" onerror="this.outerHTML='${v.nombre[0]}'">
-    </div>
-    <div style="flex:1"><div class="wpp-vn">${v.nombre}</div><div class="wpp-vsub">Consultar disponibilidad</div></div>
-    <svg class="wpp-arr" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l6 6-6 6"/></svg>
-  </a>`).join('');
+function buildWppList(){
+  const prod=activeP;
+  const msg=prod
+    ? encodeURIComponent(`Hola, quería consultar por este producto: *${getDisplayNameColor(prod,activeVI)}* - Color: ${prod.vars[activeVI].color}`)
+    : encodeURIComponent('Hola, quería consultar disponibilidad.');
+  const sub=prod ? getDisplayNameColor(prod,activeVI) : 'Consultar disponibilidad';
+  wppVlist.innerHTML=VENDEDORES.map(v=>`
+    <a class="wpp-vi" href="https://wa.me/${v.tel}?text=${msg}" target="_blank" onclick="vib(40);sndWpp()">
+      <div class="wpp-av">
+        <img src="Vendedores/${v.nombre}.jpg" alt="${v.nombre}" onerror="this.outerHTML='${v.nombre[0]}'">
+      </div>
+      <div style="flex:1"><div class="wpp-vn">${v.nombre}</div><div class="wpp-vsub">${sub}</div></div>
+      <svg class="wpp-arr" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 4l6 6-6 6"/></svg>
+    </a>`).join('');
+}
+buildWppList();
 
-function openWppSheet(){ vib(40);sndWpp(); wppMenu.classList.add('open'); wppBg.classList.add('open'); }
+function openWppSheet(){ vib(40);sndWpp(); buildWppList(); wppMenu.classList.add('open'); wppBg.classList.add('open'); }
 function closeWppSheet(){ wppMenu.classList.remove('open'); wppBg.classList.remove('open'); }
 
 const wppBtn=document.getElementById('wppBtn'), wppMenu=document.getElementById('wppMenu'), wppClose=document.getElementById('wppClose'), wppBg=document.getElementById('wppBg');
