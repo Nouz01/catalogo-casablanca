@@ -971,7 +971,8 @@ function renderVariantPicker(){
 
 function renderLookbook(){
   const p=activeP, v=p.vars[activeVI], fotos=v.fotos||[];
-  const wppMsg=encodeURIComponent(`Hola, quería consultar por este producto: *${getDisplayNameColor(p,activeVI)}* - Color: ${v.color}`);
+  const wppImg=fotos[0]?('\n'+cdnUrl(fotos[0])):'';
+  const wppMsg=encodeURIComponent(`Hola, quería consultar por este producto: *${getDisplayNameColor(p,activeVI)}* - Color: ${v.color}${wppImg}`);
   const slides=fotos.slice(0,6).map((src,fi)=>`
     <div class="gal-slide" data-fi="${fi}" style="position:relative">
       <img src="${cdnUrl(src)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=pph style=height:100%><span>${getDisplayNameColor(p,activeVI)}</span></div>'">
@@ -1303,7 +1304,7 @@ const wppVlist=document.getElementById('wppVlist');
 function buildWppList(){
   const prod=activeP;
   const msg=prod
-    ? encodeURIComponent(`Hola, quería consultar por este producto: *${getDisplayNameColor(prod,activeVI)}* - Color: ${prod.vars[activeVI].color}`)
+    ? (()=>{ const img=prod.vars[activeVI].fotos?.[0]?('\n'+cdnUrl(prod.vars[activeVI].fotos[0])):''; return encodeURIComponent(`Hola, quería consultar por este producto: *${getDisplayNameColor(prod,activeVI)}* - Color: ${prod.vars[activeVI].color}${img}`); })()
     : encodeURIComponent('Hola, quería hacer una consulta.');
   const sub=prod ? getDisplayNameColor(prod,activeVI) : 'Enviar mensaje';
   wppVlist.innerHTML=VENDEDORES.map(v=>`
