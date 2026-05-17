@@ -53,6 +53,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fn);-webkit-font-sm
 #btn-rename svg{color:#6BA3BE}
 #btn-mkdir svg{color:#C9A84C}
 #btn-covers svg{color:#B07EC6}
+#btn-move svg{color:#E07B39}
 
 /* ── BROWSER ──────────────────────────────────────────────────── */
 #browser{display:none}
@@ -189,7 +190,12 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fn);-webkit-font-sm
         <span>Nueva carpeta</span>
         <small>Creá una carpeta en Cloudinary</small>
       </button>
-      <button class="mode-btn" id="btn-covers" style="grid-column:1/-1">
+      <button class="mode-btn" id="btn-move">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16l-4-4 4-4M17 8l4 4-4 4M3 12h18"/></svg>
+        <span>Mover</span>
+        <small>Mover fotos o carpetas</small>
+      </button>
+      <button class="mode-btn" id="btn-covers">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
         <span>Portadas y Banners</span>
         <small>Cambiar imágenes de la página principal</small>
@@ -205,6 +211,12 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fn);-webkit-font-sm
   <!-- COVERS SCREEN -->
   <div id="covers-screen">
     <div id="covers-list"></div>
+  </div>
+
+  <!-- MOVE DEST -->
+  <div id="move-dest" style="display:none">
+    <div class="section-label" id="move-dest-intro">Elegí la carpeta destino</div>
+    <div id="move-dest-content"></div>
   </div>
 
   <!-- COVER PICKER -->
@@ -267,11 +279,14 @@ const BANNER_COVERS = [
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let TOKEN = null;
-let MODE  = null;       // 'upload'|'delete'|'rename'|'mkdir'|null
+let MODE  = null;       // 'upload'|'delete'|'rename'|'mkdir'|'move'|null
 let TREE_PATH   = [];
 let SELECTED    = new Set();  // public_ids seleccionados
 let CURRENT_IMGS = [];        // [{public_id, format}] en carpeta actual
 let COVERS_TARGET = null;     // {key, label, cldFolder} del cover que se está cambiando
+let MOVE_ITEMS  = [];         // archivos o [carpeta] a mover
+let MOVE_TYPE   = null;       // 'files'|'folder'
+let DEST_PATH   = [];         // ruta navegada en el destino picker
 
 // ── API ───────────────────────────────────────────────────────────────────────
 async function api(method, path, body) {
@@ -364,15 +379,27 @@ function showModal(title, def = '') {
 const FOLDER_ICO = `<svg class="folder-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5V17a2 2 0 002 2h16a2 2 0 002-2V9.5a2 2 0 00-2-2H12.5L10 5H4a2 2 0 00-2 2v2.5z"/></svg>`;
 const RENAME_ICO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
 const CHECK_ICO  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`;
+const MOVE_ICO   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 16l-4-4 4-4M17 8l4 4-4 4M3 12h18"/></svg>`;
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
 document.getElementById('btn-upload').addEventListener('click', () => { MODE='upload';  TREE_PATH=[]; SELECTED.clear(); showBrowser(); });
 document.getElementById('btn-delete').addEventListener('click', () => { MODE='delete';  TREE_PATH=[]; SELECTED.clear(); showBrowser(); });
 document.getElementById('btn-rename').addEventListener('click', () => { MODE='rename';  TREE_PATH=[]; showBrowser(); });
 document.getElementById('btn-mkdir' ).addEventListener('click', () => { MODE='mkdir';   TREE_PATH=[]; showBrowser(); });
+document.getElementById('btn-move'  ).addEventListener('click', () => { MODE='move';    TREE_PATH=[]; SELECTED.clear(); showBrowser(); });
 document.getElementById('btn-covers').addEventListener('click', () => showCoversScreen());
 
 document.getElementById('hdr-back').addEventListener('click', () => {
+  if (document.getElementById('move-dest').style.display !== 'none') {
+    if (DEST_PATH.length > 0) {
+      DEST_PATH.pop(); showMoveDest();
+    } else {
+      document.getElementById('move-dest').style.display = 'none';
+      MOVE_ITEMS = []; MOVE_TYPE = null; SELECTED.clear();
+      showBrowser();
+    }
+    return;
+  }
   if (document.getElementById('cover-picker').style.display !== 'none') {
     document.getElementById('cover-picker').style.display = 'none';
     showCoversScreen(); return;
@@ -394,6 +421,7 @@ function renderHome() {
   document.getElementById('browser').style.display      = 'none';
   document.getElementById('covers-screen').style.display = 'none';
   document.getElementById('cover-picker').style.display  = 'none';
+  document.getElementById('move-dest').style.display     = 'none';
   document.getElementById('bottom-bar').classList.remove('visible');
   document.getElementById('bottom-bar').innerHTML = '';
   document.getElementById('hdr-back-label').textContent = 'Catálogo';
@@ -405,8 +433,9 @@ function showBrowser() {
   document.getElementById('browser').style.display       = 'block';
   document.getElementById('covers-screen').style.display  = 'none';
   document.getElementById('cover-picker').style.display   = 'none';
+  document.getElementById('move-dest').style.display      = 'none';
 
-  const modeLabels = {upload:'Subir fotos', delete:'Eliminar fotos', rename:'Renombrar', mkdir:'Nueva carpeta'};
+  const modeLabels = {upload:'Subir fotos', delete:'Eliminar fotos', rename:'Renombrar', mkdir:'Nueva carpeta', move:'Mover'};
   document.getElementById('hdr-back-label').textContent = TREE_PATH.length === 0 ? 'Inicio' : 'Atrás';
   const path = TREE_PATH.join(' / ');
   document.getElementById('hdr-title').innerHTML = path
@@ -493,8 +522,25 @@ function makeFolderCard(name) {
         });
         hideProgress();
         toast(`"${name}" → "${newName}" (${renamed} fotos)`);
-        renderBrowser();
+        card.querySelector('.tree-card-name').textContent = newName;
+        name = newName;
       } catch (err) { hideProgress(); toast('Error: ' + err.message); }
+    });
+    card.appendChild(btn);
+  }
+
+  if (MODE === 'move') {
+    const btn = document.createElement('button');
+    btn.className = 'rename-btn';
+    btn.style.color = '#E07B39';
+    btn.innerHTML = MOVE_ICO;
+    btn.title = 'Mover carpeta';
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      MOVE_ITEMS = [currentPrefix() + '/' + name];
+      MOVE_TYPE = 'folder';
+      DEST_PATH = [];
+      showMoveDest();
     });
     card.appendChild(btn);
   }
@@ -531,29 +577,34 @@ function buildImgGrid(images) {
 
     wrap.appendChild(el); wrap.appendChild(check); wrap.appendChild(nameEl);
 
-    if (MODE === 'delete') {
+    if (MODE === 'delete' || MODE === 'move') {
       wrap.addEventListener('click', () => toggleSelect(public_id, format, wrap));
     } else if (MODE === 'rename') {
+      let curPid = public_id;
       const rBtn = document.createElement('button');
       rBtn.className = 'rename-file-btn';
       rBtn.title = 'Renombrar';
       rBtn.innerHTML = RENAME_ICO;
       rBtn.addEventListener('click', async e => {
         e.stopPropagation();
-        const newBase = await showModal(`Nuevo nombre para "${name}"`, public_id.split('/').pop());
+        const newBase = await showModal(`Nuevo nombre para "${nameEl.textContent}"`, curPid.split('/').pop());
         if (!newBase) return;
-        const parentPath = public_id.split('/').slice(0, -1).join('/');
+        const parentPath = curPid.split('/').slice(0, -1).join('/');
         showProgress('Renombrando foto…', 40);
         try {
           await api('POST', 'rename', {
-            old_path: public_id,
+            old_path: curPid,
             new_path: `${parentPath}/${newBase}`,
             type: 'file',
             format,
           });
           hideProgress();
+          const newPid = `${parentPath}/${newBase}`;
+          curPid = newPid;
+          el.src = thumbUrl(newPid, format);
+          nameEl.textContent = newBase + '.' + format;
+          wrap.dataset.pid = newPid;
           toast(`Foto renombrada`);
-          renderBrowser();
         } catch (err) { hideProgress(); toast('Error: ' + err.message); }
       });
       wrap.appendChild(rBtn);
@@ -574,19 +625,19 @@ function toggleSelect(public_id, format, wrap) {
     SELECTED.add(key);
     wrap.classList.add('selected');
   }
-  updateDeleteBar();
+  if (MODE === 'move') updateMoveBar(); else updateDeleteBar();
 }
 
 function selectAll() {
   SELECTED.clear();
   for (const img of CURRENT_IMGS) SELECTED.add(img.public_id + '|' + img.format);
   document.querySelectorAll('.img-thumb').forEach(el => el.classList.add('selected'));
-  updateDeleteBar();
+  if (MODE === 'move') updateMoveBar(); else updateDeleteBar();
 }
 function deselectAll() {
   SELECTED.clear();
   document.querySelectorAll('.img-thumb').forEach(el => el.classList.remove('selected'));
-  updateDeleteBar();
+  if (MODE === 'move') updateMoveBar(); else updateDeleteBar();
 }
 
 // ── BOTTOM BAR ────────────────────────────────────────────────────────────────
@@ -623,6 +674,13 @@ function renderBottomBar(imgCount) {
     btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5V17a2 2 0 002 2h16a2 2 0 002-2V9.5a2 2 0 00-2-2H12.5L10 5H4a2 2 0 00-2 2v2.5z"/><path d="M12 12v4M10 14h4"/></svg> Crear carpeta aquí`;
     btn.addEventListener('click', doMkdir);
     bb.appendChild(btn);
+  } else if (MODE === 'move') {
+    if (imgCount > 0) {
+      bb.classList.add('visible');
+      updateMoveBar();
+    } else {
+      bb.classList.remove('visible');
+    }
   } else {
     bb.classList.remove('visible');
   }
@@ -737,12 +795,121 @@ async function doMkdir() {
   }
 }
 
+// ── MOVE ──────────────────────────────────────────────────────────────────────
+function updateMoveBar() {
+  const bb = document.getElementById('bottom-bar');
+  bb.innerHTML = '';
+  if (SELECTED.size === 0) {
+    const btn = document.createElement('button');
+    btn.className = 'bar-btn';
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 11l3 3 3-3M12 5v9"/><rect x="3" y="15" width="18" height="6" rx="1"/></svg> Seleccionar todo`;
+    btn.addEventListener('click', selectAll);
+    bb.appendChild(btn);
+  } else {
+    const desel = document.createElement('button');
+    desel.className = 'bar-btn';
+    desel.textContent = 'Deseleccionar';
+    desel.addEventListener('click', deselectAll);
+
+    const mov = document.createElement('button');
+    mov.className = 'bar-btn primary';
+    mov.innerHTML = `${MOVE_ICO} Mover ${SELECTED.size}`;
+    mov.addEventListener('click', () => {
+      MOVE_ITEMS = [...SELECTED].map(s => ({ public_id: s.split('|')[0], format: s.split('|')[1] }));
+      MOVE_TYPE = 'files';
+      DEST_PATH = [];
+      showMoveDest();
+    });
+    bb.appendChild(desel); bb.appendChild(mov);
+  }
+}
+
+function showMoveDest() {
+  document.getElementById('home').style.display          = 'none';
+  document.getElementById('browser').style.display       = 'none';
+  document.getElementById('covers-screen').style.display = 'none';
+  document.getElementById('cover-picker').style.display  = 'none';
+  document.getElementById('move-dest').style.display     = 'block';
+
+  const label = MOVE_TYPE === 'folder'
+    ? `Mover carpeta "${MOVE_ITEMS[0].split('/').pop()}" a…`
+    : `Mover ${MOVE_ITEMS.length} foto${MOVE_ITEMS.length !== 1 ? 's' : ''} a…`;
+  document.getElementById('move-dest-intro').textContent = label;
+  document.getElementById('hdr-back-label').textContent = DEST_PATH.length > 0 ? 'Atrás' : 'Cancelar';
+  const destStr = DEST_PATH.length ? DEST_PATH.join(' / ') : 'Raíz del catálogo';
+  document.getElementById('hdr-title').innerHTML = `<b>Destino:</b> ${destStr}`;
+
+  renderMoveDest();
+}
+
+async function renderMoveDest() {
+  const content = document.getElementById('move-dest-content');
+  content.innerHTML = '<div class="browser-loading">Cargando carpetas…</div>';
+
+  const bb = document.getElementById('bottom-bar');
+  bb.innerHTML = '';
+  bb.classList.add('visible');
+
+  const prefix = DEST_PATH.length ? 'catalogo/' + DEST_PATH.join('/') : 'catalogo';
+
+  try {
+    const { folders } = await api('GET', `list?prefix=${encodeURIComponent(prefix)}`);
+
+    const movHere = document.createElement('button');
+    movHere.className = 'bar-btn primary';
+    movHere.innerHTML = `${MOVE_ICO} Mover aquí`;
+    movHere.addEventListener('click', () => doMove(prefix));
+    bb.appendChild(movHere);
+
+    content.innerHTML = '';
+
+    if (folders.length === 0) {
+      content.innerHTML = '<div class="browser-empty">No hay subcarpetas aquí</div>';
+      return;
+    }
+
+    const grid = document.createElement('div');
+    grid.className = 'tree-grid';
+    for (const name of folders) {
+      const card = document.createElement('div');
+      card.className = 'tree-card';
+      card.innerHTML = `${FOLDER_ICO}<span class="tree-card-name">${name}</span>`;
+      card.addEventListener('click', () => { DEST_PATH.push(name); showMoveDest(); });
+      grid.appendChild(card);
+    }
+    content.appendChild(grid);
+  } catch (err) {
+    content.innerHTML = `<div class="browser-empty">Error: ${err.message}</div>`;
+  }
+}
+
+async function doMove(dest_folder) {
+  const cnt = MOVE_TYPE === 'files' ? MOVE_ITEMS.length : 1;
+  const typeLabel = MOVE_TYPE === 'files'
+    ? `${cnt} foto${cnt !== 1 ? 's' : ''}`
+    : `la carpeta "${MOVE_ITEMS[0].split('/').pop()}"`;
+  const destLabel = DEST_PATH.join('/') || 'la raíz';
+  if (!confirm(`¿Mover ${typeLabel} a "${destLabel}"?`)) return;
+
+  showProgress(`Moviendo ${typeLabel}…`, 10);
+  try {
+    const { moved } = await api('POST', 'move', { items: MOVE_ITEMS, dest_folder, type: MOVE_TYPE });
+    hideProgress();
+    toast(`${moved} elemento${moved !== 1 ? 's' : ''} movido${moved !== 1 ? 's' : ''} ✓`);
+    MOVE_ITEMS = []; MOVE_TYPE = null; SELECTED.clear(); DEST_PATH = [];
+    TREE_PATH = []; showBrowser();
+  } catch (err) {
+    hideProgress(); toast('Error: ' + err.message);
+  }
+}
+
 // ── COVERS ────────────────────────────────────────────────────────────────────
 async function showCoversScreen() {
   document.getElementById('home').style.display          = 'none';
   document.getElementById('browser').style.display       = 'none';
   document.getElementById('covers-screen').style.display = 'block';
   document.getElementById('cover-picker').style.display   = 'none';
+  document.getElementById('move-dest').style.display      = 'none';
   document.getElementById('bottom-bar').classList.remove('visible');
   document.getElementById('hdr-back-label').textContent = 'Inicio';
   document.getElementById('hdr-title').innerHTML = '<b>Portadas</b>';
@@ -821,6 +988,7 @@ async function openCoverPicker(target) {
   COVERS_TARGET = target;
   document.getElementById('covers-screen').style.display = 'none';
   document.getElementById('cover-picker').style.display  = 'block';
+  document.getElementById('move-dest').style.display     = 'none';
   document.getElementById('hdr-back-label').textContent  = 'Portadas';
   document.getElementById('hdr-title').innerHTML = `<b>${target.label}</b>`;
   document.getElementById('cover-pick-intro').textContent = `Elegí la nueva portada para ${target.label}`;
