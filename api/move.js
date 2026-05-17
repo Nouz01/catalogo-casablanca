@@ -11,6 +11,7 @@ export default async function handler(req, res) {
 
   const cld = initCld();
   let moved = 0;
+  let catalog_updated = true;
 
   try {
     if (type === 'files') {
@@ -48,17 +49,23 @@ export default async function handler(req, res) {
         if (changed) await saveCatalog(cld, catalog);
       } catch (e) {
         console.warn('catalog.json no actualizado:', e.message);
+        catalog_updated = false;
       }
 
       // Actualizar portadas_config.json
+      // Nota: portadas_config.json almacena rutas CON extensión (ej: catalogo/X/foto.jpg)
+      //       pero public_id es SIN extensión → comparar agregando it.format
       try {
         const covers = await getCovers();
         let coversChanged = false;
         const updated = {};
         for (const [k, v] of Object.entries(covers)) {
-          const found = items.find(it => it.public_id === v || it.public_id.toLowerCase() === (v+'').toLowerCase());
+          const found = items.find(it => {
+            const fp = it.public_id + '.' + (it.format || 'jpg');
+            return fp === v || fp.toLowerCase() === (v + '').toLowerCase();
+          });
           if (found) {
-            updated[k] = dest_folder + '/' + found.public_id.split('/').pop();
+            updated[k] = dest_folder + '/' + found.public_id.split('/').pop() + '.' + (found.format || 'jpg');
             coversChanged = true;
           } else {
             updated[k] = v;
@@ -102,6 +109,7 @@ export default async function handler(req, res) {
         if (changed) await saveCatalog(cld, catalog);
       } catch (e) {
         console.warn('catalog.json no actualizado:', e.message);
+        catalog_updated = false;
       }
 
       // Actualizar portadas_config.json
@@ -126,7 +134,7 @@ export default async function handler(req, res) {
       try { await cld.api.delete_folder(sourcePath); } catch (_) {}
     }
 
-    res.json({ ok: true, moved });
+    res.json({ ok: true, moved, catalog_updated });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

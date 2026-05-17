@@ -11,6 +11,7 @@ export default async function handler(req, res) {
 
   try {
     let renamed = 0;
+    let catalog_updated = true;
 
     if (type === 'file') {
       // Renombrar un archivo individual
@@ -33,16 +34,25 @@ export default async function handler(req, res) {
         if (changed) await saveCatalog(cld, catalog);
       } catch (e) {
         console.warn('catalog.json no actualizado:', e.message);
+        catalog_updated = false;
       }
 
       // Actualizar portadas_config.json si este archivo es una portada
+      // Nota: portadas_config.json almacena rutas CON extensión (ej: catalogo/X/foto.jpg)
+      //       pero old_path es el public_id SIN extensión → comparar agregando la extensión
       try {
+        const ext = format || 'jpg';
+        const oldFull = old_path + '.' + ext;
+        const newFull = new_path + '.' + ext;
         const covers = await getCovers();
         let coversChanged = false;
         const updated = {};
         for (const [k, v] of Object.entries(covers)) {
-          if (v === old_path || (typeof v === 'string' && v.toLowerCase() === old_path.toLowerCase())) { updated[k] = new_path; coversChanged = true; }
-          else updated[k] = v;
+          if (typeof v === 'string' && v.toLowerCase() === oldFull.toLowerCase()) {
+            updated[k] = newFull; coversChanged = true;
+          } else {
+            updated[k] = v;
+          }
         }
         if (coversChanged) await saveCovers(cld, updated);
       } catch (e) {
@@ -79,6 +89,7 @@ export default async function handler(req, res) {
         if (changed) await saveCatalog(cld, catalog);
       } catch (e) {
         console.warn('catalog.json no actualizado:', e.message);
+        catalog_updated = false;
       }
 
       // Actualizar portadas_config.json: reemplazar prefijo en valores
@@ -103,7 +114,7 @@ export default async function handler(req, res) {
       try { await cld.api.delete_folder(old_path); } catch (_) {}
     }
 
-    res.json({ ok: true, renamed });
+    res.json({ ok: true, renamed, catalog_updated });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

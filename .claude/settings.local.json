@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(start chrome *)",
+      "Bash(node -e \"console.log\\('node ok'\\)\")",
+      "Bash(npm install *)"
+    ]
+  }
+}
