@@ -1361,7 +1361,7 @@ function sndWpp()   {}
 function sndFilter(){}
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-renderFeatured();
+catalogReady.then(function(){ renderFeatured(); });
 
 // ─── PORTADAS CONFIG ──────────────────────────────────────────────────────────
 fetch('https://res.cloudinary.com/dtelhncnm/raw/upload/portadas_config.json?_='+Date.now())
