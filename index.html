@@ -41,8 +41,8 @@ img{display:block;max-width:100%}
 
 /* HERO */
 .hero{position:relative;overflow:hidden;height:72vw;max-height:680px;min-height:300px;background:var(--linen)}
-.hslides{display:flex;height:100%;transition:transform .65s cubic-bezier(.34,1.2,.64,1);will-change:transform}
-.hslide{min-width:100%;height:100%;flex-shrink:0;overflow:hidden;position:relative}
+.hslides{display:flex;height:100%;transition:transform .5s cubic-bezier(.25,0,.25,1);will-change:transform;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.hslide{min-width:100%;width:100%;height:100%;flex-shrink:0;overflow:hidden;position:relative;-webkit-backface-visibility:hidden;backface-visibility:hidden}
 .hslide img{width:100%;height:100%;object-fit:cover}
 .hovl{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.55));display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;gap:10px;pointer-events:none}
 .htitle{font-family:var(--fs);font-size:clamp(32px,8vw,64px);font-weight:300;color:#fff;text-align:center;line-height:1.1;text-shadow:0 2px 24px rgba(0,0,0,.5)}
@@ -425,6 +425,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     </a>
   </div>
   <nav class="hnav" id="hnav">
+    <button class="nsec" data-sec="acolchados" onclick="navTo('acolchados')">Acolchados</button>
     <button class="nsec" data-sec="sabanas" onclick="navTo('sabanas')">Sábanas</button>
     <button class="nsec" data-sec="cubrecamas" onclick="navTo('cubrecamas')">Cubrecamas</button>
     <button class="nsec" data-sec="almohadones" onclick="navTo('almohadones')">Almohadones</button>
@@ -435,7 +436,6 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <button class="nsec" data-sec="frazada" onclick="navTo('frazada')">Frazada Plata</button>
     <button class="nsec" data-sec="fundas" onclick="navTo('fundas')">Fundas</button>
     <button class="nsec" data-sec="hogar" onclick="navTo('hogar')">Hogar</button>
-    <button class="nsec" data-sec="acolchados" onclick="navTo('acolchados')">Acolchados</button>
   </nav>
 </header>
 
@@ -585,7 +585,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
       <p class="linea-name">Sábanas Oro</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('frazada','Frazada Plata')">
-      <div class="linea-img"><img data-cover="ln-sabanas-plata" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Sabanas/HOTEL%20(preguntar%20medidas)/SAB_HOTEL_PLANA_FULL_1" alt="Sábanas Plata" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="ln-sabanas-plata" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/FRAZADA%20PLATA/FRA_PLATA_FULL_ZAFIRO_1" alt="Sábanas Plata" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Sábanas Plata</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('acolchados','Acolchados','ORO')">
@@ -593,11 +593,11 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
       <p class="linea-name">Acolchados Oro</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('acolchados','Acolchados','Infantiles')">
-      <div class="linea-img"><img data-cover="ln-infantil" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Infantiles/My%20Little%20Pony/AC_MLP_FULL_1" alt="Línea Infantil" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="ln-infantil" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Infantiles/Pepa_/AC_DTAL_PEPPA_TWIN_AMIGOS_1.jpg" alt="Línea Infantil" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Línea Infantil</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('acolchados','Acolchados','Futbol')">
-      <div class="linea-img"><img data-cover="ln-futbol" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Futbol/Argentina_/AC_ARG_FULL_1" alt="Línea Fútbol" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="ln-futbol" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Futbol/Argentina_/AC_AFA_BICAMPEONES_TWIN_4.jpg" alt="Línea Fútbol" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Línea Fútbol</p>
     </div>
   </div>
@@ -644,12 +644,12 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 <!-- ACOLCHADOS LEXUS -->
 <div class="sep-dec"><span class="sep-line"></span><span class="sep-dia">◆</span><span class="sep-line"></span></div>
 <div class="banner-temp rev">
-  <img data-cover="bn-lexus" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/BANNERS/Lexus.jpg" alt="" loading="lazy" onerror="this.style.opacity=0">
+  <img data-cover="bn-lexus" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Lexus/AC_DTAL_LEXUS_FULL_LINEAS_1.jpg" alt="" loading="lazy" onerror="this.style.opacity=0">
   <div class="banner-temp-ovl" style="background:linear-gradient(80deg,rgba(0,0,0,.88) 52%,rgba(0,0,0,.15))"></div>
   <div class="banner-temp-txt">
     <p>Acolchados · Línea Lexus</p>
     <h2>Lexus:<br>Diseño y textura<br>en cada detalle</h2>
-    <button onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Lexus_')">Explorar Lexus</button>
+    <button onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Lexus')">Explorar Lexus</button>
   </div>
 </div>
 
@@ -713,7 +713,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
       <p class="linea-name">Acolchados</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('cortinas','Cortinas')">
-      <div class="linea-img"><img data-cover="col-cortinas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Cortinas/Vinilo/COR_VIN_1" alt="Cortinas" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="col-cortinas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Cortinas/Cortinas De Ambiente/Amb Agostina/CORT_AMB_AGOSTINA_FUCSIA_1.jpg" alt="Cortinas" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Cortinas</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('sabanas','Sábanas')">
@@ -721,7 +721,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
       <p class="linea-name">Sábanas</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('almohadas','Almohadas')">
-      <div class="linea-img"><img data-cover="col-almohadas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Almohadas/Eternity/AL_ETERNITY_TWIN_1" alt="Almohadas" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="col-almohadas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Almohadas/GOLDEN/ALMOHADA_GOLDEN_1.jpg" alt="Almohadas" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Almohadas</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('borregos','Borregos')">
@@ -1173,6 +1173,25 @@ const SEC_MAP={
 const NAV_TITLES=Object.fromEntries(Object.entries(SEC_MAP).map(([k,v])=>[k,v.title]));
 function navTo(sec){ openDrawer(sec, NAV_TITLES[sec]||sec); }
 
+const SUBCAT_LABELS={
+  'ARP':'Ágatha Ruiz De La Prada',
+  'BOCA':'Boca Juniors',
+  'BOCA CUNA':'Boca Juniors Cuna',
+  'DUAL DUTY (Queen y 1 1-2)':'Dual Duty',
+  'DUAL DUTY ALGODON (revisar)':'Dual Duty Algodón',
+  'HOTEL (preguntar medidas)':'Hotel',
+  'INDEP':'Independiente',
+  'NOB':"Newell's Old Boys",
+  'ORO':'Oro',
+  'PLATA (Rehacer sabanas est. con ia)':'Plata',
+  'RACING (hay mas diseños)':'Racing Club',
+  'RIVER':'River Plate',
+  'RIVER CUNA':'River Plate Cuna',
+  'SL':'San Lorenzo',
+  'Sabana en caja (rehacer con ia)':'Sábana En Caja',
+};
+function subcatLabel(s){ return SUBCAT_LABELS[s]||s; }
+
 function getSubcat(p){
   const f=p.vars[0]?.fotos?.[0];
   if(!f) return null;
@@ -1221,7 +1240,7 @@ function renderDrawer(){
     chipsEl.style.padding='8px 12px 4px';
     chipsEl.style.scrollbarWidth='none';
     chipsEl.innerHTML=`<button class="chip ${drawerCatFilter==='all'?'active':''}" onclick="filterDrawer('all')">Todos</button>`+
-      subcats.map(s=>`<button class="chip ${drawerCatFilter===s?'active':''}" onclick="filterDrawer(this.dataset.sub)" data-sub="${s.replace(/"/g,'&quot;')}">${s}</button>`).join('');
+      subcats.map(s=>`<button class="chip ${drawerCatFilter===s?'active':''}" onclick="filterDrawer(this.dataset.sub)" data-sub="${s.replace(/"/g,'&quot;')}">${subcatLabel(s)}</button>`).join('');
   } else {
     chipsEl.style.display='none';
     chipsEl.innerHTML='';
@@ -1274,7 +1293,7 @@ cdrPanel.addEventListener('touchend',e=>{
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
 const HERO_DATA=[
-  {title:'Bienvenido<br>a Casablanca'},
+  {title:'Catálogo<br>Casablanca'},
   {title:'Calidad que<br>se siente al tacto'},
   {title:'Tu hogar merece<br>lo mejor'},
 ];
@@ -1286,7 +1305,7 @@ function setHero(i){
   hi=(i+hslides.length)%hslides.length;
   hslides[hi].classList.add('active');
   hdots[hi].classList.add('active');
-  document.getElementById('hslides').style.transform=`translateX(-${hi*100}%)`;
+  const _hw=document.querySelector('.hero').offsetWidth;document.getElementById('hslides').style.transform=`translate3d(-${hi*_hw}px,0,0)`;
   const tEl=document.getElementById('htitle');
   if(tEl){tEl.style.opacity='0';setTimeout(()=>{tEl.innerHTML=HERO_DATA[hi].title;tEl.style.opacity='1';},200);}
 }
