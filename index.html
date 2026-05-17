@@ -385,7 +385,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 .fav-btn:active{transform:scale(.88)}
 .fav-btn svg{width:14px;height:14px;stroke:var(--stone);fill:none;transition:stroke .18s,fill .18s}
 .fav-btn.fav-on svg{stroke:var(--red);fill:var(--red)}
-#favFloat{position:fixed;bottom:80px;right:16px;z-index:600;display:none;align-items:center;gap:8px;background:var(--red);color:#fff;border:none;border-radius:30px;padding:10px 16px 10px 12px;font-family:var(--fn);font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.4);letter-spacing:.02em;transition:transform .2s}
+#favFloat{position:fixed;bottom:88px;right:20px;z-index:600;display:none;align-items:center;gap:8px;background:var(--red);color:#fff;border:none;border-radius:30px;padding:10px 16px 10px 12px;font-family:var(--fn);font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.4);letter-spacing:.02em;transition:transform .2s}
 #favFloat:active{transform:scale(.95)}
 #favFloat svg{width:18px;height:18px;fill:#fff;flex-shrink:0}
 .favs-panel{position:fixed;inset:0;z-index:7000;background:var(--bg);transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden}
@@ -586,25 +586,57 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <p>Ver todo el catálogo</p>
   </div>
   <div class="lonuevo-grid">
-    <div class="ln-card" onclick="openDrawer('acolchados','Acolchados')">
+    <div class="ln-card" onclick="openDrawer('acolchados','Acolchados','Oro Liso')">
       <img data-cover="ln-1" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro Liso/AC ORO LISO TWIN BLANCO.jpg" alt="Acolchados Oro Liso" loading="lazy" onerror="this.style.opacity=0">
       <div class="ln-card-lbl"><p>Línea estrella</p><p>Acolchados Oro Liso</p></div>
     </div>
-    <div class="ln-card" onclick="openDrawer('cortinas','Cortinas')">
-      <img data-cover="ln-2" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Cortinas/Cortinas De Ambiente/Amb Blackout/CORT_AMB_BLACKOUT_BEIGE_1.jpg" alt="Cortinas Blackout" loading="lazy" onerror="this.style.opacity=0">
-      <div class="ln-card-lbl"><p>Nuevo</p><p>Cortinas Blackout</p></div>
+    <div class="ln-card" onclick="openDrawer('cortinas','Cortinas','Amb Maena')">
+      <img src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Cortinas/Cortinas De Ambiente/Amb Maena/CORT_AMB_MAENA_CAMEL_1.jpg" alt="Cortinas Maena" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ln-card-lbl"><p>Ambiente</p><p>Cortinas Maena</p></div>
     </div>
-    <div class="ln-card" onclick="openDrawer('acolchados','Acolchados')">
+    <div class="ln-card" onclick="openDrawer('acolchados','Acolchados','Oro Estampados')">
       <img data-cover="ln-3" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro Estampados/AC_ORO_FULL_FLORES AMARILLAS_1.jpg" alt="Acolchados Oro Estampados" loading="lazy" onerror="this.style.opacity=0">
       <div class="ln-card-lbl"><p>Colección</p><p>Acolchados Oro Estampados</p></div>
     </div>
-    <div class="ln-card" onclick="openDrawer('sabanas','Sábanas')">
+    <div class="ln-card" onclick="openDrawer('sabanas','Sábanas','Oro')">
       <img data-cover="ln-4" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Sabanas/Oro/ORO LISA (rehacer colores con ia)/SAB_ORO_LISA_QUEEN_AZUL_1.jpg" alt="Sábanas Oro Lisas" loading="lazy" onerror="this.style.opacity=0">
       <div class="ln-card-lbl"><p>Premium</p><p>Sábanas Oro Lisas</p></div>
     </div>
     <div class="ln-card" onclick="openDrawer('almohadas','Almohadas')">
       <img data-cover="ln-5" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Almohadas/Royal/14.jpg" alt="Almohadas" loading="lazy" onerror="this.style.opacity=0">
       <div class="ln-card-lbl"><p>Descanso</p><p>Almohadas</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="sep-dec"><span class="sep-line"></span><span class="sep-dia">◆</span><span class="sep-line"></span></div>
+
+<!-- MÁS VENDIDOS -->
+<div class="lonuevo rev" id="sec-masvendidos">
+  <div class="lonuevo-head">
+    <h2>Más Vendidos</h2>
+    <p>Los favoritos de nuestros clientes</p>
+  </div>
+  <div class="lonuevo-grid">
+    <div class="ln-card" onclick="openDrawer('sabanas','Sábanas','Oro')">
+      <img src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Sabanas/Oro/ORO LISA (rehacer colores con ia)/SAB_ORO_LISA_QUEEN_AZUL_1.jpg" alt="Sábanas Oro Lisas" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ln-card-lbl"><p>Más buscado</p><p>Sábanas Oro Lisas</p></div>
+    </div>
+    <div class="ln-card" onclick="openDrawer('acolchados','Acolchados','Oro Liso')">
+      <img src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro Liso/AC ORO LISO TWIN BLANCO.jpg" alt="Acolchados Oro Liso" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ln-card-lbl"><p>Clásico</p><p>Acolchados Oro Liso</p></div>
+    </div>
+    <div class="ln-card" onclick="openDrawer('cortinas','Cortinas','Amb Blackout')">
+      <img src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Cortinas/Cortinas De Ambiente/Amb Blackout/CORT_AMB_BLACKOUT_BEIGE_1.jpg" alt="Cortinas Blackout" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ln-card-lbl"><p>Tendencia</p><p>Cortinas Blackout</p></div>
+    </div>
+    <div class="ln-card" onclick="openDrawer('borregos','Borregos')">
+      <img src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Borregos/Peppa Dtal/BO_DTAL_PEPPA_TWIN_TOGETHER_1.jpg" alt="Borregos" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ln-card-lbl"><p>Favorito infantil</p><p>Borregos</p></div>
+    </div>
+    <div class="ln-card" onclick="openDrawer('cubrecamas','Cubrecamas')">
+      <img src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Cubrecamas/Lexus Dtal/CU_DTAL_LEXUS_FULL_BYN_1.jpg" alt="Cubrecamas" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ln-card-lbl"><p>Colección</p><p>Cubrecamas</p></div>
     </div>
   </div>
 </div>
@@ -679,7 +711,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 
 <!-- ACOLCHADOS LEXUS -->
 <div class="sep-dec"><span class="sep-line"></span><span class="sep-dia">◆</span><span class="sep-line"></span></div>
-<div class="banner-temp rev" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Lexus_')">
+<div class="banner-temp rev" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Lexus')">
   <img data-cover="bn-lexus" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Lexus_/AC_DTAL_LEXUS_FULL_LINEAS_1.jpg" alt="" loading="lazy" onerror="this.style.opacity=0">
   <div class="banner-temp-ovl" style="background:linear-gradient(80deg,rgba(0,0,0,.88) 52%,rgba(0,0,0,.15))"></div>
   <div class="banner-temp-txt">
@@ -803,10 +835,6 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <p class="favs-empty">Todavía no guardaste ningún producto.<br>Tocá el ♡ en cualquier producto para guardarlo.</p>
   </div>
   <div class="favs-footer">
-    <button class="favs-share" onclick="shareFavs()">
-      <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.526 5.845L.057 23.882l6.187-1.438A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.877 9.877 0 01-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.58 6.58 2.106 12 2.106c5.42 0 9.894 4.474 9.894 9.894 0 5.42-4.474 9.894-9.894 9.894z"/></svg>
-      Consultar por WhatsApp
-    </button>
     <button class="favs-clear" onclick="clearFavs()">Limpiar lista</button>
   </div>
 </div>
