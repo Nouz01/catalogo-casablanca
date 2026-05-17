@@ -35,9 +35,14 @@ export default async function handler(req, res) {
             (dest_folder + '/' + public_id.split('/').pop()).replace(/^catalogo\//, '1000X1000 Catalogo/') + '.' + (fmt || 'jpg'),
           ])
         );
+        const mapCI = new Map(Object.entries(map).map(([k,v])=>[k.toLowerCase(), v]));
         for (const p of catalog) {
           for (const v of p.vars || []) {
-            v.fotos = v.fotos.map(f => { if (map[f]) { changed = true; return map[f]; } return f; });
+            v.fotos = v.fotos.map(f => {
+              const val = map[f] ?? mapCI.get(f.toLowerCase());
+              if (val !== undefined) { changed = true; return val; }
+              return f;
+            });
           }
         }
         if (changed) await saveCatalog(cld, catalog);
@@ -51,7 +56,7 @@ export default async function handler(req, res) {
         let coversChanged = false;
         const updated = {};
         for (const [k, v] of Object.entries(covers)) {
-          const found = items.find(it => it.public_id === v);
+          const found = items.find(it => it.public_id === v || it.public_id.toLowerCase() === (v+'').toLowerCase());
           if (found) {
             updated[k] = dest_folder + '/' + found.public_id.split('/').pop();
             coversChanged = true;
@@ -89,7 +94,7 @@ export default async function handler(req, res) {
         for (const p of catalog) {
           for (const v of p.vars || []) {
             v.fotos = v.fotos.map(f => {
-              if (f.startsWith(oldPrefix)) { changed = true; return f.replace(oldPrefix, newPrefix); }
+              if (f.toLowerCase().startsWith(oldPrefix.toLowerCase())) { changed = true; return newPrefix + f.slice(oldPrefix.length); }
               return f;
             });
           }
@@ -106,7 +111,7 @@ export default async function handler(req, res) {
         const updated = {};
         const newBase = dest_folder + '/' + folderName + '/';
         for (const [k, v] of Object.entries(covers)) {
-          if (typeof v === 'string' && v.startsWith(sourcePath + '/')) {
+          if (typeof v === 'string' && v.toLowerCase().startsWith((sourcePath + '/').toLowerCase())) {
             updated[k] = newBase + v.slice(sourcePath.length + 1);
             coversChanged = true;
           } else {

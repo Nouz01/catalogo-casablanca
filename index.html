@@ -580,16 +580,16 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <p>Explorá por colección</p>
   </div>
   <div class="lineas-scroll">
-    <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('sabanas','Sábanas','ORO')">
-      <div class="linea-img"><img data-cover="ln-sabanas-oro" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Sabanas/Oro/ORO%20LISA%20(rehacer%20colores%20con%20ia)/SAB_ORO_LISA_QUEEN_AZUL_1" alt="Sábanas Oro" loading="lazy" onerror="this.style.display='none'"></div>
+    <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('sabanas','Sábanas','Oro')">
+      <div class="linea-img"><img data-cover="ln-sabanas-oro" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Sabanas/Oro/ORO LISA (rehacer colores con ia)/SAB_ORO_LISA_QUEEN_AZUL_1.jpg" alt="Sábanas Oro" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Sábanas Oro</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('frazada','Frazada Plata')">
-      <div class="linea-img"><img data-cover="ln-sabanas-plata" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/FRAZADA%20PLATA/FRA_PLATA_FULL_ZAFIRO_1" alt="Sábanas Plata" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="ln-sabanas-plata" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Frazada Plata/FRA_PLATA_FULL_ZAFIRO_1.jpg" alt="Sábanas Plata" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Sábanas Plata</p>
     </div>
-    <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('acolchados','Acolchados','ORO')">
-      <div class="linea-img"><img data-cover="ln-acolchados-oro" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro%20Liso/AC%20ORO%20LISO%20TWIN%20BLANCO" alt="Acolchados Oro" loading="lazy" onerror="this.style.display='none'"></div>
+    <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('acolchados','Acolchados','Oro Liso')">
+      <div class="linea-img"><img data-cover="ln-acolchados-oro" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro Liso/AC ORO LISO TWIN BLANCO.jpg" alt="Acolchados Oro" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Acolchados Oro</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('acolchados','Acolchados','Infantiles')">
@@ -609,7 +609,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <p class="edit-eye">Línea estrella</p>
     <h2 class="edit-title">Sábanas Oro Lisa</h2>
     <p class="edit-body">Percal ORO de alta densidad. Una paleta que va de los neutros más suaves a los colores más vibrantes.</p>
-    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('sabanas','Sábanas','ORO')">Ver colección</button>
+    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('sabanas','Sábanas','Oro')">Ver colección</button>
   </div>
   <div class="edit-img">
     <img data-cover="ed-sabanas-oro" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/EDITORIAL/Sabanas Oro Lisa.jpg" alt="Sábanas" onerror="this.style.display='none'">
@@ -624,7 +624,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
   <div class="banner-temp-txt">
     <p>Acolchados · Línea Oro</p>
     <h2>Oro Liso:<br>El clásico que nunca falla</h2>
-    <button onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','ORO LISO')">Ver colección Oro</button>
+    <button onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Oro Liso')">Ver colección Oro</button>
   </div>
 </div>
 
@@ -675,8 +675,20 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <p class="edit-eye">Acolchados · Oro Estampados</p>
     <h2 class="edit-title">Oro Estampados:<br>Color y vida en cada temporada</h2>
     <p class="edit-body">Diseños florales y modernos sobre base Oro premium. La combinación perfecta de estilo y confort para renovar tu habitación.</p>
-    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','ORO ESTAMPADOS')">Ver estampados</button>
+    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Oro Estampados')">Ver estampados</button>
   </div>
+</div>
+
+<!-- FEATURED -->
+<div class="featured rev" id="sec-featured">
+  <div class="feat-head">
+    <div>
+      <h2>Destacados</h2>
+      <p>Los más consultados</p>
+    </div>
+    <button class="feat-all" onclick="openDrawer('acolchados','Acolchados')">Ver todo</button>
+  </div>
+  <div class="feat-scroll" id="featScroll"></div>
 </div>
 
 <!-- SUCURSALES -->
@@ -709,23 +721,23 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
   </div>
   <div class="lineas-scroll">
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('acolchados','Acolchados')">
-      <div class="linea-img"><img data-cover="col-acolchados" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro%20Liso/AC%20ORO%20LISO%20TWIN%20BLANCO" alt="Acolchados" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="col-acolchados" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro Liso/AC ORO LISO TWIN BLANCO.jpg" alt="Acolchados" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Acolchados</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('cortinas','Cortinas')">
-      <div class="linea-img"><img data-cover="col-cortinas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/CORTINAS/Cortinas%20De%20Ambiente/AMB%20AGOSTINA/CORT_AMB_AGOSTINA_FUCSIA_1" alt="Cortinas" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="col-cortinas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Cortinas/Cortinas De Ambiente/Amb Agostina/CORT_AMB_AGOSTINA_FUCSIA_1.jpg" alt="Cortinas" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Cortinas</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('sabanas','Sábanas')">
-      <div class="linea-img"><img data-cover="col-sabanas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Sabanas/Oro/ORO%20LISA%20(rehacer%20colores%20con%20ia)/SAB_ORO_LISA_QUEEN_AZUL_1" alt="Sábanas" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="col-sabanas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Sabanas/Oro/ORO LISA (rehacer colores con ia)/SAB_ORO_LISA_QUEEN_AZUL_1.jpg" alt="Sábanas" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Sábanas</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('almohadas','Almohadas')">
-      <div class="linea-img"><img data-cover="col-almohadas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/ALMOHADAS/GOLDEN/ALMOHADA_GOLDEN_1" alt="Almohadas" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="col-almohadas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Almohadas/Royal/14.jpg" alt="Almohadas" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Almohadas</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('borregos','Borregos')">
-      <div class="linea-img"><img data-cover="col-borregos" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Borregos/Peppa%20Dtal/BO_DTAL_PEPPA_TWIN_TOGETHER_1" alt="Borregos" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="col-borregos" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Borregos/Peppa Dtal/BO_DTAL_PEPPA_TWIN_TOGETHER_1.jpg" alt="Borregos" loading="lazy" onerror="this.style.display='none'"></div>
       <p class="linea-name">Borregos</p>
     </div>
   </div>
@@ -801,11 +813,25 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 <script>
 // ─── CLOUDINARY CDN ───────────────────────────────────────────────────────────
 const CDN = 'https://res.cloudinary.com/dtelhncnm/image/upload/';
+// Corrige el case de la carpeta de categoría (catalog.json la guarda en MAYÚSCULAS,
+// Cloudinary la tiene en Title Case). Se aplica solo al primer segmento tras catalogo/.
+const _CAT_CASE = {
+  'ACOLCHADOS':'Acolchados','ALMOHADAS':'Almohadas','ALMOHADONES':'Almohadones',
+  'BORREGOS':'Borregos','CORTINAS':'Cortinas','CUBRECAMAS':'Cubrecamas',
+  'FRAZADA PLATA':'Frazada Plata','FUNDAS':'Fundas','HOGAR':'Hogar','SABANAS':'Sabanas',
+};
 function cdnUrl(path) {
   if (!path) return '';
   if (path.startsWith('http')) return path;
-  return CDN + path.replace('1000X1000 Catalogo/', 'catalogo/')
-    .split('/').map(encodeURIComponent).join('/');
+  let p = path.replace('1000X1000 Catalogo/', 'catalogo/');
+  // Normalizar case de la carpeta de categoría
+  const base = 'catalogo/';
+  const slash = p.indexOf('/', base.length);
+  if (slash > 0) {
+    const cat = p.slice(base.length, slash);
+    if (_CAT_CASE[cat]) p = base + _CAT_CASE[cat] + p.slice(slash);
+  }
+  return CDN + p.split('/').map(encodeURIComponent).join('/');
 }
 
 async function dlImg(btn, url, name) {
@@ -1118,9 +1144,10 @@ function closeSearch(){
 function doSearch(q){
   const body=document.getElementById('srchBody');
   if(!q.trim()){body.innerHTML='<p class="srch-hint">Escribí un producto, categoría o color</p>';return;}
-  const terms=q.toLowerCase().trim().split(/\s+/);
+  const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const terms=norm(q.trim()).split(/\s+/);
   const results=CATALOG.filter(p=>{
-    const hay=[p.nombre,p.cat,p.sec,getSubcat(p)||'',...p.vars.map(v=>v.color)].join(' ').toLowerCase();
+    const hay=norm([p.nombre,p.cat,p.sec,getSubcat(p)||'',...p.vars.map(v=>v.color)].join(' '));
     return terms.every(t=>hay.includes(t));
   });
   if(!results.length){body.innerHTML=`<p class="srch-empty">Sin resultados para "<strong>${q}</strong>"</p>`;return;}
@@ -1240,13 +1267,14 @@ function renderDrawer(){
     chipsEl.style.padding='8px 12px 4px';
     chipsEl.style.scrollbarWidth='none';
     chipsEl.innerHTML=`<button class="chip ${drawerCatFilter==='all'?'active':''}" onclick="filterDrawer('all')">Todos</button>`+
-      subcats.map(s=>`<button class="chip ${drawerCatFilter===s?'active':''}" onclick="filterDrawer(this.dataset.sub)" data-sub="${s.replace(/"/g,'&quot;')}">${subcatLabel(s)}</button>`).join('');
+      subcats.map(s=>`<button class="chip ${drawerCatFilter.toLowerCase()===s.toLowerCase()?'active':''}" onclick="filterDrawer(this.dataset.sub)" data-sub="${s.replace(/"/g,'&quot;')}">${subcatLabel(s)}</button>`).join('');
   } else {
     chipsEl.style.display='none';
     chipsEl.innerHTML='';
   }
 
-  const visible=drawerCatFilter==='all' ? prods : prods.filter(p=>getSubcat(p)===drawerCatFilter);
+  const _dcf=drawerCatFilter.toLowerCase();
+  const visible=drawerCatFilter==='all' ? prods : prods.filter(p=>{const sc=getSubcat(p);return sc&&sc.toLowerCase()===_dcf;});
   document.getElementById('cdrCount').textContent=`${visible.length} producto${visible.length!==1?'s':''}`;
 
   if(!visible.length){
@@ -1361,24 +1389,94 @@ function sndWpp()   {}
 function sndFilter(){}
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-catalogReady.then(function(){ renderFeatured(); });
+// Actualiza imágenes estáticas de secciones a partir del catalog.json
+// (portadas_config.json tiene prioridad y las sobreescribe luego)
+function updateSectionImages(){
+  const pick=(filter)=>{
+    const p=CATALOG.find(filter);
+    return p?.vars?.[0]?.fotos?.[0] ? cdnUrl(p.vars[0].fotos[0]) : null;
+  };
+  const sc=(sec,sub)=>p=>p.sec===sec&&(sub?getSubcat(p)===sub:true);
+  const map={
+    'acolchados':   pick(sc('acolchados')),
+    'cubrecamas':   pick(sc('cubrecamas')),
+    'almohadones':  pick(sc('almohadones')),
+    'almohadas':    pick(sc('almohadas')),
+    'fundas':       pick(sc('fundas')),
+    'cortinas':     pick(sc('cortinas')),
+    'hogar':        pick(sc('hogar')),
+    'borregos':     pick(sc('borregos')),
+    'sabanas':      pick(sc('sabanas')),
+    'col-acolchados': pick(sc('acolchados')),
+    'col-cortinas':   pick(sc('cortinas')),
+    'col-sabanas':    pick(sc('sabanas')),
+    'col-almohadas':  pick(sc('almohadas')),
+    'col-borregos':   pick(sc('borregos')),
+    'ln-sabanas-oro': pick(sc('sabanas','Oro')),
+    'ln-sabanas-plata': pick(sc('frazada')),
+    'ln-acolchados-oro': pick(sc('acolchados','Oro Liso')),
+    'ln-infantil':    pick(sc('acolchados','Infantiles')),
+    'ln-futbol':      pick(sc('acolchados','Futbol')),
+  };
+  document.querySelectorAll('[data-cover]').forEach(el=>{
+    const src=map[el.dataset.cover];
+    if(src) el.src=src;
+  });
+}
 
 // ─── PORTADAS CONFIG ──────────────────────────────────────────────────────────
-fetch('https://res.cloudinary.com/dtelhncnm/raw/upload/portadas_config.json?_='+Date.now())
-  .then(r=>r.ok?r.json():null)
-  .then(cfg=>{
-    if(!cfg) return;
-    const CDN_IMG='https://res.cloudinary.com/dtelhncnm/image/upload/';
-    document.querySelectorAll('[data-cover]').forEach(el=>{
-      const k=el.dataset.cover;
-      if(cfg[k]) el.src=CDN_IMG+cfg[k];
-    });
-    const bannerSlides=document.querySelectorAll('.hslide');
-    ['ban-1','ban-2','ban-3'].forEach((k,i)=>{
-      if(cfg[k]&&bannerSlides[i]) bannerSlides[i].querySelector('img').src=CDN_IMG+cfg[k];
-    });
-  })
-  .catch(()=>{});
+function loadCovers(){
+  fetch('https://res.cloudinary.com/dtelhncnm/raw/upload/portadas_config.json?_='+Date.now())
+    .then(r=>r.ok?r.json():null)
+    .then(cfg=>{
+      if(!cfg) return;
+      const CDN_IMG='https://res.cloudinary.com/dtelhncnm/image/upload/';
+      document.querySelectorAll('[data-cover]').forEach(el=>{
+        const k=el.dataset.cover;
+        if(cfg[k]) el.src=CDN_IMG+cfg[k];
+      });
+      const bannerSlides=document.querySelectorAll('.hslide');
+      ['ban-1','ban-2','ban-3'].forEach((k,i)=>{
+        if(cfg[k]&&bannerSlides[i]) bannerSlides[i].querySelector('img').src=CDN_IMG+cfg[k];
+      });
+    })
+    .catch(()=>{});
+}
+
+catalogReady.then(function(){ renderFeatured(); updateSectionImages(); loadCovers(); });
+
+// ─── AUTO-REFRESH desde admin ─────────────────────────────────────────────────
+(function(){
+  function onRefresh(type){
+    if(type==='covers'){
+      loadCovers();
+      return;
+    }
+    // Recargar catalog.json y re-renderizar
+    fetch('https://res.cloudinary.com/dtelhncnm/raw/upload/catalog.json?t='+Date.now())
+      .then(r=>r.ok?r.json():[])
+      .then(data=>{
+        CATALOG=Array.isArray(data)?data:[];
+        renderFeatured();
+        updateSectionImages();
+        loadCovers();
+      })
+      .catch(()=>{});
+  }
+
+  // BroadcastChannel (misma pestaña → otras pestañas)
+  if(typeof BroadcastChannel!=='undefined'){
+    const bc=new BroadcastChannel('casablanca_catalog');
+    bc.onmessage=e=>onRefresh(e.data?.type||'catalog');
+  }
+
+  // localStorage fallback (para navegadores/casos sin BroadcastChannel)
+  window.addEventListener('storage',e=>{
+    if(e.key==='casablanca_refresh'){
+      try{ const d=JSON.parse(e.newValue); onRefresh(d?.type||'catalog'); }catch(_){}
+    }
+  });
+})();
 </script>
 
 <script>

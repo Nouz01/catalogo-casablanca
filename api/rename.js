@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         let changed = false;
         for (const p of catalog) {
           for (const v of p.vars || []) {
-            const i = v.fotos.indexOf(oldCatPath);
+            const i = v.fotos.findIndex(f => f === oldCatPath || f.toLowerCase() === oldCatPath.toLowerCase());
             if (i >= 0) { v.fotos[i] = newCatPath; changed = true; }
           }
         }
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
         let coversChanged = false;
         const updated = {};
         for (const [k, v] of Object.entries(covers)) {
-          if (v === old_path) { updated[k] = new_path; coversChanged = true; }
+          if (v === old_path || (typeof v === 'string' && v.toLowerCase() === old_path.toLowerCase())) { updated[k] = new_path; coversChanged = true; }
           else updated[k] = v;
         }
         if (coversChanged) await saveCovers(cld, updated);
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
         for (const p of catalog) {
           for (const v of p.vars || []) {
             v.fotos = v.fotos.map(f => {
-              if (f.startsWith(oldPrefix)) { changed = true; return f.replace(oldPrefix, newPrefix); }
+              if (f.toLowerCase().startsWith(oldPrefix.toLowerCase())) { changed = true; return newPrefix + f.slice(oldPrefix.length); }
               return f;
             });
           }
@@ -87,8 +87,8 @@ export default async function handler(req, res) {
         let coversChanged = false;
         const updated = {};
         for (const [k, v] of Object.entries(covers)) {
-          if (typeof v === 'string' && v.startsWith(old_path + '/')) {
-            updated[k] = v.replace(old_path + '/', new_path + '/');
+          if (typeof v === 'string' && v.toLowerCase().startsWith((old_path + '/').toLowerCase())) {
+            updated[k] = new_path + '/' + v.slice(old_path.length + 1);
             coversChanged = true;
           } else {
             updated[k] = v;

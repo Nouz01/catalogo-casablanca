@@ -18,11 +18,15 @@ export default async function handler(req, res) {
     try {
       const catalog = await getCatalog();
       const pidSet = new Set(ids);
+      const pidSetLower = new Set(ids.map(id => id.toLowerCase()));
       let changed = false;
       for (const p of catalog) {
         for (const v of p.vars || []) {
           const before = v.fotos.length;
-          v.fotos = v.fotos.filter(f => !pidSet.has(catalogPathToCid(f)));
+          v.fotos = v.fotos.filter(f => {
+            const cid = catalogPathToCid(f);
+            return !pidSet.has(cid) && !pidSetLower.has(cid.toLowerCase());
+          });
           if (v.fotos.length !== before) changed = true;
         }
         // Eliminar variantes vacías

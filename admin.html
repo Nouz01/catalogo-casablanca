@@ -54,6 +54,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fn);-webkit-font-sm
 #btn-mkdir svg{color:#C9A84C}
 #btn-covers svg{color:#B07EC6}
 #btn-move svg{color:#E07B39}
+#btn-reconcile{border-color:#F5A62366;background:rgba(245,166,35,.07)}
 
 /* ── BROWSER ──────────────────────────────────────────────────── */
 #browser{display:none}
@@ -200,6 +201,11 @@ body{background:var(--bg);color:var(--ink);font-family:var(--fn);-webkit-font-sm
         <span>Portadas y Banners</span>
         <small>Cambiar imágenes de la página principal</small>
       </button>
+      <button class="mode-btn" id="btn-reconcile" style="grid-column:1/-1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:#F5A623"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10"/><path d="M16 12l-4-4-4 4M12 8v8"/><polyline points="18 16 22 16 22 20"/></svg>
+        <span>Reparar Catálogo</span>
+        <small>Corrige fotos rotas por cambios de nombre/carpeta</small>
+      </button>
     </div>
   </div>
 
@@ -258,6 +264,13 @@ const HASH  = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'
 const CLOUD = 'dtelhncnm';
 const CDN   = `https://res.cloudinary.com/${CLOUD}/image/upload/`;
 
+// ── BROADCAST ──────────────────────────────────────────────────────────────────
+const BC = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('casablanca_catalog') : null;
+function notifyRefresh(type = 'catalog') {
+  if (BC) BC.postMessage({ type });
+  localStorage.setItem('casablanca_refresh', JSON.stringify({ type, ts: Date.now() }));
+}
+
 const COVER_CATS = [
   {key:'acolchados',  label:'Acolchados',  cldFolder:'Acolchados'},
   {key:'almohadas',   label:'Almohadas',   cldFolder:'Almohadas'},
@@ -268,6 +281,7 @@ const COVER_CATS = [
   {key:'fundas',      label:'Fundas',      cldFolder:'Fundas'},
   {key:'hogar',       label:'Hogar',       cldFolder:'Hogar'},
   {key:'sabanas',     label:'Sábanas',     cldFolder:'Sabanas'},
+  {key:'frazada',     label:'Frazada Plata', cldFolder:'Frazada Plata'},
 ];
 
 const BANNER_COVERS = [
@@ -387,6 +401,24 @@ document.getElementById('btn-rename').addEventListener('click', () => { MODE='re
 document.getElementById('btn-mkdir' ).addEventListener('click', () => { MODE='mkdir';   TREE_PATH=[]; showBrowser(); });
 document.getElementById('btn-move'  ).addEventListener('click', () => { MODE='move';    TREE_PATH=[]; SELECTED.clear(); showBrowser(); });
 document.getElementById('btn-covers').addEventListener('click', () => showCoversScreen());
+document.getElementById('btn-reconcile').addEventListener('click', async () => {
+  if (!confirm('¿Reparar el catálogo? Esto puede tardar hasta 1 minuto mientras se escanean todas las fotos en Cloudinary.')) return;
+  showProgress('Escaneando Cloudinary…', 20);
+  try {
+    showProgress('Comparando con catálogo…', 50);
+    const { fixed, removed, removedProds, total } = await api('POST', 'reconcile', {});
+    hideProgress();
+    notifyRefresh('catalog');
+    const parts = [];
+    if (fixed > 0) parts.push(`${fixed} path${fixed !== 1 ? 's' : ''} corregido${fixed !== 1 ? 's' : ''}`);
+    if (removed > 0) parts.push(`${removed} foto${removed !== 1 ? 's' : ''} eliminada${removed !== 1 ? 's' : ''} de Cloudinary`);
+    if (removedProds > 0) parts.push(`${removedProds} producto${removedProds !== 1 ? 's' : ''} sin fotos removido${removedProds !== 1 ? 's' : ''}`);
+    toast(parts.length > 0 ? '✓ ' + parts.join(' · ') : `Catálogo OK — ${total} recursos escaneados`);
+  } catch (err) {
+    hideProgress();
+    toast('Error: ' + err.message);
+  }
+});
 
 document.getElementById('hdr-back').addEventListener('click', () => {
   if (document.getElementById('move-dest').style.display !== 'none') {
@@ -521,6 +553,7 @@ function makeFolderCard(name) {
         });
         hideProgress();
         toast(`"${name}" → "${newName}" (${renamed} fotos)`);
+        notifyRefresh('catalog');
         card.querySelector('.tree-card-name').textContent = newName;
         name = newName;
       } catch (err) { hideProgress(); toast('Error: ' + err.message); }
@@ -604,6 +637,7 @@ function buildImgGrid(images) {
           nameEl.textContent = newBase + '.' + format;
           wrap.dataset.pid = newPid;
           toast(`Foto renombrada`);
+          notifyRefresh('catalog');
         } catch (err) { hideProgress(); toast('Error: ' + err.message); }
       });
       wrap.appendChild(rBtn);
@@ -752,6 +786,7 @@ function doUpload() {
 
     hideProgress();
     toast(`${ok} foto${ok !== 1 ? 's' : ''} subida${ok !== 1 ? 's' : ''} ✓`);
+    if (ok > 0) notifyRefresh('catalog');
     renderBrowser();
   });
 
@@ -771,6 +806,7 @@ async function doDelete() {
     SELECTED.clear();
     hideProgress();
     toast(`${cnt} foto${cnt !== 1 ? 's' : ''} eliminada${cnt !== 1 ? 's' : ''} ✓`);
+    notifyRefresh('catalog');
     renderBrowser();
   } catch (err) {
     hideProgress(); toast('Error: ' + err.message);
@@ -895,6 +931,7 @@ async function doMove(dest_folder) {
     const { moved } = await api('POST', 'move', { items: MOVE_ITEMS, dest_folder, type: MOVE_TYPE });
     hideProgress();
     toast(`${moved} elemento${moved !== 1 ? 's' : ''} movido${moved !== 1 ? 's' : ''} ✓`);
+    notifyRefresh('catalog');
     MOVE_ITEMS = []; MOVE_TYPE = null; SELECTED.clear(); DEST_PATH = [];
     TREE_PATH = []; showBrowser();
   } catch (err) {
@@ -1035,6 +1072,7 @@ async function saveCover(public_id, format) {
     await api('POST', 'covers', { data: { [COVERS_TARGET.key]: coverPath } });
     hideProgress();
     toast(`Portada de ${COVERS_TARGET.label} actualizada ✓`);
+    notifyRefresh('covers');
     document.getElementById('cover-picker').style.display = 'none';
     showCoversScreen();
   } catch (err) {
