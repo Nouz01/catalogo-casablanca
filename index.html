@@ -459,8 +459,8 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <button class="nsec" data-sec="bano" onclick="navTo('bano')">Baño</button>
     <button class="nsec" data-sec="borregos" onclick="navTo('borregos')">Borregos</button>
     <button class="nsec" data-sec="cortinas" onclick="navTo('cortinas')">Cortinas</button>
-    <button class="nsec" data-sec="frazada" onclick="navTo('frazada')">Frazada Plata</button>
-    <button class="nsec" data-sec="fundas" onclick="navTo('fundas')">Fundas de Almohadas</button>
+    <button class="nsec" data-sec="frazada" onclick="navTo('frazada')">Frazadas</button>
+    <button class="nsec" data-sec="fundas" onclick="navTo('fundas')">Fundas</button>
     <button class="nsec" data-sec="hogar" onclick="navTo('hogar')">Hogar</button>
     <button class="nsec" data-sec="colchones" onclick="navTo('colchones')">Colchones</button>
     <button class="nsec" data-sec="camas" onclick="navTo('camas')">Camas</button>
@@ -633,7 +633,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
       <p class="linea-name">Línea Infantil</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('acolchados','Acolchados','Futbol')">
-      <div class="linea-img"><img data-cover="ln-futbol" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Futbol/Argentina_/AC_AFA_BICAMPEONES_TWIN_4.jpg" alt="Línea Fútbol" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="linea-img"><img data-cover="ln-futbol" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Futbol/Argentina/AC_AFA_BICAMPEONES_TWIN_4.jpg" alt="Línea Fútbol" loading="lazy" onerror="this.style.opacity=0"></div>
       <p class="linea-name">Línea Fútbol</p>
     </div>
   </div>
@@ -1587,7 +1587,7 @@ function updateSectionImages(){
   };
   document.querySelectorAll('[data-cover]').forEach(el=>{
     const src=map[el.dataset.cover];
-    if(src) el.src=src;
+    if(src){ el.style.display=''; el.style.opacity=''; el.src=src; }
   });
 }
 
