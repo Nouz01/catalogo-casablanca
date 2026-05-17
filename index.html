@@ -460,8 +460,10 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <button class="nsec" data-sec="borregos" onclick="navTo('borregos')">Borregos</button>
     <button class="nsec" data-sec="cortinas" onclick="navTo('cortinas')">Cortinas</button>
     <button class="nsec" data-sec="frazada" onclick="navTo('frazada')">Frazada Plata</button>
-    <button class="nsec" data-sec="fundas" onclick="navTo('fundas')">Fundas</button>
+    <button class="nsec" data-sec="fundas" onclick="navTo('fundas')">Fundas de Almohadas</button>
     <button class="nsec" data-sec="hogar" onclick="navTo('hogar')">Hogar</button>
+    <button class="nsec" data-sec="colchones" onclick="navTo('colchones')">Colchones</button>
+    <button class="nsec" data-sec="camas" onclick="navTo('camas')">Camas</button>
   </nav>
 </header>
 
@@ -529,9 +531,9 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
       <img data-cover="almohadas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Almohadas/Royal/14.jpg" alt="Almohadas" loading="lazy" onerror="this.style.opacity=0">
       <div class="ccat-lbl"><p class="ccat-name">Almohadas</p><p class="ccat-count">Cool · Eternity · Golden</p></div>
     </div>
-    <div class="ccat" onclick="openDrawer('fundas','Fundas')">
-      <img data-cover="fundas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Fundas/River Plate/FUNDAS_PACK_RIVER PLATE_ BANDA_1.jpg" alt="Fundas" loading="lazy" onerror="this.style.opacity=0">
-      <div class="ccat-lbl"><p class="ccat-name">Fundas</p><p class="ccat-count">River · Boca · Racing +</p></div>
+    <div class="ccat" onclick="openDrawer('fundas','Fundas de Almohadas')">
+      <img data-cover="fundas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Fundas/River Plate/FUNDAS_PACK_RIVER PLATE_ BANDA_1.jpg" alt="Fundas de Almohadas" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ccat-lbl"><p class="ccat-name">Fundas de Almohadas</p><p class="ccat-count">River · Boca · Racing +</p></div>
     </div>
     <div class="ccat" onclick="openDrawer('cortinas','Cortinas')">
       <img data-cover="cortinas" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Cortinas/Cortinas De Ambiente/Amb Agostina/CORT_AMB_AGOSTINA_FUCSIA_1.jpg" alt="Cortinas" loading="lazy" onerror="this.style.opacity=0">
@@ -548,6 +550,14 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <div class="ccat" onclick="openDrawer('acolchados','Acolchados')">
       <img data-cover="acolchados" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro Liso/AC ORO LISO TWIN BLANCO.jpg" alt="Acolchados" loading="lazy" onerror="this.style.opacity=0">
       <div class="ccat-lbl"><p class="ccat-name">Acolchados</p><p class="ccat-count">Oro Liso · Estampados · Infantil</p></div>
+    </div>
+    <div class="ccat" onclick="openDrawer('colchones','Colchones')">
+      <div class="ccat-ph"><span style="font-size:36px">🛏</span></div>
+      <div class="ccat-lbl"><p class="ccat-name">Colchones</p><p class="ccat-count">Próximamente</p></div>
+    </div>
+    <div class="ccat" onclick="openDrawer('camas','Camas')">
+      <div class="ccat-ph"><span style="font-size:36px">🛏</span></div>
+      <div class="ccat-lbl"><p class="ccat-name">Camas</p><p class="ccat-count">Próximamente</p></div>
     </div>
   </div>
 </section>
@@ -955,8 +965,9 @@ const SINGULAR_MAP = {
   'Cortinas':'CORTINA','Sabanas':'SÁBANA','Fundas':'FUNDA',
   'Borregos':'BORREGO','Baño':'BAÑO','Hogar':'HOGAR',
 };
-function getDisplayName(p){ return p.nombre; }
-function getDisplayNameColor(p,vi){ return p.nombre; }
+function cleanNombre(s){ return s.replace(/\s*\([^)]*\)/g,'').trim(); }
+function getDisplayName(p){ return cleanNombre(p.nombre); }
+function getDisplayNameColor(p,vi){ return cleanNombre(p.nombre); }
 
 // ─── CATALOG DATA — cargado desde catalog.js (ver catalog.js) ────────────────
 
@@ -1112,7 +1123,7 @@ function renderVariantPicker(){
   const arrSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>';
   document.getElementById('lookbook').innerHTML=`
     <div style="padding:20px 16px 8px">
-      <p style="font-size:11px;color:var(--stone);letter-spacing:.07em;text-transform:uppercase;margin-bottom:16px">${p.nombre} &mdash; ${p.vars.length} variante${p.vars.length!==1?'s':''}</p>
+      <p style="font-size:11px;color:var(--stone);letter-spacing:.07em;text-transform:uppercase;margin-bottom:16px">${getDisplayName(p)} &mdash; ${p.vars.length} variante${p.vars.length!==1?'s':''}</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         ${p.vars.map((vv,i)=>`
           <div class="ftile vpick" data-vi="${i}" style="cursor:pointer">
@@ -1158,7 +1169,7 @@ function renderLookbook(){
     </a>`).join('');
 
   document.getElementById('lookbook').innerHTML=`
-    ${p.vars.length>1?`<button onclick="renderVariantPicker();document.getElementById('overlay').scrollTop=0" style="display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--stone);font-family:var(--fn);font-size:13px;padding:14px 16px 0;cursor:pointer">&#8249; <span>${p.nombre}</span></button>`:''}
+    ${p.vars.length>1?`<button onclick="renderVariantPicker();document.getElementById('overlay').scrollTop=0" style="display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--stone);font-family:var(--fn);font-size:13px;padding:14px 16px 0;cursor:pointer">&#8249; <span>${getDisplayName(p)}</span></button>`:''}
     <div class="gal" id="galWrap">
       <div class="gal-track" id="galTrack">${slides||`<div class="gal-slide"><div class="pph" style="height:100%"><span>${getDisplayNameColor(p,activeVI)}</span></div></div>`}</div>
       <span class="gal-cnt" id="galCnt">1 / ${fotos.length||1}</span>
@@ -1334,13 +1345,15 @@ const SEC_MAP={
   cubrecamas: {secs:['cubrecamas'], title:'Cubrecamas'},
   almohadones:{secs:['almohadones'],title:'Almohadones'},
   almohadas:  {secs:['almohadas'],  title:'Almohadas'},
-  bano:       {secs:['toalla','toallones','batas'], title:'Baño'},
+  bano:       {secs:['toalla','toallones','batas','cortinas-bano','alfombras'], title:'Baño'},
   borregos:   {secs:['borregos'],   title:'Borregos'},
   cortinas:   {secs:['cortinas'],   title:'Cortinas'},
   frazada:    {secs:['frazada'],    title:'Frazada Plata'},
-  fundas:     {secs:['fundas'],     title:'Fundas'},
+  fundas:     {secs:['fundas'],     title:'Fundas de Almohadas'},
   hogar:      {secs:['hogar'],      title:'Hogar'},
   acolchados: {secs:['acolchados'], title:'Acolchados'},
+  colchones:  {secs:['colchones'],  title:'Colchones'},
+  camas:      {secs:['camas'],      title:'Camas'},
 };
 const NAV_TITLES=Object.fromEntries(Object.entries(SEC_MAP).map(([k,v])=>[k,v.title]));
 function navTo(sec){ openDrawer(sec, NAV_TITLES[sec]||sec); }
@@ -1355,7 +1368,15 @@ const SUBCAT_LABELS={
   'INDEP':'Independiente',
   'NOB':"Newell's Old Boys",
   'ORO':'Oro',
+  'PEPPA DTAL':'Peppa Pig',
+  'PLAY DTAL':'PlayStation',
+  'PONY DTAL':'My Little Pony',
+  'ORO BITONO':'Oro Bitono',
+  'ORO ESTAMPADOS':'Oro Estampados',
+  'ORO LISO':'Oro Liso',
   'PLATA (Rehacer sabanas est. con ia)':'Plata',
+  'PLATA ESTAMPADOS':'Plata Estampados',
+  'ROLLING DTAL':'Rolling Dtal',
   'RACING (hay mas diseños)':'Racing Club',
   'RIVER':'River Plate',
   'RIVER CUNA':'River Plate Cuna',
@@ -1394,7 +1415,7 @@ function closeDrawer(){
 function drawerMatch(p){
   const cfg=SEC_MAP[drawerSec];
   if(!cfg) return false;
-  if(!cfg.secs.some(s=>p.sec===s)) return false;
+  if(!cfg.secs.some(s=>p.sec.toLowerCase()===s)) return false;
   if(cfg.filter && !cfg.filter(p)) return false;
   return true;
 }
