@@ -1,4 +1,4 @@
-import { initCld, isAuthed, getCatalog, saveCatalog, getAllResources } from './_cld.js';
+import { initCld, isAuthed, getCatalog, saveCatalog, getCovers, saveCovers, getAllResources } from './_cld.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -34,6 +34,20 @@ export default async function handler(req, res) {
       } catch (e) {
         console.warn('catalog.json no actualizado:', e.message);
       }
+
+      // Actualizar portadas_config.json si este archivo es una portada
+      try {
+        const covers = await getCovers();
+        let coversChanged = false;
+        const updated = {};
+        for (const [k, v] of Object.entries(covers)) {
+          if (v === old_path) { updated[k] = new_path; coversChanged = true; }
+          else updated[k] = v;
+        }
+        if (coversChanged) await saveCovers(cld, updated);
+      } catch (e) {
+        console.warn('portadas_config.json no actualizado:', e.message);
+      }
     } else {
       // Renombrar carpeta: mover todos los recursos
       const resources = await getAllResources(cld, old_path);
@@ -65,6 +79,24 @@ export default async function handler(req, res) {
         if (changed) await saveCatalog(cld, catalog);
       } catch (e) {
         console.warn('catalog.json no actualizado:', e.message);
+      }
+
+      // Actualizar portadas_config.json: reemplazar prefijo en valores
+      try {
+        const covers = await getCovers();
+        let coversChanged = false;
+        const updated = {};
+        for (const [k, v] of Object.entries(covers)) {
+          if (typeof v === 'string' && v.startsWith(old_path + '/')) {
+            updated[k] = v.replace(old_path + '/', new_path + '/');
+            coversChanged = true;
+          } else {
+            updated[k] = v;
+          }
+        }
+        if (coversChanged) await saveCovers(cld, updated);
+      } catch (e) {
+        console.warn('portadas_config.json no actualizado:', e.message);
       }
 
       // Intentar borrar carpeta vieja (solo si está vacía)

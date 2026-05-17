@@ -1,81 +1,126 @@
-import { initCld, isAuthed, getCatalog, saveCatalog, getAllResources } from './_cld.js';
+import { initCld, isAuthed, getCatalog, saveCatalog, getCovers, saveCovers, getAllResources } from './_cld.js';
 
 export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).end();
   if (!isAuthed(req)) return res.status(401).json({ error: 'No autorizado' });
 
   const { items, dest_folder, type } = req.body;
-  if (!items?.length || !dest_folder || !type)
-    return res.status(400).json({ error: 'items, dest_folder y type son requeridos' });
+  if (!items?.length || !dest_folder) return res.status(400).json({ error: 'Faltan parámetros' });
 
   const cld = initCld();
+  let moved = 0;
 
   try {
-    let moved = 0;
-    const catalog = await getCatalog().catch(() => null);
-    let catalogChanged = false;
-
     if (type === 'files') {
       for (const { public_id, format } of items) {
         const filename = public_id.split('/').pop();
         const new_id = dest_folder + '/' + filename;
-        if (public_id === new_id) continue;
         try {
           await cld.uploader.rename(public_id, new_id, { overwrite: false, resource_type: 'image' });
           moved++;
-          if (catalog) {
-            const ext = format || 'jpg';
-            const oldPath = public_id.replace(/^catalogo\//, '1000X1000 Catalogo/') + '.' + ext;
-            const newPath = new_id.replace(/^catalogo\//, '1000X1000 Catalogo/') + '.' + ext;
-            for (const p of catalog) {
-              for (const v of p.vars || []) {
-                const i = v.fotos.indexOf(oldPath);
-                if (i >= 0) { v.fotos[i] = newPath; catalogChanged = true; }
-              }
-            }
-          }
         } catch (e) {
           console.warn('No se pudo mover:', public_id, e.message);
         }
       }
 
-    } else {
-      // type === 'folder'
-      const source_folder = items[0];
-      const folderName = source_folder.split('/').pop();
-      const new_folder = dest_folder + '/' + folderName;
-      if (source_folder === new_folder)
-        return res.status(400).json({ error: 'El origen y destino son iguales' });
-      if (new_folder.startsWith(source_folder + '/'))
-        return res.status(400).json({ error: 'No se puede mover una carpeta dentro de sí misma' });
+      // Actualizar catalog.json
+      try {
+        const catalog = await getCatalog();
+        let changed = false;
+        const map = Object.fromEntries(
+          items.map(({ public_id, format: fmt }) => [
+            public_id.replace(/^catalogo\//, '1000X1000 Catalogo/') + '.' + (fmt || 'jpg'),
+            (dest_folder + '/' + public_id.split('/').pop()).replace(/^catalogo\//, '1000X1000 Catalogo/') + '.' + (fmt || 'jpg'),
+          ])
+        );
+        for (const p of catalog) {
+          for (const v of p.vars || []) {
+            v.fotos = v.fotos.map(f => { if (map[f]) { changed = true; return map[f]; } return f; });
+          }
+        }
+        if (changed) await saveCatalog(cld, catalog);
+      } catch (e) {
+        console.warn('catalog.json no actualizado:', e.message);
+      }
 
-      const resources = await getAllResources(cld, source_folder);
-      const oldPrefix = source_folder.replace(/^catalogo\//, '1000X1000 Catalogo/') + '/';
-      const newPrefix = new_folder.replace(/^catalogo\//, '1000X1000 Catalogo/') + '/';
+      // Actualizar portadas_config.json
+      try {
+        const covers = await getCovers();
+        let coversChanged = false;
+        const updated = {};
+        for (const [k, v] of Object.entries(covers)) {
+          const found = items.find(it => it.public_id === v);
+          if (found) {
+            updated[k] = dest_folder + '/' + found.public_id.split('/').pop();
+            coversChanged = true;
+          } else {
+            updated[k] = v;
+          }
+        }
+        if (coversChanged) await saveCovers(cld, updated);
+      } catch (e) {
+        console.warn('portadas_config.json no actualizado:', e.message);
+      }
+
+    } else if (type === 'folder') {
+      const sourcePath = items[0];
+      const folderName = sourcePath.split('/').pop();
+      const resources = await getAllResources(cld, sourcePath);
 
       for (const r of resources) {
-        const newId = r.public_id.replace(source_folder + '/', new_folder + '/');
+        const rel = r.public_id.slice(sourcePath.length + 1);
+        const new_id = dest_folder + '/' + folderName + '/' + rel;
         try {
-          await cld.uploader.rename(r.public_id, newId, { overwrite: false, resource_type: 'image' });
+          await cld.uploader.rename(r.public_id, new_id, { overwrite: false, resource_type: 'image' });
           moved++;
-          if (catalog) {
-            for (const p of catalog) {
-              for (const v of p.vars || []) {
-                v.fotos = v.fotos.map(f => {
-                  if (f.startsWith(oldPrefix)) { catalogChanged = true; return f.replace(oldPrefix, newPrefix); }
-                  return f;
-                });
-              }
-            }
-          }
         } catch (e) {
           console.warn('No se pudo mover:', r.public_id, e.message);
         }
       }
-      try { await cld.api.delete_folder(source_folder); } catch (_) {}
+
+      // Actualizar catalog.json
+      try {
+        const oldPrefix = sourcePath.replace(/^catalogo\//, '1000X1000 Catalogo/') + '/';
+        const newPrefix = (dest_folder + '/' + folderName + '/').replace(/^catalogo\//, '1000X1000 Catalogo/');
+        const catalog = await getCatalog();
+        let changed = false;
+        for (const p of catalog) {
+          for (const v of p.vars || []) {
+            v.fotos = v.fotos.map(f => {
+              if (f.startsWith(oldPrefix)) { changed = true; return f.replace(oldPrefix, newPrefix); }
+              return f;
+            });
+          }
+        }
+        if (changed) await saveCatalog(cld, catalog);
+      } catch (e) {
+        console.warn('catalog.json no actualizado:', e.message);
+      }
+
+      // Actualizar portadas_config.json
+      try {
+        const covers = await getCovers();
+        let coversChanged = false;
+        const updated = {};
+        const newBase = dest_folder + '/' + folderName + '/';
+        for (const [k, v] of Object.entries(covers)) {
+          if (typeof v === 'string' && v.startsWith(sourcePath + '/')) {
+            updated[k] = newBase + v.slice(sourcePath.length + 1);
+            coversChanged = true;
+          } else {
+            updated[k] = v;
+          }
+        }
+        if (coversChanged) await saveCovers(cld, updated);
+      } catch (e) {
+        console.warn('portadas_config.json no actualizado:', e.message);
+      }
+
+      try { await cld.api.delete_folder(sourcePath); } catch (_) {}
     }
 
-    if (catalog && catalogChanged) await saveCatalog(cld, catalog);
     res.json({ ok: true, moved });
   } catch (e) {
     res.status(500).json({ error: e.message });

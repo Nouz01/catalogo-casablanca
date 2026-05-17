@@ -268,7 +268,6 @@ const COVER_CATS = [
   {key:'fundas',      label:'Fundas',      cldFolder:'Fundas'},
   {key:'hogar',       label:'Hogar',       cldFolder:'Hogar'},
   {key:'sabanas',     label:'Sábanas',     cldFolder:'Sabanas'},
-  {key:'almohadas',   label:'Almohadas',   cldFolder:'Almohadas'},
 ];
 
 const BANNER_COVERS = [
@@ -997,16 +996,15 @@ async function openCoverPicker(target) {
   pickerGrid.innerHTML = '<div class="cover-pick-loading">Cargando imágenes…</div>';
 
   try {
-    const prefix = `catalogo/${target.cldFolder}`;
-    const { images } = await api('GET', `list?prefix=${encodeURIComponent(prefix)}`);
+    const prefix = target.cldFolder ? `catalogo/${target.cldFolder}` : 'catalogo';
+    const { folders, images } = await api('GET', `list?prefix=${encodeURIComponent(prefix)}`);
 
     // Si no hay fotos directas, buscar en subcarpetas también
-    let allImgs = images;
-    if (images.length === 0) {
-      const { folders } = await api('GET', `list?prefix=${encodeURIComponent(prefix)}`);
-      for (const f of folders.slice(0, 5)) {
+    let allImgs = [...images];
+    if (allImgs.length === 0) {
+      for (const f of folders.slice(0, 8)) {
         const sub = await api('GET', `list?prefix=${encodeURIComponent(prefix + '/' + f)}`).catch(() => ({images:[]}));
-        allImgs.push(...sub.images.slice(0, 10));
+        allImgs.push(...sub.images.slice(0, 12));
       }
     }
 
