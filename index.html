@@ -171,7 +171,7 @@ img{display:block;max-width:100%}
 .linea-name{text-align:center;font-size:12px;letter-spacing:.05em;margin-top:10px;color:var(--soft)}
 
 /* BANNER TEMPORADA */
-.banner-temp{margin:0 24px 56px;border-radius:20px;overflow:hidden;position:relative;min-height:280px;display:flex;align-items:center}
+.banner-temp{margin:0 24px 56px;border-radius:20px;overflow:hidden;position:relative;min-height:280px;display:flex;align-items:center;cursor:pointer}
 @media(max-width:640px){.banner-temp{margin:0 14px 40px;min-height:220px}}
 .banner-temp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .banner-temp-ovl{position:absolute;inset:0;background:linear-gradient(100deg,rgba(0,0,0,.75) 40%,transparent)}
@@ -183,7 +183,7 @@ img{display:block;max-width:100%}
 .banner-temp-txt button:hover{background:rgba(255,255,255,.12);border-color:#fff}
 
 /* EDITORIAL */
-.editorial{display:grid;grid-template-columns:1fr 1fr;margin:0 24px 48px;border-radius:16px;overflow:hidden;min-height:320px;background:var(--linen);border:1px solid var(--border)}
+.editorial{display:grid;grid-template-columns:1fr 1fr;margin:0 24px 48px;border-radius:16px;overflow:hidden;min-height:320px;background:var(--linen);border:1px solid var(--border);cursor:pointer}
 @media(max-width:640px){.editorial{grid-template-columns:1fr;margin:0 14px 40px}.edit-img{aspect-ratio:4/3;order:-1}}
 .edit-txt{padding:40px 36px;display:flex;flex-direction:column;justify-content:center;gap:14px}
 .edit-eye{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
@@ -380,6 +380,32 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 .rev-l.vis{opacity:1;transform:translateX(0)}
 .rev-r{opacity:0;transform:translateX(40px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
 .rev-r.vis{opacity:1;transform:translateX(0)}
+/* FAVORITOS */
+.fav-btn{position:absolute;top:7px;right:7px;width:30px;height:30px;border-radius:50%;background:rgba(18,16,14,.75);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:3;backdrop-filter:blur(6px);transition:background .18s,transform .15s;-webkit-tap-highlight-color:transparent;flex-shrink:0}
+.fav-btn:active{transform:scale(.88)}
+.fav-btn svg{width:14px;height:14px;stroke:var(--stone);fill:none;transition:stroke .18s,fill .18s}
+.fav-btn.fav-on svg{stroke:var(--red);fill:var(--red)}
+#favFloat{position:fixed;bottom:80px;right:16px;z-index:600;display:none;align-items:center;gap:8px;background:var(--red);color:#fff;border:none;border-radius:30px;padding:10px 16px 10px 12px;font-family:var(--fn);font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.4);letter-spacing:.02em;transition:transform .2s}
+#favFloat:active{transform:scale(.95)}
+#favFloat svg{width:18px;height:18px;fill:#fff;flex-shrink:0}
+.favs-panel{position:fixed;inset:0;z-index:7000;background:var(--bg);transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden}
+.favs-panel.open{transform:translateX(0)}
+.favs-hdr{display:flex;align-items:center;gap:10px;padding:max(14px,env(safe-area-inset-top)) 16px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.favs-hdr h2{flex:1;font-family:var(--fs);font-size:18px;font-weight:400;color:var(--ink)}
+.favs-close{background:none;border:none;color:var(--stone);font-size:22px;cursor:pointer;padding:4px;line-height:1}
+.favs-body{overflow-y:auto;flex:1;padding:12px;-webkit-overflow-scrolling:touch}
+.favs-empty{padding:60px 20px;text-align:center;color:var(--stone);font-size:14px;line-height:1.8}
+.favs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.favs-card{background:var(--card);border-radius:10px;overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:transform .15s}
+.favs-card:active{transform:scale(.96)}
+.favs-card-img{aspect-ratio:1;overflow:hidden;position:relative}
+.favs-card-img img{width:100%;height:100%;object-fit:cover}
+.favs-card-info{padding:8px 10px 10px}
+.favs-card-name{font-family:var(--fs);font-size:13px;color:var(--ink);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.favs-footer{padding:14px 16px max(14px,env(safe-area-inset-bottom));border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.favs-share{background:var(--red);color:#fff;border:none;border-radius:12px;padding:14px;font-family:var(--fn);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:.02em}
+.favs-clear{background:none;border:1px solid var(--border);color:var(--stone);border-radius:12px;padding:10px;font-family:var(--fn);font-size:13px;cursor:pointer}
+
 /* SEARCH */
 .srch-btn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:none;background:none;color:var(--soft);cursor:pointer;flex-shrink:0;padding:0;margin-left:auto;transition:color .2s;-webkit-appearance:none}
 .srch-btn:active,.srch-btn:hover{color:var(--ink)}
@@ -604,78 +630,78 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 </div>
 
 <!-- EDITORIAL 3 — Sábanas Oro Lisa (imagen derecha) -->
-<div class="editorial rev">
+<div class="editorial rev" onclick="vib(20);sndOpen();openDrawer('sabanas','Sábanas','Oro')">
   <div class="edit-txt">
     <p class="edit-eye">Línea estrella</p>
     <h2 class="edit-title">Sábanas Oro Lisa</h2>
     <p class="edit-body">Percal ORO de alta densidad. Una paleta que va de los neutros más suaves a los colores más vibrantes.</p>
-    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('sabanas','Sábanas','Oro')">Ver colección</button>
+    <button class="edit-cta" style="pointer-events:none">Ver colección</button>
   </div>
   <div class="edit-img">
-    <img data-cover="ed-sabanas-oro" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/EDITORIAL/Sabanas Oro Lisa.jpg" alt="Sábanas" onerror="this.style.display='none'">
+    <img data-cover="ed-sabanas-oro" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Sabanas/Oro/ORO LISA (rehacer colores con ia)/SAB_ORO_LISA_QUEEN_AZUL_1.jpg" alt="Sábanas" onerror="this.style.opacity=0">
   </div>
 </div>
 
 <!-- ACOLCHADOS ORO LISO -->
 <div class="sep-dec"><span class="sep-line"></span><span class="sep-dia">◆</span><span class="sep-line"></span></div>
-<div class="banner-temp rev">
-  <img data-cover="bn-oro-liso" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/BANNERS/Oro Liso.jpg" alt="" loading="lazy" onerror="this.style.opacity=0">
+<div class="banner-temp rev" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Oro Liso')">
+  <img data-cover="bn-oro-liso" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro Liso/AC ORO LISO TWIN BLANCO.jpg" alt="" loading="lazy" onerror="this.style.opacity=0">
   <div class="banner-temp-ovl" style="background:linear-gradient(110deg,rgba(0,0,0,.82) 48%,rgba(0,0,0,.2))"></div>
   <div class="banner-temp-txt">
     <p>Acolchados · Línea Oro</p>
     <h2>Oro Liso:<br>El clásico que nunca falla</h2>
-    <button onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Oro Liso')">Ver colección Oro</button>
+    <button style="pointer-events:none">Ver colección Oro</button>
   </div>
 </div>
 
 <!-- ACOLCHADOS INFANTILES -->
-<div class="editorial rev-img rev">
+<div class="editorial rev-img rev" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Infantiles')">
   <div class="edit-img">
-    <img data-cover="ed-infantiles" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/EDITORIAL/Infantiles.jpg" alt="Acolchado Infantil" loading="lazy" onerror="this.style.display='none'">
+    <img data-cover="ed-infantiles" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Infantiles/Pepa_/AC_DTAL_PEPPA_TWIN_AMIGOS_1.jpg" alt="Acolchado Infantil" loading="lazy" onerror="this.style.opacity=0">
   </div>
   <div class="edit-txt">
     <p class="edit-eye">Para los más chicos</p>
     <h2 class="edit-title">Acolchados Infantiles:<br>Diseños que enamoran</h2>
     <p class="edit-body">Personajes favoritos en acolchados de alta calidad. My Little Pony, Transformers, Peppa Pig, Playstation y muchos más.</p>
-    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Infantiles')">Ver infantiles</button>
+    <button class="edit-cta" style="pointer-events:none">Ver infantiles</button>
   </div>
 </div>
 
 <!-- ACOLCHADOS LEXUS -->
 <div class="sep-dec"><span class="sep-line"></span><span class="sep-dia">◆</span><span class="sep-line"></span></div>
-<div class="banner-temp rev">
+<div class="banner-temp rev" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Lexus_')">
   <img data-cover="bn-lexus" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Lexus_/AC_DTAL_LEXUS_FULL_LINEAS_1.jpg" alt="" loading="lazy" onerror="this.style.opacity=0">
   <div class="banner-temp-ovl" style="background:linear-gradient(80deg,rgba(0,0,0,.88) 52%,rgba(0,0,0,.15))"></div>
   <div class="banner-temp-txt">
     <p>Acolchados · Línea Lexus</p>
     <h2>Lexus:<br>Diseño y textura<br>en cada detalle</h2>
-    <button onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Lexus_')">Explorar Lexus</button>
+    <button style="pointer-events:none">Explorar Lexus</button>
   </div>
 </div>
 
 <!-- SABANAS ARP -->
-<div class="editorial rev">
+<div class="editorial rev" onclick="vib(20);sndOpen();openDrawer('sabanas','Sábanas','ARP')">
   <div class="edit-txt">
     <p class="edit-eye">Sábanas · Diseño exclusivo</p>
     <h2 class="edit-title">Sábanas Ágatha:<br>Arte para tu descanso</h2>
     <p class="edit-body">La firma de Ágatha Ruiz de la Prada llega a tu cama. Diseños únicos en colores vibrantes que transforman tu dormitorio.</p>
-    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('sabanas','Sábanas','ARP')">Ver sábanas</button>
+    <button class="edit-cta" style="pointer-events:none">Ver sábanas</button>
   </div>
   <div class="edit-img">
-    <img data-cover="ed-sabanas-agatha" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/EDITORIAL/Sabanas Agatha.jpg" alt="Sábanas Ágatha" loading="lazy" onerror="this.style.display='none'">
+    <img data-cover="ed-sabanas-agatha" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Sabanas/ARP/SAB_ARP_FULL_BLOOM_ROSA_1.jpg" alt="Sábanas Ágatha" loading="lazy" onerror="this.src='https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Sabanas/Oro/ORO LISA (rehacer colores con ia)/SAB_ORO_LISA_QUEEN_AZUL_1.jpg'">
   </div>
 </div>
 
 <!-- ACOLCHADOS ORO ESTAMPADOS -->
-<div class="editorial rev-img rev">
+<div class="editorial rev-img rev" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Oro Estampados')">
   <div class="edit-img">
-    <img data-cover="ed-oro-estampados" src="https://res.cloudinary.com/dtelhncnm/image/upload/miniaturas/EDITORIAL/Oro Estampados.jpg" alt="Oro Estampado" loading="lazy" onerror="this.style.display='none'">
+    <img data-cover="ed-oro-estampados" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro Estampados/AC_ORO_FULL_FLORES AMARILLAS_1.jpg" alt="Oro Estampado" loading="lazy" onerror="this.style.opacity=0">
   </div>
   <div class="edit-txt">
     <p class="edit-eye">Acolchados · Oro Estampados</p>
     <h2 class="edit-title">Oro Estampados:<br>Color y vida en cada temporada</h2>
     <p class="edit-body">Diseños florales y modernos sobre base Oro premium. La combinación perfecta de estilo y confort para renovar tu habitación.</p>
-    <button class="edit-cta" onclick="vib(20);sndOpen();openDrawer('acolchados','Acolchados','Oro Estampados')">Ver estampados</button>
+    <button class="edit-cta" style="pointer-events:none">Ver estampados</button>
   </div>
 </div>
 
@@ -750,6 +776,30 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
   </div>
   <p class="foot-copy">© 2026 Casablanca. Catálogo interno.</p>
 </footer>
+
+<!-- FAVORITOS FLOAT -->
+<button id="favFloat" onclick="openFavs()">
+  <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+  <span id="favFloatCnt">0</span> guardados
+</button>
+
+<!-- FAVORITOS PANEL -->
+<div class="favs-panel" id="favsPanel">
+  <div class="favs-hdr">
+    <h2>Mis guardados</h2>
+    <button class="favs-close" onclick="closeFavs()">✕</button>
+  </div>
+  <div class="favs-body" id="favsBody">
+    <p class="favs-empty">Todavía no guardaste ningún producto.<br>Tocá el ♡ en cualquier producto para guardarlo.</p>
+  </div>
+  <div class="favs-footer">
+    <button class="favs-share" onclick="shareFavs()">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.526 5.845L.057 23.882l6.187-1.438A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.877 9.877 0 01-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374A9.861 9.861 0 012.106 12C2.106 6.58 6.58 2.106 12 2.106c5.42 0 9.894 4.474 9.894 9.894 0 5.42-4.474 9.894-9.894 9.894z"/></svg>
+      Consultar por WhatsApp
+    </button>
+    <button class="favs-clear" onclick="clearFavs()">Limpiar lista</button>
+  </div>
+</div>
 
 <!-- SEARCH PANEL -->
 <div id="srch" role="dialog" aria-modal="true">
@@ -879,6 +929,14 @@ const CMAP = {
   'old rose':'#C89098','pink lavander':'#C8A8C8','rosa':'#E0A8B8',
   'hielo':'#D0E8F0','tierra':'#B08060','vison':'#9A7060','visón':'#9A7060',
   'gris':'#AAA6A0','único':'#D0C8BC',
+  'azul':'#4A7AB0','verde':'#3A8C5A','rojo':'#B83030','negro':'#1A1818',
+  'amarillo':'#C8A830','naranja':'#C87028','violeta':'#7850A0','morado':'#6840A0',
+  'turquesa':'#3AA8A0','bordó':'#7A1028','bordo':'#7A1028','petroleo':'#2A5060',
+  'petróleo':'#2A5060','terracota':'#C06848','durazno':'#E8A878',
+  'salmon':'#E88878','salmón':'#E88878','aqua':'#48C8C0','fucsia':'#D03898',
+  'coral':'#E87868','arena':'#D4B88A','crema':'#F0E8D0','ocre':'#C09040',
+  'cobre':'#B06830','indigo':'#3C3880','índigo':'#3C3880','dorado':'#C8A030',
+  'plateado':'#B0B0B8','musgo':'#6A8858','caqui':'#B0A060','acero':'#607888',
 };
 function chex(n){
   if(!n) return '#888';
@@ -888,7 +946,7 @@ function chex(n){
     if(k===nk||k.includes(nk)) return val;
   }
   let h=0; for(const ch of n) h=(h*31+ch.charCodeAt(0))&0xffff;
-  return `hsl(${h%360},30%,55%)`;
+  return `hsl(${h%360},55%,48%)`;
 }
 
 // ─── NAMING AUTOMÁTICO ────────────────────────────────────────────────────────
@@ -906,6 +964,87 @@ const FOTO_LABELS = ['Detalle','Ambiente','Textura','Color'];
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let activeP=null, activeVI=0;
+
+// ─── FAVORITOS ────────────────────────────────────────────────────────────────
+let FAVS = JSON.parse(localStorage.getItem('cbFavs')||'[]');
+
+function isFav(id){ return FAVS.includes(id); }
+
+function toggleFav(id, btn){
+  const idx=FAVS.indexOf(id);
+  if(idx>=0) FAVS.splice(idx,1); else FAVS.push(id);
+  localStorage.setItem('cbFavs',JSON.stringify(FAVS));
+  if(btn) btn.classList.toggle('fav-on', isFav(id));
+  updateFavFloat();
+  // sync all buttons for this product
+  document.querySelectorAll(`.fav-btn[data-fid="${id}"]`).forEach(b=>b.classList.toggle('fav-on',isFav(id)));
+}
+
+const FAV_HEART='<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
+
+function mkFavBtn(id){
+  const on=isFav(id)?'fav-on':'';
+  return `<button class="fav-btn ${on}" data-fid="${id}" onclick="event.stopPropagation();toggleFav('${id}',this)" title="Guardar">${FAV_HEART}</button>`;
+}
+
+function updateFavFloat(){
+  const cnt=FAVS.length;
+  const fl=document.getElementById('favFloat');
+  const fc=document.getElementById('favFloatCnt');
+  if(!fl) return;
+  fl.style.display=cnt>0?'flex':'none';
+  if(fc) fc.textContent=cnt;
+}
+
+function openFavs(){
+  vib(20); sndOpen();
+  history.pushState({view:'favs'},'','#guardados');
+  renderFavsPanel();
+  document.getElementById('favsPanel').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeFavs(){
+  vib(15); sndClose();
+  document.getElementById('favsPanel').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function clearFavs(){
+  FAVS=[];
+  localStorage.setItem('cbFavs','[]');
+  updateFavFloat();
+  renderFavsPanel();
+}
+
+function shareFavs(){
+  if(!FAVS.length) return;
+  vib(30); sndWpp();
+  const prods=CATALOG.filter(p=>FAVS.includes(p.id));
+  const list=prods.map(p=>`• ${p.nombre} (${p.cat})`).join('\n');
+  const msg=encodeURIComponent(`Hola, me interesan estos productos de Casablanca:\n\n${list}\n\n¿Me podés dar información?`);
+  window.open(`https://wa.me/${VENDEDORES[0].tel}?text=${msg}`,'_blank');
+}
+
+function renderFavsPanel(){
+  const body=document.getElementById('favsBody');
+  if(!body) return;
+  const prods=CATALOG.filter(p=>FAVS.includes(p.id));
+  if(!prods.length){
+    body.innerHTML='<p class="favs-empty">Todavía no guardaste ningún producto.<br>Tocá el ♡ en cualquier producto para guardarlo.</p>';
+    return;
+  }
+  body.innerHTML=`<div class="favs-grid">${prods.map(p=>{
+    const src=cdnUrl(p.vars[0]?.fotos?.[0]);
+    const dn=getDisplayName(p);
+    return `<div class="favs-card" onclick="closeFavs();setTimeout(()=>openDet('${p.id}'),320)">
+      <div class="favs-card-img">${src?`<img src="${src}" alt="${dn}" loading="lazy" onerror="this.style.opacity=0">`:''}
+        ${mkFavBtn(p.id)}
+      </div>
+      <div class="favs-card-info"><p class="favs-card-name">${dn}</p></div>
+    </div>`;
+  }).join('')}</div>`;
+}
 
 
 // ─── CLICK TRACKING ───────────────────────────────────────────────────────────
@@ -943,7 +1082,7 @@ function renderFeatured(){
     const dots=p.vars.slice(0,4).map(v=>`<span class="cdot" style="background:${chex(v.color)}"></span>`).join('');
     const dn=getDisplayName(p);
     return `<div class="fcard" data-id="${p.id}">
-      <div class="fwrap">${src?`<img src="${src}" alt="${dn}" loading="lazy" onerror="this.style.opacity=0">`:`<div class="pph" style="height:100%"><span>${dn}</span></div>`}</div>
+      <div class="fwrap" style="position:relative">${src?`<img src="${src}" alt="${dn}" loading="lazy" onerror="this.style.opacity=0">`:`<div class="pph" style="height:100%"><span>${dn}</span></div>`}${mkFavBtn(p.id)}</div>
       <p class="fname">${dn}</p>
       <div class="fdots">${dots}</div>
     </div>`;
@@ -1026,10 +1165,15 @@ function renderLookbook(){
       ${fotos.length>1?`<button class="gal-arr prev" id="galPrev">&#8249;</button><button class="gal-arr next" id="galNext">&#8250;</button>`:''}
     </div>
     ${thumbs?`<div class="gal-thumbs" id="galThumbs">${thumbs}</div>`:''}
-    <div class="lb-info">
-      <p class="lb-tag">${p.cat}</p>
-      <h2 class="lb-nombre">${getDisplayNameColor(p,activeVI)}</h2>
-      <p class="lb-mat">${p.mat}</p>
+    <div class="lb-info" style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+        <div style="flex:1">
+          <p class="lb-tag">${p.cat}</p>
+          <h2 class="lb-nombre">${getDisplayNameColor(p,activeVI)}</h2>
+          <p class="lb-mat">${p.mat}</p>
+        </div>
+        <button class="fav-btn ${isFav(p.id)?'fav-on':''}" data-fid="${p.id}" onclick="event.stopPropagation();toggleFav('${p.id}',this)" title="Guardar" style="position:relative;top:auto;right:auto;flex-shrink:0;width:36px;height:36px;margin-top:4px">${FAV_HEART}</button>
+      </div>
     </div>
     <div class="lb-stock">
       <p class="lb-slbl">¿Querés consultar sobre este producto?</p>
@@ -1156,7 +1300,7 @@ function doSearch(q){
       const src=cdnUrl(p.vars[0]?.fotos?.[0]);
       const dn=getDisplayName(p);
       return `<div class="srch-card" data-id="${p.id}">
-        <div class="srch-card-img">${src?`<img src="${src}" alt="${dn}" loading="lazy" onerror="this.style.opacity=0">`:`<div class="pph" style="height:100%"><span>${dn}</span></div>`}</div>
+        <div class="srch-card-img" style="position:relative">${src?`<img src="${src}" alt="${dn}" loading="lazy" onerror="this.style.opacity=0">`:`<div class="pph" style="height:100%"><span>${dn}</span></div>`}${mkFavBtn(p.id)}</div>
         <div class="srch-card-info"><p class="srch-card-name">${dn}</p><p class="srch-card-cat">${p.cat}</p></div>
       </div>`;
     }).join('')}</div>`;
@@ -1173,6 +1317,7 @@ window.addEventListener('popstate', e=>{
   const s = e.state;
   if(document.getElementById('srch').classList.contains('open')){ closeSearch(); return; }
   if(document.getElementById('overlay').classList.contains('open')){ closeDet(); return; }
+  if(document.getElementById('favsPanel').classList.contains('open')){ closeFavs(); return; }
   if(document.getElementById('cdr').classList.contains('open')){ closeDrawer(); return; }
   if(wppMenu && wppMenu.classList.contains('open')){ closeWppSheet(); return; }
 });
@@ -1287,8 +1432,9 @@ function renderDrawer(){
     const src=cdnUrl(p.vars[0]?.fotos?.[0]);
     const dn=getDisplayName(p);
     return `<div class="ftile" data-id="${p.id}">
-      <div class="ftile-img">
+      <div class="ftile-img" style="position:relative">
         ${src?`<img src="${src}" alt="${dn}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=ftile-ph></div>'">`:`<div class="ftile-ph"></div>`}
+        ${mkFavBtn(p.id)}
       </div>
       <div class="ftile-lbl">
         <p class="ftile-name">${getDisplayName(p)}</p>
@@ -1443,7 +1589,7 @@ function loadCovers(){
     .catch(()=>{});
 }
 
-catalogReady.then(function(){ renderFeatured(); updateSectionImages(); loadCovers(); });
+catalogReady.then(function(){ renderFeatured(); updateSectionImages(); loadCovers(); updateFavFloat(); });
 
 // ─── AUTO-REFRESH desde admin ─────────────────────────────────────────────────
 (function(){
