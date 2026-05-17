@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Admin — Casablanca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1A1614;--linen:#221D1A;--sand:#2E2A26;--stone:#8A7D74;
+  --ink:#F5F0EB;--soft:#C0B8AF;--red:#D91A1A;--green:#4CAF50;
+  --card:#201E1B;--border:#322E2A;
+  --fn:'DM Sans',system-ui,sans-serif;--fs:'Cormorant Garamond',Georgia,serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);font-family:var(--fn);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+
+/* ── LOCK ─────────────────────────────────────────────────────── */
+#lock{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:40px}
+#lock h2{font-family:var(--fs);font-size:28px;font-weight:300;letter-spacing:.04em}
+#lock-input{width:100%;max-width:220px;background:var(--linen);border:1px solid var(--border);color:var(--ink);font-family:var(--fn);font-size:22px;padding:16px;border-radius:12px;text-align:center;letter-spacing:.4em;outline:none;transition:border-color .2s;-webkit-appearance:none}
+#lock-input:focus{border-color:var(--stone)}
+#lock-input.shake{animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+#lock small{font-size:11px;color:var(--stone);opacity:.45;letter-spacing:.06em;text-transform:uppercase}
+
+/* ── PANEL ────────────────────────────────────────────────────── */
+#panel{display:none;min-height:100vh;padding-bottom:100px}
+
+/* ── HEADER ───────────────────────────────────────────────────── */
+.hdr{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:0 16px;height:54px;display:flex;align-items:center;gap:12px}
+.hdr-back{display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--stone);font-family:var(--fn);font-size:13px;cursor:pointer;padding:8px 0;flex-shrink:0;transition:color .15s}
+.hdr-back:active{color:var(--ink)}
+.hdr-back svg{width:16px;height:16px}
+.hdr-title{flex:1;overflow:hidden;font-size:13px;color:var(--stone);white-space:nowrap;text-overflow:ellipsis}
+.hdr-title b{color:var(--ink);font-weight:500}
+
+/* ── HOME ─────────────────────────────────────────────────────── */
+#home{padding:20px 16px}
+.home-logo{font-family:var(--fs);font-size:24px;font-weight:300;margin-bottom:4px;color:var(--ink)}
+.home-sub{font-size:11px;color:var(--stone);margin-bottom:20px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:22px 14px;border-radius:14px;cursor:pointer;border:1px solid var(--border);background:var(--linen);transition:background .15s,border-color .15s;-webkit-appearance:none;font-family:var(--fn)}
+.mode-btn:active{background:var(--sand)}
+.mode-btn svg{width:26px;height:26px}
+.mode-btn span{font-size:13px;font-weight:500;color:var(--ink);letter-spacing:.02em}
+.mode-btn small{font-size:10px;color:var(--stone);text-align:center;line-height:1.4}
+#btn-upload svg{color:var(--green)}
+#btn-delete svg{color:var(--red)}
+#btn-rename svg{color:#6BA3BE}
+#btn-mkdir svg{color:#C9A84C}
+#btn-covers svg{color:#B07EC6}
+
+/* ── BROWSER ──────────────────────────────────────────────────── */
+#browser{display:none}
+.tree-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;padding:4px 14px 14px}
+.tree-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px 10px 14px;background:var(--linen);border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:background .12s,border-color .12s;-webkit-user-select:none;user-select:none;text-align:center;min-height:90px;position:relative}
+.tree-card:active{background:var(--sand);border-color:var(--stone)}
+.tree-card svg.folder-ico{width:28px;height:28px;color:var(--stone);flex-shrink:0}
+.tree-card-name{font-size:12px;font-weight:500;color:var(--ink);line-height:1.3;word-break:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tree-card .rename-btn{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:var(--sand);border:1px solid var(--border);color:var(--stone);display:flex;align-items:center;justify-content:center;z-index:5;cursor:pointer;transition:background .12s,color .12s}
+.tree-card .rename-btn:active{background:var(--stone);color:var(--ink)}
+.tree-card .rename-btn svg{width:13px;height:13px}
+
+/* ── IMG GRID ─────────────────────────────────────────────────── */
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;padding:12px}
+.img-thumb{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--sand);cursor:pointer}
+.img-thumb img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.img-thumb .check{position:absolute;inset:0;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(217,26,26,.0);transition:background .15s;border:2px solid transparent}
+.img-thumb.selected .check{background:rgba(217,26,26,.35);border-color:var(--red)}
+.img-thumb .check svg{width:28px;height:28px;color:#fff;opacity:0;transform:scale(.6);transition:opacity .15s,transform .15s;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.img-thumb.selected .check svg{opacity:1;transform:scale(1)}
+.img-name{position:absolute;bottom:0;left:0;right:0;padding:4px 6px;font-size:9px;color:rgba(255,255,255,.7);background:linear-gradient(transparent,rgba(0,0,0,.5));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.img-thumb .rename-file-btn{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;background:rgba(26,22,20,.75);border:1px solid rgba(255,255,255,.15);color:#fff;display:flex;align-items:center;justify-content:center;z-index:5;cursor:pointer}
+.img-thumb .rename-file-btn svg{width:11px;height:11px}
+
+.section-label{padding:10px 16px 6px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);border-bottom:1px solid var(--border)}
+.browser-empty{padding:40px 16px;text-align:center;font-size:13px;color:var(--stone)}
+.browser-loading{padding:20px 16px;font-size:13px;color:var(--stone);font-style:italic}
+
+/* ── COVERS SCREEN ────────────────────────────────────────────── */
+#covers-screen{display:none;padding-bottom:40px}
+.covers-cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 20px}
+.covers-cat-card{border-radius:12px;overflow:hidden;position:relative;aspect-ratio:.85;background:var(--linen);cursor:pointer;-webkit-user-select:none;user-select:none}
+.covers-cat-card img{width:100%;height:100%;object-fit:cover;display:block}
+.covers-cat-lbl{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.7));padding:20px 10px 8px;font-size:13px;font-weight:500;color:#fff}
+.change-portada-btn{position:absolute;top:9px;right:9px;background:rgba(26,22,20,.78);border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:6px 11px;font-size:10px;font-weight:500;color:#fff;font-family:var(--fn);letter-spacing:.03em;display:inline-flex;align-items:center;gap:5px;cursor:pointer;z-index:5;white-space:nowrap;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .15s}
+.change-portada-btn:active{background:rgba(176,126,198,.85)}
+.change-portada-btn svg{width:11px;height:11px;flex-shrink:0}
+.covers-section-hd{padding:16px 16px 10px;font-family:var(--fs);font-size:20px;font-weight:300;color:var(--ink)}
+
+/* ── COVER PICKER ─────────────────────────────────────────────── */
+#cover-picker{display:none;padding:12px 14px 40px}
+.cover-pick-intro{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--stone);padding:4px 2px 14px}
+.cover-pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.cover-pick-item{cursor:pointer;border-radius:12px;overflow:hidden;background:var(--linen);border:2px solid transparent;transition:border-color .15s;-webkit-user-select:none;user-select:none;position:relative;aspect-ratio:1}
+.cover-pick-item:active{border-color:var(--stone)}
+.cover-pick-item img{width:100%;height:100%;object-fit:cover;display:block}
+.cover-pick-name{position:absolute;bottom:0;left:0;right:0;padding:4px 6px;font-size:9px;color:rgba(255,255,255,.8);background:linear-gradient(transparent,rgba(0,0,0,.6));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cover-pick-loading{padding:24px 0;text-align:center;font-size:13px;color:var(--stone);font-style:italic}
+
+/* ── BOTTOM BAR ───────────────────────────────────────────────── */
+#bottom-bar{position:fixed;bottom:0;left:0;right:0;z-index:50;background:var(--bg);border-top:1px solid var(--border);padding:12px 16px;display:none;gap:10px}
+#bottom-bar.visible{display:flex}
+.bar-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 16px;border-radius:10px;border:1px solid var(--border);background:var(--linen);color:var(--ink);font-family:var(--fn);font-size:14px;font-weight:500;cursor:pointer;-webkit-appearance:none;transition:background .15s;min-height:50px}
+.bar-btn:active{background:var(--sand)}
+.bar-btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.bar-btn.primary:active{background:var(--soft)}
+.bar-btn.danger{background:var(--red);color:#fff;border-color:var(--red)}
+.bar-btn.danger:active{background:#b81717}
+.bar-btn.accent{background:#4CAF50;color:#fff;border-color:#4CAF50}
+.bar-btn.accent:active{background:#388E3C}
+.bar-btn svg{width:16px;height:16px;flex-shrink:0}
+.bar-btn:disabled{opacity:.35;pointer-events:none}
+
+/* ── MODAL ────────────────────────────────────────────────────── */
+#modal{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:20px}
+#modal.open{display:flex}
+.modal-box{background:var(--linen);border:1px solid var(--border);border-radius:16px;padding:24px 20px;width:100%;max-width:340px}
+.modal-title{font-size:15px;font-weight:500;color:var(--ink);margin-bottom:16px}
+.modal-input{width:100%;background:var(--sand);border:1px solid var(--border);color:var(--ink);font-family:var(--fn);font-size:15px;padding:12px 14px;border-radius:10px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.modal-input:focus{border-color:var(--stone)}
+.modal-btns{display:flex;gap:10px;margin-top:16px}
+.modal-cancel{flex:1;padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--sand);color:var(--stone);font-family:var(--fn);font-size:14px;cursor:pointer}
+.modal-ok{flex:1;padding:12px;border-radius:10px;border:none;background:var(--ink);color:var(--bg);font-family:var(--fn);font-size:14px;font-weight:500;cursor:pointer}
+.modal-ok:active{background:var(--soft)}
+
+/* ── TOAST ────────────────────────────────────────────────────── */
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--ink);color:var(--bg);padding:10px 22px;border-radius:24px;font-size:13px;font-weight:500;white-space:nowrap;z-index:9999;opacity:0;pointer-events:none;transition:transform .3s cubic-bezier(.34,1.2,.64,1),opacity .25s;max-width:88vw;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ── PROGRESS ─────────────────────────────────────────────────── */
+#progress-overlay{position:fixed;inset:0;z-index:8000;background:rgba(26,22,20,.9);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:40px}
+#progress-overlay.visible{display:flex}
+#progress-overlay p{font-size:15px;color:var(--ink);text-align:center}
+.prog-track{width:200px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--red);border-radius:2px;width:0;transition:width .3s}
+
+@media(min-width:600px){
+  #home,#browser,#covers-screen{max-width:520px;margin:0 auto}
+  #bottom-bar{max-width:520px;left:50%;transform:translateX(-50%);border-left:1px solid var(--border);border-right:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+
+<!-- LOCK -->
+<div id="lock">
+  <h2>Casablanca</h2>
+  <input id="lock-input" type="password" placeholder="••••" maxlength="20" autocomplete="off" inputmode="numeric">
+  <small>Acceso privado</small>
+</div>
+
+<!-- PANEL -->
+<div id="panel">
+  <header class="hdr">
+    <button class="hdr-back" id="hdr-back">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M13 4l-7 6 7 6"/></svg>
+      <span id="hdr-back-label">Catálogo</span>
+    </button>
+    <div class="hdr-title" id="hdr-title"></div>
+  </header>
+
+  <!-- HOME -->
+  <div id="home">
+    <div class="home-logo">Administración</div>
+    <p class="home-sub">Gestión del catálogo · Cloudinary</p>
+    <div class="mode-grid">
+      <button class="mode-btn" id="btn-upload">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V8M9 11l3-3 3 3M4 19h16"/></svg>
+        <span>Subir fotos</span>
+        <small>Agregá imágenes a una carpeta</small>
+      </button>
+      <button class="mode-btn" id="btn-delete">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10M4 7h16M9 7v11M15 7v11M5 7l1 13a1 1 0 001 1h10a1 1 0 001-1L19 7"/></svg>
+        <span>Eliminar fotos</span>
+        <small>Seleccioná y borrá imágenes</small>
+      </button>
+      <button class="mode-btn" id="btn-rename">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span>Renombrar</span>
+        <small>Carpetas y fotos</small>
+      </button>
+      <button class="mode-btn" id="btn-mkdir">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5V17a2 2 0 002 2h16a2 2 0 002-2V9.5a2 2 0 00-2-2H12.5L10 5H4a2 2 0 00-2 2v2.5z"/><path d="M12 12v4M10 14h4"/></svg>
+        <span>Nueva carpeta</span>
+        <small>Creá una carpeta en Cloudinary</small>
+      </button>
+      <button class="mode-btn" id="btn-covers" style="grid-column:1/-1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <span>Portadas y Banners</span>
+        <small>Cambiar imágenes de la página principal</small>
+      </button>
+    </div>
+  </div>
+
+  <!-- BROWSER -->
+  <div id="browser">
+    <div id="browser-content"></div>
+  </div>
+
+  <!-- COVERS SCREEN -->
+  <div id="covers-screen">
+    <div id="covers-list"></div>
+  </div>
+
+  <!-- COVER PICKER -->
+  <div id="cover-picker">
+    <div class="cover-pick-intro" id="cover-pick-intro">Tocá la foto que querés usar como portada</div>
+    <div class="cover-pick-grid" id="cover-pick-grid"></div>
+  </div>
+</div>
+
+<!-- BOTTOM BAR -->
+<div id="bottom-bar"></div>
+
+<!-- MODAL -->
+<div id="modal">
+  <div class="modal-box">
+    <p class="modal-title" id="modal-title">Nuevo nombre</p>
+    <input class="modal-input" id="modal-input" type="text" autocomplete="off" autocorrect="off" spellcheck="false">
+    <div class="modal-btns">
+      <button class="modal-cancel" id="modal-cancel">Cancelar</button>
+      <button class="modal-ok" id="modal-ok">Aceptar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS OVERLAY -->
+<div id="progress-overlay">
+  <p id="progress-text">Procesando…</p>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+// ── CONSTANTS ─────────────────────────────────────────────────────────────────
+const HASH  = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+const CLOUD = 'dtelhncnm';
+const CDN   = `https://res.cloudinary.com/${CLOUD}/image/upload/`;
+
+const COVER_CATS = [
+  {key:'acolchados',  label:'Acolchados',  cldFolder:'Acolchados'},
+  {key:'almohadas',   label:'Almohadas',   cldFolder:'Almohadas'},
+  {key:'almohadones', label:'Almohadones', cldFolder:'Almohadones'},
+  {key:'borregos',    label:'Borregos',    cldFolder:'Borregos'},
+  {key:'cortinas',    label:'Cortinas',    cldFolder:'Cortinas'},
+  {key:'cubrecamas',  label:'Cubrecamas',  cldFolder:'Cubrecamas'},
+  {key:'fundas',      label:'Fundas',      cldFolder:'Fundas'},
+  {key:'hogar',       label:'Hogar',       cldFolder:'Hogar'},
+  {key:'sabanas',     label:'Sábanas',     cldFolder:'Sabanas'},
+  {key:'almohadas',   label:'Almohadas',   cldFolder:'Almohadas'},
+];
+
+const BANNER_COVERS = [
+  {key:'ban-1', label:'Banner 1', cldFolder:'miniaturas/BANNERS'},
+  {key:'ban-2', label:'Banner 2', cldFolder:'miniaturas/BANNERS'},
+  {key:'ban-3', label:'Banner 3', cldFolder:'miniaturas/BANNERS'},
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let TOKEN = null;
+let MODE  = null;       // 'upload'|'delete'|'rename'|'mkdir'|null
+let TREE_PATH   = [];
+let SELECTED    = new Set();  // public_ids seleccionados
+let CURRENT_IMGS = [];        // [{public_id, format}] en carpeta actual
+let COVERS_TARGET = null;     // {key, label, cldFolder} del cover que se está cambiando
+
+// ── API ───────────────────────────────────────────────────────────────────────
+async function api(method, path, body) {
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TOKEN}` },
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(`/api/${path}`, opts);
+  if (!r.ok) {
+    const txt = await r.text().catch(() => r.statusText);
+    throw new Error(txt || `Error ${r.status}`);
+  }
+  return r.json();
+}
+
+function thumbUrl(public_id, format) {
+  return `${CDN}w_300,h_300,c_fill,q_auto,f_auto/${public_id}.${format || 'jpg'}`;
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+async function sha256(s) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+}
+
+const lockInput = document.getElementById('lock-input');
+lockInput.focus();
+
+async function tryUnlock() {
+  const h = await sha256(lockInput.value);
+  if (h === HASH) {
+    TOKEN = h;
+    document.getElementById('lock').style.display = 'none';
+    document.getElementById('panel').style.display = 'block';
+    renderHome();
+  } else {
+    lockInput.classList.add('shake');
+    lockInput.value = '';
+    setTimeout(() => lockInput.classList.remove('shake'), 500);
+  }
+}
+lockInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+lockInput.addEventListener('input',   () => { if (lockInput.value.length >= 4) tryUnlock(); });
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+let toastTm = null;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTm);
+  toastTm = setTimeout(() => t.classList.remove('show'), 3400);
+}
+
+function showProgress(msg, pct) {
+  document.getElementById('progress-text').textContent = msg;
+  document.getElementById('prog-fill').style.width = (pct || 0) + '%';
+  document.getElementById('progress-overlay').classList.add('visible');
+}
+function hideProgress() {
+  document.getElementById('progress-overlay').classList.remove('visible');
+  document.getElementById('prog-fill').style.width = '0';
+}
+
+function showModal(title, def = '') {
+  return new Promise(resolve => {
+    document.getElementById('modal-title').textContent = title;
+    const inp = document.getElementById('modal-input');
+    inp.value = def;
+    document.getElementById('modal').classList.add('open');
+    setTimeout(() => { inp.focus(); inp.select(); }, 60);
+    const ok = () => {
+      const val = inp.value.trim();
+      document.getElementById('modal').classList.remove('open');
+      off(); resolve(val || null);
+    };
+    const cancel = () => {
+      document.getElementById('modal').classList.remove('open');
+      off(); resolve(null);
+    };
+    const kd = e => { if (e.key === 'Enter') ok(); if (e.key === 'Escape') cancel(); };
+    document.getElementById('modal-ok').onclick     = ok;
+    document.getElementById('modal-cancel').onclick = cancel;
+    inp.addEventListener('keydown', kd);
+    function off() { inp.removeEventListener('keydown', kd); }
+  });
+}
+
+const FOLDER_ICO = `<svg class="folder-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5V17a2 2 0 002 2h16a2 2 0 002-2V9.5a2 2 0 00-2-2H12.5L10 5H4a2 2 0 00-2 2v2.5z"/></svg>`;
+const RENAME_ICO = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+const CHECK_ICO  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>`;
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+document.getElementById('btn-upload').addEventListener('click', () => { MODE='upload';  TREE_PATH=[]; SELECTED.clear(); showBrowser(); });
+document.getElementById('btn-delete').addEventListener('click', () => { MODE='delete';  TREE_PATH=[]; SELECTED.clear(); showBrowser(); });
+document.getElementById('btn-rename').addEventListener('click', () => { MODE='rename';  TREE_PATH=[]; showBrowser(); });
+document.getElementById('btn-mkdir' ).addEventListener('click', () => { MODE='mkdir';   TREE_PATH=[]; showBrowser(); });
+document.getElementById('btn-covers').addEventListener('click', () => showCoversScreen());
+
+document.getElementById('hdr-back').addEventListener('click', () => {
+  if (document.getElementById('cover-picker').style.display !== 'none') {
+    document.getElementById('cover-picker').style.display = 'none';
+    showCoversScreen(); return;
+  }
+  if (document.getElementById('covers-screen').style.display !== 'none') {
+    MODE = null; renderHome(); return;
+  }
+  if (MODE === null) { window.location.href = 'index.html'; return; }
+  if (TREE_PATH.length === 0) {
+    MODE = null; SELECTED.clear(); renderHome();
+  } else {
+    TREE_PATH.pop(); SELECTED.clear(); showBrowser();
+  }
+});
+
+// ── SCREENS ───────────────────────────────────────────────────────────────────
+function renderHome() {
+  document.getElementById('home').style.display         = 'block';
+  document.getElementById('browser').style.display      = 'none';
+  document.getElementById('covers-screen').style.display = 'none';
+  document.getElementById('cover-picker').style.display  = 'none';
+  document.getElementById('bottom-bar').classList.remove('visible');
+  document.getElementById('bottom-bar').innerHTML = '';
+  document.getElementById('hdr-back-label').textContent = 'Catálogo';
+  document.getElementById('hdr-title').innerHTML = '';
+}
+
+function showBrowser() {
+  document.getElementById('home').style.display          = 'none';
+  document.getElementById('browser').style.display       = 'block';
+  document.getElementById('covers-screen').style.display  = 'none';
+  document.getElementById('cover-picker').style.display   = 'none';
+
+  const modeLabels = {upload:'Subir fotos', delete:'Eliminar fotos', rename:'Renombrar', mkdir:'Nueva carpeta'};
+  document.getElementById('hdr-back-label').textContent = TREE_PATH.length === 0 ? 'Inicio' : 'Atrás';
+  const path = TREE_PATH.join(' / ');
+  document.getElementById('hdr-title').innerHTML = path
+    ? `<b>${modeLabels[MODE]}</b> · ${path}`
+    : `<b>${modeLabels[MODE]}</b>`;
+
+  renderBrowser();
+}
+
+// ── BROWSER (Cloudinary) ──────────────────────────────────────────────────────
+function currentPrefix() {
+  return TREE_PATH.length ? 'catalogo/' + TREE_PATH.join('/') : 'catalogo';
+}
+
+async function renderBrowser() {
+  const content = document.getElementById('browser-content');
+  content.innerHTML = '<div class="browser-loading">Cargando desde Cloudinary…</div>';
+  document.getElementById('bottom-bar').classList.remove('visible');
+  document.getElementById('bottom-bar').innerHTML = '';
+
+  try {
+    const prefix = currentPrefix();
+    const { folders, images } = await api('GET', `list?prefix=${encodeURIComponent(prefix)}`);
+
+    content.innerHTML = '';
+
+    if (folders.length > 0) {
+      if (images.length > 0) {
+        const lbl = document.createElement('div');
+        lbl.className = 'section-label';
+        lbl.textContent = 'Carpetas';
+        content.appendChild(lbl);
+      }
+      const grid = document.createElement('div');
+      grid.className = 'tree-grid';
+      for (const name of folders) {
+        const card = makeFolderCard(name);
+        grid.appendChild(card);
+      }
+      content.appendChild(grid);
+    }
+
+    if (images.length > 0) {
+      if (folders.length > 0) {
+        const lbl = document.createElement('div');
+        lbl.className = 'section-label';
+        lbl.textContent = `Fotos (${images.length})`;
+        content.appendChild(lbl);
+      }
+      CURRENT_IMGS = images;
+      content.appendChild(buildImgGrid(images));
+    }
+
+    if (folders.length === 0 && images.length === 0) {
+      content.innerHTML = '<div class="browser-empty">Carpeta vacía</div>';
+    }
+
+    renderBottomBar(images.length);
+  } catch (err) {
+    content.innerHTML = `<div class="browser-empty">Error: ${err.message}</div>`;
+  }
+}
+
+function makeFolderCard(name) {
+  const card = document.createElement('div');
+  card.className = 'tree-card';
+  card.innerHTML = `${FOLDER_ICO}<span class="tree-card-name">${name}</span>`;
+
+  if (MODE === 'rename') {
+    const btn = document.createElement('button');
+    btn.className = 'rename-btn';
+    btn.innerHTML = RENAME_ICO;
+    btn.addEventListener('click', async e => {
+      e.stopPropagation();
+      const newName = await showModal(`Nuevo nombre para "${name}"`, name);
+      if (!newName || newName === name) return;
+      const prefix = currentPrefix();
+      showProgress(`Renombrando carpeta…`, 5);
+      try {
+        const { renamed } = await api('POST', 'rename', {
+          old_path: `${prefix}/${name}`,
+          new_path: `${prefix}/${newName}`,
+          type: 'folder',
+        });
+        hideProgress();
+        toast(`"${name}" → "${newName}" (${renamed} fotos)`);
+        renderBrowser();
+      } catch (err) { hideProgress(); toast('Error: ' + err.message); }
+    });
+    card.appendChild(btn);
+  }
+
+  card.addEventListener('click', () => { SELECTED.clear(); TREE_PATH.push(name); showBrowser(); });
+  return card;
+}
+
+function buildImgGrid(images) {
+  const grid = document.createElement('div');
+  grid.className = 'img-grid';
+  grid.id = 'img-grid';
+
+  for (const img of images) {
+    const { public_id, format } = img;
+    const name = public_id.split('/').pop() + '.' + format;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'img-thumb';
+    wrap.dataset.pid = public_id;
+
+    const el = document.createElement('img');
+    el.loading = 'lazy';
+    el.src = thumbUrl(public_id, format);
+    el.alt = name;
+
+    const check = document.createElement('div');
+    check.className = 'check';
+    check.innerHTML = CHECK_ICO;
+
+    const nameEl = document.createElement('div');
+    nameEl.className = 'img-name';
+    nameEl.textContent = name;
+
+    wrap.appendChild(el); wrap.appendChild(check); wrap.appendChild(nameEl);
+
+    if (MODE === 'delete') {
+      wrap.addEventListener('click', () => toggleSelect(public_id, format, wrap));
+    } else if (MODE === 'rename') {
+      const rBtn = document.createElement('button');
+      rBtn.className = 'rename-file-btn';
+      rBtn.title = 'Renombrar';
+      rBtn.innerHTML = RENAME_ICO;
+      rBtn.addEventListener('click', async e => {
+        e.stopPropagation();
+        const newBase = await showModal(`Nuevo nombre para "${name}"`, public_id.split('/').pop());
+        if (!newBase) return;
+        const parentPath = public_id.split('/').slice(0, -1).join('/');
+        showProgress('Renombrando foto…', 40);
+        try {
+          await api('POST', 'rename', {
+            old_path: public_id,
+            new_path: `${parentPath}/${newBase}`,
+            type: 'file',
+            format,
+          });
+          hideProgress();
+          toast(`Foto renombrada`);
+          renderBrowser();
+        } catch (err) { hideProgress(); toast('Error: ' + err.message); }
+      });
+      wrap.appendChild(rBtn);
+    }
+
+    grid.appendChild(wrap);
+  }
+  return grid;
+}
+
+// ── SELECTION ─────────────────────────────────────────────────────────────────
+function toggleSelect(public_id, format, wrap) {
+  const key = public_id + '|' + format;
+  if (SELECTED.has(key)) {
+    SELECTED.delete(key);
+    wrap.classList.remove('selected');
+  } else {
+    SELECTED.add(key);
+    wrap.classList.add('selected');
+  }
+  updateDeleteBar();
+}
+
+function selectAll() {
+  SELECTED.clear();
+  for (const img of CURRENT_IMGS) SELECTED.add(img.public_id + '|' + img.format);
+  document.querySelectorAll('.img-thumb').forEach(el => el.classList.add('selected'));
+  updateDeleteBar();
+}
+function deselectAll() {
+  SELECTED.clear();
+  document.querySelectorAll('.img-thumb').forEach(el => el.classList.remove('selected'));
+  updateDeleteBar();
+}
+
+// ── BOTTOM BAR ────────────────────────────────────────────────────────────────
+function renderBottomBar(imgCount) {
+  const bb = document.getElementById('bottom-bar');
+  bb.innerHTML = '';
+
+  if (MODE === 'upload') {
+    bb.classList.add('visible');
+    const btn = document.createElement('button');
+    if (TREE_PATH.length === 0) {
+      btn.className = 'bar-btn';
+      btn.disabled = true;
+      btn.textContent = 'Entrá a una carpeta para subir fotos';
+    } else {
+      btn.className = 'bar-btn primary';
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 16V8M9 11l3-3 3 3M4 19h16"/></svg> Subir fotos aquí`;
+      btn.addEventListener('click', doUpload);
+    }
+    bb.appendChild(btn);
+
+  } else if (MODE === 'delete') {
+    if (imgCount > 0) {
+      bb.classList.add('visible');
+      updateDeleteBar();
+    } else {
+      bb.classList.remove('visible');
+    }
+
+  } else if (MODE === 'mkdir') {
+    bb.classList.add('visible');
+    const btn = document.createElement('button');
+    btn.className = 'bar-btn accent';
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5V17a2 2 0 002 2h16a2 2 0 002-2V9.5a2 2 0 00-2-2H12.5L10 5H4a2 2 0 00-2 2v2.5z"/><path d="M12 12v4M10 14h4"/></svg> Crear carpeta aquí`;
+    btn.addEventListener('click', doMkdir);
+    bb.appendChild(btn);
+  } else {
+    bb.classList.remove('visible');
+  }
+}
+
+function updateDeleteBar() {
+  const bb = document.getElementById('bottom-bar');
+  bb.innerHTML = '';
+  if (SELECTED.size === 0) {
+    const btn = document.createElement('button');
+    btn.className = 'bar-btn';
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 11l3 3 3-3M12 5v9"/><rect x="3" y="15" width="18" height="6" rx="1"/></svg> Seleccionar todo`;
+    btn.addEventListener('click', selectAll);
+    bb.appendChild(btn);
+  } else {
+    const desel = document.createElement('button');
+    desel.className = 'bar-btn';
+    desel.textContent = 'Deseleccionar';
+    desel.addEventListener('click', deselectAll);
+
+    const del = document.createElement('button');
+    del.className = 'bar-btn danger';
+    del.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 4h10M4 7h16M9 7v11M15 7v11M5 7l1 13a1 1 0 001 1h10a1 1 0 001-1L19 7"/></svg> Eliminar ${SELECTED.size}`;
+    del.addEventListener('click', doDelete);
+    bb.appendChild(desel); bb.appendChild(del);
+  }
+}
+
+// ── UPLOAD ────────────────────────────────────────────────────────────────────
+function doUpload() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*'; input.multiple = true;
+  input.style.cssText = 'position:fixed;top:-9999px;opacity:0';
+  document.body.appendChild(input);
+
+  input.addEventListener('cancel', () => document.body.removeChild(input));
+  input.addEventListener('change', async () => {
+    document.body.removeChild(input);
+    const files = Array.from(input.files);
+    if (!files.length) return;
+
+    const folder = currentPrefix();
+    showProgress('Preparando subida…', 5);
+
+    let signData;
+    try {
+      signData = await api('POST', 'upload-sign', { folder });
+    } catch (err) {
+      hideProgress(); toast('Error al obtener firma: ' + err.message); return;
+    }
+
+    let ok = 0;
+    for (let i = 0; i < files.length; i++) {
+      showProgress(`Subiendo ${i + 1} de ${files.length}…`, 10 + Math.round((i / files.length) * 85));
+      try {
+        const fd = new FormData();
+        fd.append('file', files[i]);
+        fd.append('api_key',   signData.api_key);
+        fd.append('timestamp', signData.timestamp);
+        fd.append('signature', signData.signature);
+        fd.append('folder',    signData.folder);
+
+        const r = await fetch(
+          `https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`,
+          { method: 'POST', body: fd }
+        );
+        if (r.ok) ok++;
+      } catch (e) { console.error(e); }
+    }
+
+    hideProgress();
+    toast(`${ok} foto${ok !== 1 ? 's' : ''} subida${ok !== 1 ? 's' : ''} ✓`);
+    renderBrowser();
+  });
+
+  input.click();
+}
+
+// ── DELETE ────────────────────────────────────────────────────────────────────
+async function doDelete() {
+  if (SELECTED.size === 0) return;
+  const cnt = SELECTED.size;
+  if (!confirm(`¿Eliminar ${cnt} foto${cnt !== 1 ? 's' : ''}?\n\nEsta acción no se puede deshacer.`)) return;
+
+  showProgress(`Eliminando ${cnt} foto${cnt !== 1 ? 's' : ''}…`, 10);
+  try {
+    const public_ids = [...SELECTED].map(s => ({ public_id: s.split('|')[0], format: s.split('|')[1] }));
+    await api('POST', 'delete', { public_ids });
+    SELECTED.clear();
+    hideProgress();
+    toast(`${cnt} foto${cnt !== 1 ? 's' : ''} eliminada${cnt !== 1 ? 's' : ''} ✓`);
+    renderBrowser();
+  } catch (err) {
+    hideProgress(); toast('Error: ' + err.message);
+  }
+}
+
+// ── MKDIR ─────────────────────────────────────────────────────────────────────
+async function doMkdir() {
+  const nombre = await showModal('Nombre de la nueva carpeta');
+  if (!nombre) return;
+  const folder = currentPrefix() + '/' + nombre;
+  showProgress('Creando carpeta…', 50);
+  try {
+    await api('POST', 'mkdir', { folder });
+    hideProgress();
+    toast(`Carpeta "${nombre}" creada`);
+    TREE_PATH.push(nombre);
+    showBrowser();
+  } catch (err) {
+    hideProgress(); toast('Error: ' + err.message);
+  }
+}
+
+// ── COVERS ────────────────────────────────────────────────────────────────────
+async function showCoversScreen() {
+  document.getElementById('home').style.display          = 'none';
+  document.getElementById('browser').style.display       = 'none';
+  document.getElementById('covers-screen').style.display = 'block';
+  document.getElementById('cover-picker').style.display   = 'none';
+  document.getElementById('bottom-bar').classList.remove('visible');
+  document.getElementById('hdr-back-label').textContent = 'Inicio';
+  document.getElementById('hdr-title').innerHTML = '<b>Portadas</b>';
+
+  const list = document.getElementById('covers-list');
+  list.innerHTML = '<div class="browser-loading">Cargando portadas…</div>';
+
+  let covers = {};
+  try {
+    const r = await fetch(`https://res.cloudinary.com/${CLOUD}/raw/upload/portadas_config.json?t=${Date.now()}`);
+    if (r.ok) covers = await r.json();
+  } catch (_) {}
+
+  list.innerHTML = '';
+
+  const secHd = document.createElement('div');
+  secHd.className = 'covers-section-hd';
+  secHd.textContent = 'Categorías';
+  list.appendChild(secHd);
+
+  const grid = document.createElement('div');
+  grid.className = 'covers-cat-grid';
+
+  const editIco = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+
+  const seen = new Set();
+  for (const cc of COVER_CATS) {
+    if (seen.has(cc.key)) continue;
+    seen.add(cc.key);
+
+    const src = covers[cc.key]
+      ? CDN + covers[cc.key]
+      : '';
+
+    const card = document.createElement('div');
+    card.className = 'covers-cat-card';
+    if (src) card.innerHTML = `<img src="${src}" alt="${cc.label}" loading="lazy">`;
+    card.innerHTML += `<div class="covers-cat-lbl">${cc.label}</div>`;
+
+    const btn = document.createElement('button');
+    btn.className = 'change-portada-btn';
+    btn.innerHTML = editIco + ' Cambiar';
+    btn.addEventListener('click', e => { e.stopPropagation(); openCoverPicker(cc); });
+    card.appendChild(btn);
+
+    grid.appendChild(card);
+  }
+  list.appendChild(grid);
+
+  // Banners
+  const bnHd = document.createElement('div');
+  bnHd.className = 'covers-section-hd';
+  bnHd.textContent = 'Banners';
+  bnHd.style.marginTop = '8px';
+  list.appendChild(bnHd);
+
+  for (const bn of BANNER_COVERS) {
+    const src = covers[bn.key] ? CDN + covers[bn.key] : '';
+    const card = document.createElement('div');
+    card.style.cssText = 'margin:0 16px 12px;border-radius:12px;overflow:hidden;position:relative;height:130px;background:var(--linen)';
+    if (src) card.innerHTML = `<img src="${src}" alt="${bn.label}" style="width:100%;height:100%;object-fit:cover">`;
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'position:absolute;bottom:8px;left:12px;font-size:12px;color:#fff;font-weight:500';
+    lbl.textContent = bn.label;
+    card.appendChild(lbl);
+    const btn = document.createElement('button');
+    btn.className = 'change-portada-btn';
+    btn.innerHTML = editIco + ' Cambiar';
+    btn.addEventListener('click', () => openCoverPicker({key: bn.key, label: bn.label, cldFolder: bn.cldFolder}));
+    card.appendChild(btn);
+    list.appendChild(card);
+  }
+}
+
+async function openCoverPicker(target) {
+  COVERS_TARGET = target;
+  document.getElementById('covers-screen').style.display = 'none';
+  document.getElementById('cover-picker').style.display  = 'block';
+  document.getElementById('hdr-back-label').textContent  = 'Portadas';
+  document.getElementById('hdr-title').innerHTML = `<b>${target.label}</b>`;
+  document.getElementById('cover-pick-intro').textContent = `Elegí la nueva portada para ${target.label}`;
+
+  const pickerGrid = document.getElementById('cover-pick-grid');
+  pickerGrid.innerHTML = '<div class="cover-pick-loading">Cargando imágenes…</div>';
+
+  try {
+    const prefix = `catalogo/${target.cldFolder}`;
+    const { images } = await api('GET', `list?prefix=${encodeURIComponent(prefix)}`);
+
+    // Si no hay fotos directas, buscar en subcarpetas también
+    let allImgs = images;
+    if (images.length === 0) {
+      const { folders } = await api('GET', `list?prefix=${encodeURIComponent(prefix)}`);
+      for (const f of folders.slice(0, 5)) {
+        const sub = await api('GET', `list?prefix=${encodeURIComponent(prefix + '/' + f)}`).catch(() => ({images:[]}));
+        allImgs.push(...sub.images.slice(0, 10));
+      }
+    }
+
+    pickerGrid.innerHTML = '';
+    if (allImgs.length === 0) {
+      pickerGrid.innerHTML = '<div class="cover-pick-loading">No se encontraron imágenes</div>';
+      return;
+    }
+
+    for (const img of allImgs.slice(0, 80)) {
+      const { public_id, format } = img;
+      const item = document.createElement('div');
+      item.className = 'cover-pick-item';
+      item.innerHTML = `<img src="${thumbUrl(public_id, format)}" loading="lazy" alt=""><div class="cover-pick-name">${public_id.split('/').pop()}.${format}</div>`;
+      item.addEventListener('click', () => saveCover(public_id, format));
+      pickerGrid.appendChild(item);
+    }
+  } catch (err) {
+    pickerGrid.innerHTML = `<div class="cover-pick-loading">Error: ${err.message}</div>`;
+  }
+}
+
+async function saveCover(public_id, format) {
+  if (!COVERS_TARGET) return;
+  const coverPath = `${public_id}.${format}`;
+  showProgress('Guardando portada…', 50);
+  try {
+    await api('POST', 'covers', { data: { [COVERS_TARGET.key]: coverPath } });
+    hideProgress();
+    toast(`Portada de ${COVERS_TARGET.label} actualizada ✓`);
+    document.getElementById('cover-picker').style.display = 'none';
+    showCoversScreen();
+  } catch (err) {
+    hideProgress(); toast('Error: ' + err.message);
+  }
+}
+</script>
+</body>
+</html>
