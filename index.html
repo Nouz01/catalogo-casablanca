@@ -62,8 +62,10 @@ img{display:block;max-width:100%}
 /* BENEFITS */
 .benefits{background:#141210;display:flex;justify-content:center;overflow-x:auto;scrollbar-width:none}
 .benefits::-webkit-scrollbar{display:none}
-.bitem{display:flex;align-items:center;gap:12px;padding:16px 28px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.bitem{display:flex;align-items:center;gap:12px;padding:16px 28px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.07);flex-shrink:0;cursor:pointer;transition:background .18s,transform .12s;-webkit-tap-highlight-color:transparent}
 .bitem:last-child{border-right:none}
+.bitem:hover{background:rgba(37,211,102,.07)}
+.bitem:active{transform:scale(.97)}
 .bitem svg{width:22px;height:22px;color:var(--red);flex-shrink:0;animation:pulse-icon 3s ease-in-out infinite}
 .bitem:nth-child(2) svg{animation-delay:.4s}
 @keyframes pulse-icon{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
@@ -498,11 +500,11 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 
 <!-- BENEFITS -->
 <div class="benefits">
-  <div class="bitem">
+  <div class="bitem" onclick="openWppSheet()" title="Contactar vendedor">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
     <div class="bitem-txt"><span class="bitem-t">Envíos a todo el país</span><span class="bitem-s">Sin cargo mínimo</span></div>
   </div>
-  <div class="bitem">
+  <div class="bitem" onclick="openWppSheet()" title="Contactar vendedor">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
     <div class="bitem-txt"><span class="bitem-t">Asesoramiento</span><span class="bitem-s">Personalizado</span></div>
   </div>
@@ -589,7 +591,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
       <img src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Cortinas/Cortinas De Ambiente/Amb Maena/CORT_AMB_MAENA_CAMEL_1.jpg" alt="Cortinas Maena" loading="lazy" onerror="this.style.opacity=0">
       <div class="ln-card-lbl"><p>Ambiente</p><p>Cortinas Maena</p></div>
     </div>
-    <div class="ln-card" onclick="openDrawer('acolchados','Acolchados','Oro Estampados')">
+    <div class="ln-card" onclick="openFirstProd('acolchados','Acolchados','Oro Estampados')">
       <img data-cover="ln-3" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro Estampados/AC_ORO_FULL_FLORES AMARILLAS_1.jpg" alt="Acolchados Oro Estampados" loading="lazy" onerror="this.style.opacity=0">
       <div class="ln-card-lbl"><p>Colección</p><p>Acolchados Oro Estampados</p></div>
     </div>
@@ -648,8 +650,8 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
       <p class="linea-name">Sábanas Oro</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('frazada','Frazada Plata')">
-      <div class="linea-img"><img data-cover="ln-sabanas-plata" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Frazada Plata/FRA_PLATA_FULL_ZAFIRO_1.jpg" alt="Sábanas Plata" loading="lazy" onerror="this.style.display='none'"></div>
-      <p class="linea-name">Sábanas Plata</p>
+      <div class="linea-img"><img data-cover="ln-sabanas-plata" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Frazada Plata/FRA_PLATA_FULL_ZAFIRO_1.jpg" alt="Frazadas Plata" loading="lazy" onerror="this.style.display='none'"></div>
+      <p class="linea-name">Frazadas Plata</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('acolchados','Acolchados','Oro Liso')">
       <div class="linea-img"><img data-cover="ln-acolchados-oro" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro Liso/AC ORO LISO TWIN BLANCO.jpg" alt="Acolchados Oro" loading="lazy" onerror="this.style.display='none'"></div>
@@ -660,7 +662,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
       <p class="linea-name">Línea Infantil</p>
     </div>
     <div class="linea-card" onclick="vib(15);sndOpen();openDrawer('acolchados','Acolchados','Futbol')">
-      <div class="linea-img"><img data-cover="ln-futbol" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Futbol/Argentina/AC_AFA_BICAMPEONES_TWIN_4.jpg" alt="Línea Fútbol" loading="lazy" onerror="this.style.opacity=0"></div>
+      <div class="linea-img"><img data-cover="ln-futbol" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Futbol/Argentina_/AC_AFA_BICAMPEONES_TWIN_4.jpg" alt="Línea Fútbol" loading="lazy" onerror="this.style.opacity=0"></div>
       <p class="linea-name">Línea Fútbol</p>
     </div>
   </div>
@@ -1413,6 +1415,12 @@ function getSubcat(p){
   const parts=f.split('/');
   return parts.length>=4 ? parts[2] : null;
 }
+function getSubSubcat(p){
+  const f=p.vars[0]?.fotos?.[0];
+  if(!f) return null;
+  const parts=f.split('/');
+  return parts.length>=5 ? parts[3] : null;
+}
 
 let drawerSec='', drawerCatFilter='all';
 
@@ -1425,6 +1433,17 @@ function openDrawer(sec, title, sub){
   document.getElementById('cdr').classList.add('open');
   document.body.style.overflow='hidden';
   document.querySelectorAll('.nsec').forEach(b=>b.classList.toggle('active',b.dataset.sec===sec));
+}
+
+function openFirstProd(sec, title, sub){
+  vib(20); sndOpen();
+  const cfg=SEC_MAP[sec];
+  if(!cfg) return openDrawer(sec,title,sub);
+  const _sub=sub.toLowerCase();
+  const match=CATALOG.filter(p=>cfg.secs.some(s=>p.sec.toLowerCase()===s))
+    .find(p=>getSubcat(p)?.toLowerCase()===_sub||getSubSubcat(p)?.toLowerCase()===_sub);
+  if(match){ openDet(match.id); return; }
+  openDrawer(sec,title,sub);
 }
 
 function closeDrawer(){
@@ -1462,7 +1481,13 @@ function renderDrawer(){
   }
 
   const _dcf=drawerCatFilter.toLowerCase();
-  const visible=drawerCatFilter==='all' ? prods : prods.filter(p=>{const sc=getSubcat(p);return sc&&sc.toLowerCase()===_dcf;});
+  let visible;
+  if(drawerCatFilter==='all'){
+    visible=prods;
+  }else{
+    visible=prods.filter(p=>{const sc=getSubcat(p);return sc&&sc.toLowerCase()===_dcf;});
+    if(!visible.length) visible=prods.filter(p=>{const sc=getSubSubcat(p);return sc&&sc.toLowerCase()===_dcf;});
+  }
   document.getElementById('cdrCount').textContent=`${visible.length} producto${visible.length!==1?'s':''}`;
 
   if(!visible.length){
