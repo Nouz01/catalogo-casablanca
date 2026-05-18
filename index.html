@@ -462,8 +462,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
     <button class="nsec" data-sec="frazada" onclick="navTo('frazada')">Frazadas</button>
     <button class="nsec" data-sec="fundas" onclick="navTo('fundas')">Fundas</button>
     <button class="nsec" data-sec="hogar" onclick="navTo('hogar')">Hogar</button>
-    <button class="nsec" data-sec="colchones" onclick="navTo('colchones')">Colchones</button>
-    <button class="nsec" data-sec="camas" onclick="navTo('camas')">Camas</button>
+    <button class="nsec" data-sec="sommiers" onclick="navTo('sommiers')">Sommiers</button>
   </nav>
 </header>
 
@@ -551,13 +550,9 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
       <img data-cover="acolchados" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/Acolchados/Oro Liso/AC ORO LISO TWIN BLANCO.jpg" alt="Acolchados" loading="lazy" onerror="this.style.opacity=0">
       <div class="ccat-lbl"><p class="ccat-name">Acolchados</p><p class="ccat-count">Oro Liso · Estampados · Infantil</p></div>
     </div>
-    <div class="ccat" onclick="openDrawer('colchones','Colchones')">
-      <img data-cover="col-colchones" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/COLCHONES/COLCHON%201/1" alt="Colchones" loading="lazy" onerror="this.style.opacity=0">
-      <div class="ccat-lbl"><p class="ccat-name">Colchones</p><p class="ccat-count">Descanso · Confort</p></div>
-    </div>
-    <div class="ccat" onclick="openDrawer('camas','Camas')">
-      <div class="ccat-ph"><span style="font-size:36px">🛏</span></div>
-      <div class="ccat-lbl"><p class="ccat-name">Camas</p><p class="ccat-count">Próximamente</p></div>
+    <div class="ccat" onclick="openDrawer('sommiers','Sommiers')">
+      <img data-cover="col-sommiers" src="https://res.cloudinary.com/dtelhncnm/image/upload/catalogo/COLCHONES/COLCHON%201/1" alt="Sommiers" loading="lazy" onerror="this.style.opacity=0">
+      <div class="ccat-lbl"><p class="ccat-name">Sommiers</p><p class="ccat-count">Colchones · Camas</p></div>
     </div>
   </div>
 </section>
@@ -1380,8 +1375,7 @@ const SEC_MAP={
   fundas:     {secs:['fundas'],     title:'Fundas de Almohadas'},
   hogar:      {secs:['hogar'],      title:'Hogar'},
   acolchados: {secs:['acolchados'], title:'Acolchados'},
-  colchones:  {secs:['colchones'],  title:'Colchones'},
-  camas:      {secs:['camas'],      title:'Camas'},
+  sommiers:   {secs:['colchones','camas'], title:'Sommiers'},
 };
 const NAV_TITLES=Object.fromEntries(Object.entries(SEC_MAP).map(([k,v])=>[k,v.title]));
 function navTo(sec){ openDrawer(sec, NAV_TITLES[sec]||sec); }
@@ -1606,6 +1600,7 @@ function updateSectionImages(){
     'col-cortinas':   pick(sc('cortinas')),
     'col-sabanas':    pick(sc('sabanas')),
     'col-almohadas':  pick(sc('almohadas')),
+    'col-sommiers':   pick(sc('colchones')),
     'col-borregos':   pick(sc('borregos')),
     'ln-sabanas-oro': pick(sc('sabanas','Oro')),
     'ln-sabanas-plata': pick(sc('frazada')),
