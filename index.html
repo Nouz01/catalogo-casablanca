@@ -1631,7 +1631,7 @@ function updateSectionImages(){
     'ln-sabanas-plata': pick(sc('frazada')),
     'ln-acolchados-oro': pick(sc('acolchados','Oro Liso')),
     'ln-infantil':    pick(sc('acolchados','Infantiles')),
-    'ln-futbol':      pick(sc('acolchados','Futbol')),
+    'ln-futbol':      (()=>{ const p=CATALOG.find(x=>x.sec==='acolchados'&&getSubcat(x)==='Futbol'&&x.vars?.[0]?.fotos?.[0]?.includes('Argentina_')); return p?.vars?.[0]?.fotos?.[0]?cdnUrl(p.vars[0].fotos[0]):pick(sc('acolchados','Futbol')); })(),
   };
   document.querySelectorAll('[data-cover]').forEach(el=>{
     const src=map[el.dataset.cover];
