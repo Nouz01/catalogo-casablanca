@@ -335,11 +335,7 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
 .dl-btn{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.55);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;opacity:0;transition:opacity .2s;z-index:10;backdrop-filter:blur(4px)}
 .dl-btn svg{width:16px;height:16px}
 .pimg-wrap:hover .dl-btn,.dl-btn:focus{opacity:1}
-.gal-dl{position:absolute;bottom:54px;right:12px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.6);border:none;padding:0;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;z-index:20;backdrop-filter:blur(4px);transition:background .2s,opacity .2s,transform .2s}
-.gal-dl svg{width:18px;height:18px}
-.gal-dl:hover{background:rgba(0,0,0,.85)}
-.gal-dl.dl-busy{opacity:.4;pointer-events:none;transform:scale(.88)}
-.gal-dl.dl-ok{background:rgba(46,160,67,.9)!important}
+
 
 /* CANVAS */
 #bgc{position:fixed;inset:0;z-index:0;pointer-events:none}
@@ -919,26 +915,7 @@ function cdnUrl(path) {
   return CDN + p.split('/').map(encodeURIComponent).join('/');
 }
 
-async function dlImg(btn, url, name) {
-  if (btn._dl) return;
-  btn._dl = true;
-  btn.classList.add('dl-busy');
-  try {
-    const r = await fetch(url);
-    if (!r.ok) throw new Error('fetch');
-    const blob = await r.blob();
-    const tmp = URL.createObjectURL(blob);
-    const a = Object.assign(document.createElement('a'), {href:tmp, download:name});
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(tmp), 30000);
-    btn.classList.replace('dl-busy','dl-ok');
-    setTimeout(() => { btn.classList.remove('dl-ok'); btn._dl=false; }, 2200);
-  } catch {
-    window.open(url, '_blank');
-    btn.classList.remove('dl-busy');
-    btn._dl = false;
-  }
-}
+
 
 // ─── VENDEDORES (editá nombres y números) ─────────────────────────────────────
 const VENDEDORES = [
@@ -1177,7 +1154,7 @@ function renderLookbook(){
   const slides=fotos.slice(0,6).map((src,fi)=>`
     <div class="gal-slide" data-fi="${fi}" style="position:relative">
       <img src="${cdnUrl(src)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=pph style=height:100%><span>${getDisplayNameColor(p,activeVI)}</span></div>'">
-      <button class="gal-dl" onclick="event.stopPropagation();dlImg(this,'${cdnUrl(src)}','${getDisplayNameColor(p,activeVI).replace(/[^a-z0-9]/gi,'_')}_${v.color.replace(/[^a-z0-9]/gi,'_')}_${fi+1}.jpg')" title="Descargar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v10M7 15l5 5 5-5"/><rect x="3" y="19" width="18" height="2" rx="1"/></svg></button>
+
     </div>`).join('');
   const thumbs=fotos.length>1?fotos.slice(0,6).map((src,fi)=>`
     <div class="gthumb${fi===0?' active':''}" data-ti="${fi}"><img src="${cdnUrl(src)}" alt="" loading="lazy"></div>`).join(''):'';
@@ -1761,7 +1738,7 @@ catalogReady.then(function(){ renderFeatured(); updateSectionImages(); loadCover
   const canvas=document.getElementById('bgc'), ctx=canvas.getContext('2d');
   let W,H;
   function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-  resize(); window.addEventListener('resize',resize);
+  resize(); let _resizeT; window.addEventListener('resize',()=>{clearTimeout(_resizeT);_resizeT=setTimeout(resize,150);});
 
   const lines=Array.from({length:10},()=>({
     x:Math.random()*1400, y:Math.random()*900,
@@ -1781,8 +1758,8 @@ catalogReady.then(function(){ renderFeatured(); updateSectionImages(); loadCover
     pulse:Math.random()*Math.PI*2, ps:Math.random()*.02+.005
   }));
 
-  let sy=0;
-  window.addEventListener('scroll',()=>{sy=window.scrollY;},{passive:true});
+  let sy=0, _scrollPending=false;
+  window.addEventListener('scroll',()=>{if(!_scrollPending){_scrollPending=true;requestAnimationFrame(()=>{sy=window.scrollY;_scrollPending=false;});}},{passive:true});
 
   let rafId=null, paused=false;
   document.addEventListener('visibilitychange',()=>{ paused=document.hidden; if(!paused&&!rafId) draw(); });
@@ -1849,28 +1826,37 @@ catalogReady.then(function(){ renderFeatured(); updateSectionImages(); loadCover
     const card=e.target.closest('.pcard,.ccat');
     if(!card||card._magnet) return;
     card._magnet=true;
+    let _mvRaf=false;
     function mv(e2){
-      const r=card.getBoundingClientRect();
-      const dx=(e2.clientX-r.left-r.width/2)/(r.width/2);
-      const dy=(e2.clientY-r.top-r.height/2)/(r.height/2);
-      card.style.transform=`perspective(600px) rotateY(${dx*5}deg) rotateX(${-dy*5}deg) translateY(-2px)`;
+      if(_mvRaf)return; _mvRaf=true;
+      requestAnimationFrame(()=>{
+        const r=card.getBoundingClientRect();
+        const dx=(e2.clientX-r.left-r.width/2)/(r.width/2);
+        const dy=(e2.clientY-r.top-r.height/2)/(r.height/2);
+        card.style.transform=`perspective(600px) rotateY(${dx*5}deg) rotateX(${-dy*5}deg) translateY(-2px)`;
+        _mvRaf=false;
+      });
     }
     function ml(){ card.style.transform=''; card.removeEventListener('mousemove',mv); card.removeEventListener('mouseleave',ml); card._magnet=false; }
     card.addEventListener('mousemove',mv);
     card.addEventListener('mouseleave',ml,{once:true});
   });
 
-  // Glitter trail
-  let lt=0;
+  // Glitter trail — pool reutilizable
+  const GPOOL_SIZE=8, gColors=['#D91A1A','#D9C9B0','#A89880','#fff8'];
+  const gPool=Array.from({length:GPOOL_SIZE},()=>{
+    const el=document.createElement('div');
+    el.style.cssText='position:fixed;pointer-events:none;z-index:9997;border-radius:50%;display:none';
+    document.body.appendChild(el); return el;
+  });
+  let gPoolIdx=0, lt=0;
   document.addEventListener('touchmove',e=>{
-    const now=Date.now(); if(now-lt<45)return; lt=now;
-    const t=e.touches[0], el=document.createElement('div');
+    const now=Date.now(); if(now-lt<60)return; lt=now;
+    const t=e.touches[0], el=gPool[gPoolIdx=(gPoolIdx+1)%GPOOL_SIZE];
     const sz=Math.random()*10+4;
-    const colors=['#D91A1A','#D9C9B0','#A89880','#fff8'];
-    el.style.cssText=`position:fixed;pointer-events:none;z-index:9997;left:${t.clientX-sz/2}px;top:${t.clientY-sz/2}px;width:${sz}px;height:${sz}px;border-radius:50%;background:${colors[Math.floor(Math.random()*colors.length)]};opacity:.7;transition:transform .5s ease,opacity .5s ease`;
-    document.body.appendChild(el);
+    el.style.cssText=`position:fixed;pointer-events:none;z-index:9997;left:${t.clientX-sz/2}px;top:${t.clientY-sz/2}px;width:${sz}px;height:${sz}px;border-radius:50%;background:${gColors[Math.floor(Math.random()*gColors.length)]};opacity:.7;display:block;transition:transform .5s ease,opacity .5s ease`;
     requestAnimationFrame(()=>{el.style.transform='scale(0)';el.style.opacity='0';});
-    setTimeout(()=>el.remove(),520);
+    setTimeout(()=>{el.style.display='none';el.style.transform='';el.style.opacity='.7';},520);
   },{passive:true});
 
   // Confetti burst on tap card
@@ -1879,7 +1865,9 @@ catalogReady.then(function(){ renderFeatured(); updateSectionImages(); loadCover
     const t=e.touches[0]; burst(t.clientX,t.clientY);
   },{passive:true});
 
+  let _lastBurst=0;
   function burst(x,y){
+    const now=Date.now(); if(now-_lastBurst<300)return; _lastBurst=now;
     for(let i=0;i<16;i++){
       const el=document.createElement('div');
       const a=(i/16)*Math.PI*2, sp=Math.random()*80+40, sz=Math.random()*7+3;
