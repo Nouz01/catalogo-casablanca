@@ -957,16 +957,6 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
         <button class="sfc" data-type="color" data-val="salmon"><span class="sfc-dot" style="background:#E88878"></span>Salmón</button>
       </div>
     </div>
-    <div class="sf-row-wrap">
-      <span class="sf-lbl">Medida</span>
-      <div class="sf-chips" id="sfMedidas">
-        <button class="sfc" data-type="medida" data-val="TWIN">1 Plaza</button>
-        <button class="sfc" data-type="medida" data-val="FULL">2 Plazas</button>
-        <button class="sfc" data-type="medida" data-val="QUEEN">Queen</button>
-        <button class="sfc" data-type="medida" data-val="KING">King</button>
-        <button class="sfc" data-type="medida" data-val="CUNA">Cuna</button>
-      </div>
-    </div>
     <div class="sf-foot">
       <span class="sf-active-lbl" id="sfActiveLbl"></span>
       <button class="sf-clr" id="sfClr">✕ Limpiar filtros</button>
@@ -1484,16 +1474,15 @@ function openSearch(){
   history.pushState({view:'search'},'','#buscar');
 }
 // ─── SEARCH FILTERS STATE ─────────────────────────────────────────────────────
-let _sfCat='', _sfColor='', _sfMedida='';
+let _sfCat='', _sfColor='';
 
 function _sfNorm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); }
 
 function setFilter(type,val){
   if(type==='cat')    _sfCat    = _sfCat===val    ? '' : val;
   else if(type==='color')  _sfColor  = _sfColor===val  ? '' : val;
-  else if(type==='medida') _sfMedida = _sfMedida===val ? '' : val;
   document.querySelectorAll(`.sfc[data-type="${type}"]`).forEach(c=>
-    c.classList.toggle('on', c.dataset.val===(type==='cat'?_sfCat:type==='color'?_sfColor:_sfMedida))
+    c.classList.toggle('on', c.dataset.val===(type==='cat'?_sfCat:_sfColor))
   );
   _sfUpdateUI();
   vib(8);
@@ -1501,7 +1490,7 @@ function setFilter(type,val){
 }
 
 function clearAllFilters(){
-  _sfCat=''; _sfColor=''; _sfMedida='';
+  _sfCat=''; _sfColor='';
   document.querySelectorAll('.sfc').forEach(c=>c.classList.remove('on'));
   _sfUpdateUI();
   vib(8);
@@ -1509,7 +1498,7 @@ function clearAllFilters(){
 }
 
 function _sfUpdateUI(){
-  const active=[_sfCat,_sfColor,_sfMedida].filter(Boolean);
+  const active=[_sfCat,_sfColor].filter(Boolean);
   const clrBtn=document.getElementById('sfClr');
   const lblEl=document.getElementById('sfActiveLbl');
   if(clrBtn) clrBtn.classList.toggle('vis', active.length>0);
@@ -1524,7 +1513,7 @@ document.getElementById('srchFilters').addEventListener('click',e=>{
 document.getElementById('sfClr').addEventListener('click', clearAllFilters);
 
 function closeSearch(){
-  _sfCat=''; _sfColor=''; _sfMedida='';
+  _sfCat=''; _sfColor='';
   document.querySelectorAll('.sfc').forEach(c=>c.classList.remove('on'));
   _sfUpdateUI();
   document.getElementById('srch').classList.remove('open');
@@ -1534,7 +1523,7 @@ function closeSearch(){
 
 function doSearch(q){
   const body=document.getElementById('srchBody');
-  const hasFilters=_sfCat||_sfColor||_sfMedida;
+  const hasFilters=_sfCat||_sfColor;
   if(!q.trim()&&!hasFilters){
     body.innerHTML='<p class="srch-hint">Elegí un filtro o escribí para buscar</p>';
     return;
@@ -1558,15 +1547,6 @@ function doSearch(q){
   if(_sfColor){
     const cn=norm(_sfColor);
     results=results.filter(p=>p.vars.some(v=>norm(v.color||'').includes(cn)));
-  }
-  // Filtro medida (busca en nombre del producto y rutas de fotos)
-  if(_sfMedida){
-    const mt=_sfMedida;
-    results=results.filter(p=>{
-      const n=(p.nombre||'').toUpperCase();
-      const fp=p.vars.flatMap(v=>v.fotos||[]).join(' ').toUpperCase();
-      return n.includes(mt)||fp.includes(mt);
-    });
   }
   if(!results.length){
     const extra=q.trim()?` para "<strong>${q}</strong>"`:'';
