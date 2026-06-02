@@ -933,30 +933,6 @@ footer{background:#141414;padding:40px 24px 28px;display:flex;flex-direction:col
         <button class="sfc" data-type="cat" data-val="sommiers">Sommiers</button>
       </div>
     </div>
-    <div class="sf-row-wrap">
-      <span class="sf-lbl">Color</span>
-      <div class="sf-chips" id="sfColors">
-        <button class="sfc" data-type="color" data-val="blanco"><span class="sfc-dot" style="background:#F5F5F2;border-color:rgba(0,0,0,.18)"></span>Blanco</button>
-        <button class="sfc" data-type="color" data-val="crema"><span class="sfc-dot" style="background:#F0E8D0;border-color:rgba(0,0,0,.1)"></span>Crema</button>
-        <button class="sfc" data-type="color" data-val="beige"><span class="sfc-dot" style="background:#E0C8A8"></span>Beige</button>
-        <button class="sfc" data-type="color" data-val="natural"><span class="sfc-dot" style="background:#D4C4A0"></span>Natural</button>
-        <button class="sfc" data-type="color" data-val="gris"><span class="sfc-dot" style="background:#AAA6A0"></span>Gris</button>
-        <button class="sfc" data-type="color" data-val="negro"><span class="sfc-dot" style="background:#1A1818"></span>Negro</button>
-        <button class="sfc" data-type="color" data-val="azul"><span class="sfc-dot" style="background:#4A7AB0"></span>Azul</button>
-        <button class="sfc" data-type="color" data-val="celeste"><span class="sfc-dot" style="background:#88B8D8"></span>Celeste</button>
-        <button class="sfc" data-type="color" data-val="verde"><span class="sfc-dot" style="background:#3A8C5A"></span>Verde</button>
-        <button class="sfc" data-type="color" data-val="rojo"><span class="sfc-dot" style="background:#B83030"></span>Rojo</button>
-        <button class="sfc" data-type="color" data-val="rosa"><span class="sfc-dot" style="background:#E0A8B8"></span>Rosa</button>
-        <button class="sfc" data-type="color" data-val="bordo"><span class="sfc-dot" style="background:#7A1028"></span>Bordó</button>
-        <button class="sfc" data-type="color" data-val="violeta"><span class="sfc-dot" style="background:#7850A0"></span>Violeta</button>
-        <button class="sfc" data-type="color" data-val="lila"><span class="sfc-dot" style="background:#9888B8"></span>Lila</button>
-        <button class="sfc" data-type="color" data-val="naranja"><span class="sfc-dot" style="background:#C87028"></span>Naranja</button>
-        <button class="sfc" data-type="color" data-val="amarillo"><span class="sfc-dot" style="background:#C8A830"></span>Amarillo</button>
-        <button class="sfc" data-type="color" data-val="turquesa"><span class="sfc-dot" style="background:#3AA8A0"></span>Turquesa</button>
-        <button class="sfc" data-type="color" data-val="fucsia"><span class="sfc-dot" style="background:#D03898"></span>Fucsia</button>
-        <button class="sfc" data-type="color" data-val="salmon"><span class="sfc-dot" style="background:#E88878"></span>Salmón</button>
-      </div>
-    </div>
     <div class="sf-foot">
       <span class="sf-active-lbl" id="sfActiveLbl"></span>
       <button class="sf-clr" id="sfClr">✕ Limpiar filtros</button>
@@ -1474,73 +1450,14 @@ function openSearch(){
   history.pushState({view:'search'},'','#buscar');
 }
 // ─── SEARCH FILTERS STATE ─────────────────────────────────────────────────────
-let _sfCat='', _sfColor='';
+let _sfCat='';
 
 function _sfNorm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); }
 
-// Familias de color — cada filtro define qué nombres de color pertenecen a él.
-// Orden importa: primero los términos más específicos (mayor score = match más fuerte).
-const _COLOR_RULES = {
-  'blanco':  ['blanco','optical white','bright white','winter white','white','blanco perla'],
-  'crema':   ['crema','cream','ivory','marfil','off white'],
-  'natural': ['natural','lino claro','lino','jute','crudo','cru'],
-  'beige':   ['beige claro','beige','sand','camel','tostado claro','tostado','indian tan','nude','vison','visón'],
-  'gris':    ['gris claro','gris perla','gris plata','gris topo','gris medio','gris','nimbus','paloma','volcanic','stone','acero','plateado'],
-  'negro':   ['negro','black','blak','ebony','bitter chocolate'],
-  'azul':    ['azul marino','navy blue','navy','azulino','indigo','índigo','azul','petróleo','petroleo'],
-  'celeste': ['celeste','sky blue','baby blue','light blue','hielo','azul claro'],
-  'verde':   ['verde humo','verde militar','verde','musgo','mint','scarlet sage','eucalipto','oliva','caqui','kaki'],
-  'rojo':    ['rojo','red','scarlet','escarlata','granate rojo'],
-  'rosa':    ['pink lavander','pink lavender','old rose','rosa','pink','flamingo'],
-  'bordo':   ['bordo','bordó','burgundy','granate','vino'],
-  'violeta': ['violeta','morado','purple'],
-  'lila':    ['lila','lavanda','lavender','malva'],
-  'naranja': ['naranja','orange','ocre','cobre','terracota','teja'],
-  'amarillo':['amarillo','yellow','dorado','mostaza','limón','gold'],
-  'turquesa':['turquesa','turquoise','aqua','agua'],
-  'fucsia':  ['fucsia','fuchsia','magenta'],
-  'salmon':  ['salmon','salmón','coral','durazno','melocotón'],
-};
-
-// Devuelve un score de qué tan bien encaja el color del producto con el filtro elegido.
-// Score más alto = match más específico. 0 = no encaja.
-function _colorScore(productColor, filterVal){
-  const rules=_COLOR_RULES[filterVal];
-  if(!rules) return _sfNorm(productColor).includes(_sfNorm(filterVal))?1:0;
-  const nc=_sfNorm(productColor);
-  for(let i=0;i<rules.length;i++){
-    const r=_sfNorm(rules[i]);
-    // Coincidencia exacta o como palabra completa dentro del nombre del color
-    if(nc===r||nc.startsWith(r+' ')||nc.endsWith(' '+r)||nc.includes(' '+r+' ')){
-      return (rules.length-i)*2;
-    }
-    // Coincidencia parcial (substring)
-    if(nc.includes(r)) return rules.length-i;
-  }
-  return 0;
-}
-
-// Devuelve true si al menos una variante del producto encaja con el filtro de color
-// y ese color NO encaja mejor con otro filtro (evita falsos positivos).
-function _productMatchesColor(p, filterVal){
-  return p.vars.some(v=>{
-    const color=v.color||'';
-    const myScore=_colorScore(color,filterVal);
-    if(myScore===0) return false;
-    // Verificar que ningún otro filtro tenga mejor score para este color
-    for(const other of Object.keys(_COLOR_RULES)){
-      if(other===filterVal) continue;
-      if(_colorScore(color,other)>myScore) return false;
-    }
-    return true;
-  });
-}
-
 function setFilter(type,val){
-  if(type==='cat')    _sfCat    = _sfCat===val    ? '' : val;
-  else if(type==='color')  _sfColor  = _sfColor===val  ? '' : val;
+  if(type==='cat') _sfCat = _sfCat===val ? '' : val;
   document.querySelectorAll(`.sfc[data-type="${type}"]`).forEach(c=>
-    c.classList.toggle('on', c.dataset.val===(type==='cat'?_sfCat:_sfColor))
+    c.classList.toggle('on', c.dataset.val===_sfCat)
   );
   _sfUpdateUI();
   vib(8);
@@ -1548,7 +1465,7 @@ function setFilter(type,val){
 }
 
 function clearAllFilters(){
-  _sfCat=''; _sfColor='';
+  _sfCat='';
   document.querySelectorAll('.sfc').forEach(c=>c.classList.remove('on'));
   _sfUpdateUI();
   vib(8);
@@ -1556,7 +1473,7 @@ function clearAllFilters(){
 }
 
 function _sfUpdateUI(){
-  const active=[_sfCat,_sfColor].filter(Boolean);
+  const active=[_sfCat].filter(Boolean);
   const clrBtn=document.getElementById('sfClr');
   const lblEl=document.getElementById('sfActiveLbl');
   if(clrBtn) clrBtn.classList.toggle('vis', active.length>0);
@@ -1571,7 +1488,7 @@ document.getElementById('srchFilters').addEventListener('click',e=>{
 document.getElementById('sfClr').addEventListener('click', clearAllFilters);
 
 function closeSearch(){
-  _sfCat=''; _sfColor='';
+  _sfCat='';
   document.querySelectorAll('.sfc').forEach(c=>c.classList.remove('on'));
   _sfUpdateUI();
   document.getElementById('srch').classList.remove('open');
@@ -1581,7 +1498,7 @@ function closeSearch(){
 
 function doSearch(q){
   const body=document.getElementById('srchBody');
-  const hasFilters=_sfCat||_sfColor;
+  const hasFilters=_sfCat;
   if(!q.trim()&&!hasFilters){
     body.innerHTML='<p class="srch-hint">Elegí un filtro o escribí para buscar</p>';
     return;
@@ -1600,10 +1517,6 @@ function doSearch(q){
   if(_sfCat){
     const cfg=SEC_MAP[_sfCat];
     if(cfg) results=results.filter(p=>cfg.secs.some(s=>p.sec.toLowerCase()===s.toLowerCase()));
-  }
-  // Filtro color — best-match por familia, sin falsos positivos
-  if(_sfColor){
-    results=results.filter(p=>_productMatchesColor(p,_sfColor));
   }
   if(!results.length){
     const extra=q.trim()?` para "<strong>${q}</strong>"`:'';
