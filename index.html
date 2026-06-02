@@ -1478,6 +1478,64 @@ let _sfCat='', _sfColor='';
 
 function _sfNorm(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); }
 
+// Familias de color — cada filtro define qué nombres de color pertenecen a él.
+// Orden importa: primero los términos más específicos (mayor score = match más fuerte).
+const _COLOR_RULES = {
+  'blanco':  ['blanco','optical white','bright white','winter white','white','blanco perla'],
+  'crema':   ['crema','cream','ivory','marfil','off white'],
+  'natural': ['natural','lino claro','lino','jute','crudo','cru'],
+  'beige':   ['beige claro','beige','sand','camel','tostado claro','tostado','indian tan','nude','vison','visón'],
+  'gris':    ['gris claro','gris perla','gris plata','gris topo','gris medio','gris','nimbus','paloma','volcanic','stone','acero','plateado'],
+  'negro':   ['negro','black','blak','ebony','bitter chocolate'],
+  'azul':    ['azul marino','navy blue','navy','azulino','indigo','índigo','azul','petróleo','petroleo'],
+  'celeste': ['celeste','sky blue','baby blue','light blue','hielo','azul claro'],
+  'verde':   ['verde humo','verde militar','verde','musgo','mint','scarlet sage','eucalipto','oliva','caqui','kaki'],
+  'rojo':    ['rojo','red','scarlet','escarlata','granate rojo'],
+  'rosa':    ['pink lavander','pink lavender','old rose','rosa','pink','flamingo'],
+  'bordo':   ['bordo','bordó','burgundy','granate','vino'],
+  'violeta': ['violeta','morado','purple'],
+  'lila':    ['lila','lavanda','lavender','malva'],
+  'naranja': ['naranja','orange','ocre','cobre','terracota','teja'],
+  'amarillo':['amarillo','yellow','dorado','mostaza','limón','gold'],
+  'turquesa':['turquesa','turquoise','aqua','agua'],
+  'fucsia':  ['fucsia','fuchsia','magenta'],
+  'salmon':  ['salmon','salmón','coral','durazno','melocotón'],
+};
+
+// Devuelve un score de qué tan bien encaja el color del producto con el filtro elegido.
+// Score más alto = match más específico. 0 = no encaja.
+function _colorScore(productColor, filterVal){
+  const rules=_COLOR_RULES[filterVal];
+  if(!rules) return _sfNorm(productColor).includes(_sfNorm(filterVal))?1:0;
+  const nc=_sfNorm(productColor);
+  for(let i=0;i<rules.length;i++){
+    const r=_sfNorm(rules[i]);
+    // Coincidencia exacta o como palabra completa dentro del nombre del color
+    if(nc===r||nc.startsWith(r+' ')||nc.endsWith(' '+r)||nc.includes(' '+r+' ')){
+      return (rules.length-i)*2;
+    }
+    // Coincidencia parcial (substring)
+    if(nc.includes(r)) return rules.length-i;
+  }
+  return 0;
+}
+
+// Devuelve true si al menos una variante del producto encaja con el filtro de color
+// y ese color NO encaja mejor con otro filtro (evita falsos positivos).
+function _productMatchesColor(p, filterVal){
+  return p.vars.some(v=>{
+    const color=v.color||'';
+    const myScore=_colorScore(color,filterVal);
+    if(myScore===0) return false;
+    // Verificar que ningún otro filtro tenga mejor score para este color
+    for(const other of Object.keys(_COLOR_RULES)){
+      if(other===filterVal) continue;
+      if(_colorScore(color,other)>myScore) return false;
+    }
+    return true;
+  });
+}
+
 function setFilter(type,val){
   if(type==='cat')    _sfCat    = _sfCat===val    ? '' : val;
   else if(type==='color')  _sfColor  = _sfColor===val  ? '' : val;
@@ -1543,10 +1601,9 @@ function doSearch(q){
     const cfg=SEC_MAP[_sfCat];
     if(cfg) results=results.filter(p=>cfg.secs.some(s=>p.sec.toLowerCase()===s.toLowerCase()));
   }
-  // Filtro color
+  // Filtro color — best-match por familia, sin falsos positivos
   if(_sfColor){
-    const cn=norm(_sfColor);
-    results=results.filter(p=>p.vars.some(v=>norm(v.color||'').includes(cn)));
+    results=results.filter(p=>_productMatchesColor(p,_sfColor));
   }
   if(!results.length){
     const extra=q.trim()?` para "<strong>${q}</strong>"`:'';
